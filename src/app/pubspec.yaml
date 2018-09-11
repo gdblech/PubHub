@@ -1,4 +1,4 @@
-name: PubHub
+name: app
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -37,5 +37,4 @@ flutter:
     - family: Roboto
       fonts:
         - asset: fonts/Roboto-Medium.ttf
-          weight: 900
 
