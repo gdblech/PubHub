@@ -34,6 +34,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _authenticate(){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -52,21 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
               child: new Text(
                 'Sign In With Google',
-                style: TextStyle(fontFamily: 'Roboto')
+                style: TextStyle(fontFamily: 'Roboto', fontSize: 20.0)
                 ),
             )
-            // new Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.display1,
-            // ),
           ],
         ),
       ),
-      // floatingActionButton: new FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: new Icon(Icons.add),
-      //), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
