@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'signInButton.dart';
 
 void main() => runApp(new MyApp());
 
@@ -12,30 +13,23 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         accentColor: Colors.red,
       ),
-      home: new MyHomePage(title: 'PubHub'),
+      home: new LogInScreen(title: 'PubHub'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class LogInScreen extends StatefulWidget {
+  LogInScreen({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class _MyHomePageState extends State<LogInScreen> {
 
   void _authenticate(){
-
+    // put sign in code here
   }
 
   @override
@@ -51,14 +45,12 @@ class _MyHomePageState extends State<MyHomePage> {
             new Text(
               'There is no button to push',
             ),
-            new RaisedButton(
-              onPressed: _incrementCounter,
-
-              child: new Text(
-                'Sign In With Google',
-                style: TextStyle(fontFamily: 'Roboto', fontSize: 20.0)
-                ),
-            )
+            RaisedButton(
+              child: button('Google', 'images/google.png'),
+              onPressed: _authenticate,
+              color: Color.fromRGBO(255, 255, 255, 1.0),
+              //color: Color.fromRGBO(66, 133, 244, 1.0),
+            ),
           ],
         ),
       ),
