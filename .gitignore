@@ -147,3 +147,15 @@ fastlane/readme.md
 build/
 
 .flutter-plugins
+
+playground/
+
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+
+# Node.js
+node_modules/
