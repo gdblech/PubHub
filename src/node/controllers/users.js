@@ -1,4 +1,4 @@
-const db = require('./db_controller.js');
+const db = require('../utils/db.js');
 const log4js = require('log4js');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL;
