@@ -1,0 +1,8 @@
+{
+	"AWS": {
+		"region": "us-east-2"
+	},
+	"DB": {
+		"userTable": "pubhub-users"
+	}
+}
