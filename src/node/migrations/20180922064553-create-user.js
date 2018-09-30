@@ -9,12 +9,21 @@ module.exports = {
 				type: Sequelize.INTEGER
 			},
 			userId: {
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
+				allowNull: false,
+				unique: true
 			},
 			userName: {
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
+				allowNull: false,
+				unique: true
 			},
 			email: {
+				type: Sequelize.STRING,
+				allowNull: false,
+				unique: true
+			},
+			profilePicPath: {
 				type: Sequelize.STRING
 			},
 			createdAt: {
