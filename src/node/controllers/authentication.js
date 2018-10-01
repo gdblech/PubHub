@@ -86,20 +86,27 @@ let auth = async (req, res) => {
  * @param {*} token 
  */
 let validate = async (token) => {
+	let decoded;
 	try {
-		let decoded = jwt.verify(token, process.env.JWT_KEY);
-		logger.debug(`payload: ${JSON.stringify(decoded)}`);
-		let user = await User.find({
+		decoded = jwt.verify(token, process.env.JWT_KEY);
+	} catch (err) {
+		err.type = "JWT-VALIDATION";
+		throw err;
+	}
+
+	let user;
+	try {
+		user = await User.find({
 			where: {
 				userId: decoded.userId
 			},
 			include: [Role]
 		});
-		logger.debug(user);
-		return user;
 	} catch (err) {
-		logger.error(`Error: ${err}`);
+		err.type = "USER-LOAD";
+		throw err;
 	}
+	return user;
 };
 
 /**
@@ -108,14 +115,7 @@ let validate = async (token) => {
  * @param {*} res 
  */
 let getProfile = async (req, res) => {
-	try {
-		user = await validate(req.token);
-		res.send(JSON.stringify(user.getJSON()));
-	} catch (err) {
-		logger.error(err);
-		res.status(500).send('Error retrieving profile');
-	}
-
+	res.send(JSON.stringify(req.user.getJSON()));
 }
 
 module.exports = {

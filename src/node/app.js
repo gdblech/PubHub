@@ -7,13 +7,15 @@ const app = express();
 const port = 8081;
 const morgan = require('morgan');
 const bearerToken = require('express-bearer-token');
-app.use(bearerToken());
+const auth_mw = require('./utils/auth_mw');
 
 app.use(morgan('common'));
-app.get('/', (req, res) => res.send('Test'));
+app.use(bearerToken());
+// auth_mw needs to be after bearerToken
+app.use(auth_mw);
 
-let userRoute = require('./routes/users.js');
-app.use('/api/user', userRoute);
+
+app.get('/', (req, res) => res.send('Test'));
 
 let authRoute = require('./routes/auth.js');
 app.use('/api/auth', authRoute);
