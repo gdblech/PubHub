@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PubHub</string>
+    <string name="title_trivia">Trivia</string>
+    <string name="title_chat">Chat</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="server_client_id">980331984960-d33t8e79agt8udf140sm30ob83q020na.apps.googleusercontent.com</string>
+    <string name="server_backend">https://pubhub.me/api/auth</string>
+    <string name="user_agent">REPLACE_LATER</string>
+</resources>
