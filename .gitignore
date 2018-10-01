@@ -159,4 +159,3 @@ playground/
 
 # Node.js
 node_modules/
-src/node/db_setup/data.json
