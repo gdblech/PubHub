@@ -104,19 +104,22 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         try {
 
             //REST API https setup
-            URL server = new URL(getString(R.string.server_backend));
+            URL server = new URL(getString(R.string.server_backend) + "/api/auth");
             HttpsURLConnection backend = (HttpsURLConnection) server.openConnection();
-            backend.setRequestProperty("Authorization", getString(R.string.user_agent)); //auth needs to be setup
-            backend.setRequestMethod("PUT"); //may need to be post
-            backend.setDoInput(true);
+            backend.setRequestProperty("Authorization","Bearer " + googleToken); //auth needs to be setup
+            backend.setRequestMethod("GET");
+//            backend.setDoInput(true);
 
             //set up cache to store messages from the backend
 //            long cacheSize = 10 * 1024 * 1024; // 10MB
 //            HttpResponseCache backendCache = HttpResponseCache.install(getCacheDir(), cacheSize);
 
-            //send the user token from google to the backend
-            backend.getOutputStream().write(googleToken.getBytes());
-            phbToken = backend.getResponseMessage();
+//            backend.getOutputStream().write(googleToken.getBytes()); //token in body.
+            if(backend.getResponseCode() == 200) {
+                phbToken = backend.getResponseMessage();
+            }else{
+                //failed to get response
+            }
 
         } catch (IOException e) {
             Log.w(TAG, "authenticate:error", e);
