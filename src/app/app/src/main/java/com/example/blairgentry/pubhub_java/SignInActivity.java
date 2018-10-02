@@ -3,7 +3,8 @@ package com.example.blairgentry.pubhub_java;
 //PubHub 2018, Blair Gentry & Geoffrey Blech
 
 import android.content.Intent;
-// import android.net.http.HttpResponseCache;
+import android.net.http.HttpResponseCache;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +21,12 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -47,6 +53,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //sign in variables
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
+                .requestEmail()
                 .build();
 
 
@@ -89,6 +96,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             googleToken = account.getIdToken();
             authenticate();
+
             updateUI(account);
         } catch (ApiException e) {
             Log.w(TAG, "handleSignInResult:error", e);
@@ -101,29 +109,32 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void authenticate() {
-        try {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
 
-            //REST API https setup
-            URL server = new URL(getString(R.string.server_backend) + "/api/auth");
-            HttpsURLConnection backend = (HttpsURLConnection) server.openConnection();
-            backend.setRequestProperty("Authorization","Bearer " + googleToken); //auth needs to be setup
-            backend.setRequestMethod("GET");
-//            backend.setDoInput(true);
+                try {
+                    //REST API https setup
+                    URL server = new URL("http://pub-hub.us-east-2.elasticbeanstalk.com/api/auth");
+                    HttpURLConnection backend = (HttpURLConnection) server.openConnection();
+                    backend.setRequestProperty("Authorization","Bearer " + googleToken);
+                    backend.setRequestMethod("GET");
+                    backend.connect();
 
-            //set up cache to store messages from the backend
-//            long cacheSize = 10 * 1024 * 1024; // 10MB
-//            HttpResponseCache backendCache = HttpResponseCache.install(getCacheDir(), cacheSize);
+                    //ger response
+                    if(backend.getResponseCode() == 200){
+                        BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
+                        phbToken = response.readLine();
+                    } else{
+                        throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
+                    }
 
-//            backend.getOutputStream().write(googleToken.getBytes()); //token in body.
-            if(backend.getResponseCode() == 200) {
-                phbToken = backend.getResponseMessage();
-            }else{
-                //failed to get response
+                } catch (IOException e) {
+                    Log.w(TAG, "Authenticate: error", e);
+                }
             }
+        });
 
-        } catch (IOException e) {
-            Log.w(TAG, "authenticate:error", e);
-        }
 
 
     }
