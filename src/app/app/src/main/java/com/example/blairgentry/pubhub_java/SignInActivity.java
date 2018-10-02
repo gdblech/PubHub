@@ -20,12 +20,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private SignInButton signInButton;
@@ -90,7 +84,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             googleToken = account.getIdToken();
-            authenticate();
+
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    phbToken = ServerRestConnection.authenticate(googleToken, TAG);
+                }
+            });
 
             updateUI(account);
         } catch (ApiException e) {
@@ -103,36 +103,4 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //TODO this is where we move to the next UI
     }
 
-    private void authenticate() {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    //REST API https setup
-                    String url = getString(R.string.server_backend) + "/api/auth";
-                    URL server = new URL(url);
-                    HttpURLConnection backend = (HttpURLConnection) server.openConnection();
-                    backend.setRequestProperty("Authorization", "Bearer " + googleToken);
-                    backend.setRequestMethod("GET");
-                    backend.connect();
-
-                    //ger response
-                    if (backend.getResponseCode() == 200) {
-                        BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
-                        phbToken = response.readLine();
-                    } else {
-                        throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
-                    }
-
-                    backend.disconnect();
-
-                } catch (IOException e) {
-                    Log.w(TAG, "Authenticate: error", e);
-                }
-            }
-        });
-
-
-    }
 }
