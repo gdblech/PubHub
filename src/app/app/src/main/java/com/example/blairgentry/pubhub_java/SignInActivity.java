@@ -3,7 +3,6 @@ package com.example.blairgentry.pubhub_java;
 //PubHub 2018, Blair Gentry & Geoffrey Blech
 
 import android.content.Intent;
-import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,15 +20,11 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -115,26 +110,28 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
                 try {
                     //REST API https setup
-                    URL server = new URL("http://pub-hub.us-east-2.elasticbeanstalk.com/api/auth");
+                    String url = getString(R.string.server_backend) + "/api/auth";
+                    URL server = new URL(url);
                     HttpURLConnection backend = (HttpURLConnection) server.openConnection();
-                    backend.setRequestProperty("Authorization","Bearer " + googleToken);
+                    backend.setRequestProperty("Authorization", "Bearer " + googleToken);
                     backend.setRequestMethod("GET");
                     backend.connect();
 
                     //ger response
-                    if(backend.getResponseCode() == 200){
+                    if (backend.getResponseCode() == 200) {
                         BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
                         phbToken = response.readLine();
-                    } else{
+                    } else {
                         throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
                     }
+
+                    backend.disconnect();
 
                 } catch (IOException e) {
                     Log.w(TAG, "Authenticate: error", e);
                 }
             }
         });
-
 
 
     }
