@@ -20,15 +20,20 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int REQ_CODE = 13374;
+    private static final String TAG = "SignInActivity";
     private SignInButton signInButton;
     private String googleToken;
     private String phbToken;
     private GoogleSignInClient googleSignInClient;
-    private static final int REQ_CODE = 13374;
-    private static final String TAG = "SignInActivity";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     protected void onStart() {
         super.onStart();
 
-        //If the user has already signed in previously, sign them in without the button, and so silently
+
+        //If the user has already signed in previously, sign them in without the button, and do so silently
         googleSignInClient.silentSignIn()
                 .addOnCompleteListener(this, new OnCompleteListener<GoogleSignInAccount>() {
                     @Override
@@ -84,13 +90,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             googleToken = account.getIdToken();
-
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    phbToken = ServerRestConnection.authenticate(googleToken, TAG);
-                }
-            });
+            authenticate();
 
             updateUI(account);
         } catch (ApiException e) {
@@ -103,4 +103,35 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //TODO this is where we move to the next UI
     }
 
+    private void authenticate() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    //REST API https setup
+                    URL server = new URL("http://pubhub.me/api/auth");
+                    HttpURLConnection backend = (HttpURLConnection) server.openConnection();
+                    backend.setRequestProperty("Authorization", "Bearer " + googleToken);
+                    backend.setRequestMethod("GET");
+                    backend.connect();
+
+                    //ger response
+                    if (backend.getResponseCode() == 200) {
+                        BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
+                        phbToken = response.readLine();
+                    } else {
+                        throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
+                    }
+
+                    backend.disconnect();
+
+                } catch (IOException e) {
+                    Log.w(TAG, "Authenticate: error", e);
+                }
+            }
+        });
+
+
+    }
 }
