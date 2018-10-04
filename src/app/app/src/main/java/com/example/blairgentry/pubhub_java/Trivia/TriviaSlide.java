@@ -1,20 +1,28 @@
-package com.example.blairgentry.pubhub_java;
+package com.example.blairgentry.pubhub_java.Trivia;
 
 import java.util.HashMap;
 
-class TriviaSlide {
+public class TriviaSlide {
     private String title;
     private String question;
     private HashMap answers;
-    private int value;
+    private int score;
     private int style;
     private int slideTime;
     private TriviaPicture picture;
 
-    TriviaSlide(String t) {
-        title = t;
+    TriviaSlide(String title) {
+        this.title = title;
     }
 
+    TriviaSlide(String title, String question, int score,TriviaPicture picture){
+        this.title = title;
+        this.question = question;
+        this.score = score;
+        this.picture = picture;
+    }
+
+    //future release
     public int getSlideTime() {
         return slideTime;
     }
@@ -24,6 +32,7 @@ class TriviaSlide {
         this.slideTime = slideTime;
     }
 
+    //future release
     public int getStyle() {
         return style;
     }
@@ -33,12 +42,13 @@ class TriviaSlide {
         this.style = style;
     }
 
-    public int getValue() {
-        return value;
+
+    public int getScore() {
+        return score;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public String getQuestion() {
@@ -71,7 +81,7 @@ class TriviaSlide {
     }
 
     //future release
-    public boolean checkAnswer(String guess) {
+    public boolean checkAnswer(String answer) {
         return false;
     }
 }

@@ -1,25 +1,32 @@
-package com.example.blairgentry.pubhub_java;
+package com.example.blairgentry.pubhub_java.Trivia;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-class TriviaPicture {
+public class TriviaPicture {
     private String locationLocal;
     private String locationRemote;
+    private File pictureFile;
 
     TriviaPicture(String local) {
         locationLocal = local;
+        locationRemote = null;
+        pictureFile = new File(local);
     }
 
     TriviaPicture() {
         locationLocal = null;
         locationRemote = null;
+        pictureFile = null;
     }
 
     public String getLocationLocal() {
@@ -28,6 +35,7 @@ class TriviaPicture {
 
     public void setLocationLocal(String locationLocal) {
         this.locationLocal = locationLocal;
+        pictureFile = new File(locationLocal);
     }
 
     public String getLocationRemote() {
@@ -36,6 +44,14 @@ class TriviaPicture {
 
     public void setLocationRemote(String locationRemote) {
         this.locationRemote = locationRemote;
+    }
+
+    public Bitmap loadPicture(){
+        if(pictureFile.exists()){
+            return BitmapFactory.decodeFile(pictureFile.getAbsolutePath());
+        }else{
+            return null;
+        }
     }
 
     //sends locally saved picture to the backend REST
@@ -77,5 +93,4 @@ class TriviaPicture {
         //TODO implement pic pull
         return false;
     }
-
 }

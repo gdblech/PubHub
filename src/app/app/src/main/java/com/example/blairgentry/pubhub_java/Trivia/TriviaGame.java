@@ -1,8 +1,8 @@
-package com.example.blairgentry.pubhub_java;
+package com.example.blairgentry.pubhub_java.Trivia;
 
 import java.util.ArrayList;
 
-class TriviaGame {
+public class TriviaGame {
     private int numberOfRounds;
     private String gameName; //should never be changed
     private int gamePoints;

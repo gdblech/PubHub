@@ -1,8 +1,8 @@
-package com.example.blairgentry.pubhub_java;
+package com.example.blairgentry.pubhub_java.Trivia;
 
 import java.util.ArrayList;
 
-class TriviaRound {
+public class TriviaRound {
     private ArrayList slides;
     private boolean example;
     private int numOfSlides;
@@ -49,7 +49,7 @@ class TriviaRound {
         if (slides.size() == numOfSlides) {
             return false;
         } else {
-            totalScore += slide.getValue();
+            totalScore += slide.getScore();
             slides.add(place, slide);
             return true;
         }
@@ -76,16 +76,16 @@ class TriviaRound {
         return totalScore;
     }
 
-    public boolean getPlayBack() {
-        return playBack;
-    }
-
-    public void setPlayBack(boolean playBack) {
-        this.playBack = playBack;
-    }
-
     public void setSlides(ArrayList slides) {
         this.slides = slides;
+    }
+
+    public boolean getExample() {
+        return example;
+    }
+
+    public void setExample(boolean example) {
+        this.example = example;
     }
 
     //future release all following
@@ -109,12 +109,12 @@ class TriviaRound {
         this.style = style;
     }
 
-    public boolean getExample() {
-        return example;
+    public boolean getPlayBack() {
+        return playBack;
     }
 
-    public void setExample(boolean example) {
-        this.example = example;
+    public void setPlayBack(boolean playBack) {
+        this.playBack = playBack;
     }
 }
 
