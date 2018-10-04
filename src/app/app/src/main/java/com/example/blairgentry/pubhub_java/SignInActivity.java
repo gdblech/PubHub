@@ -17,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.BufferedReader;
@@ -50,24 +49,31 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 .requestEmail()
                 .build();
 
-
         googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            googleToken = account.getIdToken();
+            authenticate();
+        }
+        updateUI(account);
+    }
 
-        //If the user has already signed in previously, sign them in without the button, and do so silently
-        googleSignInClient.silentSignIn()
-                .addOnCompleteListener(this, new OnCompleteListener<GoogleSignInAccount>() {
-                    @Override
-                    public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                        handleSignInResult(task);
-                    }
-                });
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == REQ_CODE) {
+            // The Task returned from this call is always completed, no need to attach a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
     }
 
     @Override
@@ -82,8 +88,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
-        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(signInIntent);
-        handleSignInResult(task);
+        startActivityForResult(signInIntent, REQ_CODE);
     }
 
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
@@ -94,7 +99,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
             updateUI(account);
         } catch (ApiException e) {
-            Log.w(TAG, "handleSignInResult:error", e);
+            Log.w(TAG, "signInResult:failed code = " + e.getStatusCode(), e);
             updateUI(null);
         }
     }
@@ -131,7 +136,5 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
-
-
     }
 }
