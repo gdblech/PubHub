@@ -1,10 +1,8 @@
-package com.example.blairgentry.pubhub_java;
+package me.lgbt.pubhub;
 
 import android.graphics.Bitmap;
-import java.util.Base64;
+import android.util.Base64OutputStream;
 import android.util.Log;
-
-import com.example.blairgentry.pubhub_java.Trivia.TriviaPicture;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -18,12 +16,12 @@ public class ServerRestConnection {
     static final String TAG = "ServerRESTConnection";
 
     public static String authentication(String url, String googleToken) {
-        String url1 = url + "/auth/api";
         String phbToken = null;
+        String url1 = url + "/api/auth";
 
         try {
             //REST API https setup
-            URL server = new URL("http://pubhub.me/api/auth");
+            URL server = new URL(url1);
             HttpURLConnection backend = (HttpURLConnection) server.openConnection();
             backend.setRequestProperty("Authorization", "Bearer " + googleToken);
             backend.setRequestMethod("GET");
@@ -45,7 +43,7 @@ public class ServerRestConnection {
         return phbToken;
     }
 
-    public static String pushPicture(String url, TriviaPicture picture, String phbToken) {
+    public static String pushPicture(String url, Bitmap picture, String phbToken) {
 
         try {
             //Set up http connection
@@ -57,26 +55,19 @@ public class ServerRestConnection {
 
             //convert picture into byte array for sending
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            picture.loadPicture().compress(Bitmap.CompressFormat.PNG,50, stream);
-
+            Base64OutputStream base = new Base64OutputStream(stream, 0);
+            picture.compress(Bitmap.CompressFormat.PNG, 50, base);
             byte[] picBytes = stream.toByteArray();
 
-            //byte[] base64 = Base64.getEncoder();
 
             backend.setDoOutput(true);
-            backend.getOutputStream().write(picBytes); // TODO need to write byte array from picture
-            //TODO add code to turn into bit stream
-            //TODO add code to send out picture may require buffer due to size
+            backend.getOutputStream().write(picBytes);
 
             backend.connect();
             //get response from stream
-            if (backend.getResponseCode() == 200) {
-                BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
-                picture.setLocationRemote(response.readLine());
-            } else {
+            if (backend.getResponseCode() != 200) {
                 throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
             }
-
             backend.disconnect();
 
         } catch (IOException e) {
