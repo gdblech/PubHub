@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.blairgentry.pubhub_java"
+        applicationId "me.lgbt.pubhub"
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
