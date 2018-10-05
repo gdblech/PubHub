@@ -1,4 +1,4 @@
-package com.example.blairgentry.pubhub_java;
+package me.lgbt.pubhub;
 
 //PubHub 2018, Blair Gentry & Geoffrey Blech
 
@@ -18,12 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,9 +51,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         super.onStart();
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) {
+        if (account != null && !account.isExpired()) {
             googleToken = account.getIdToken();
             authenticate();
+
         }
         updateUI(account);
     }
@@ -106,34 +101,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
         //TODO this is where we move to the next UI
+        System.out.println(phbToken);
     }
 
     private void authenticate() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
-                try {
-                    //REST API https setup
-                    URL server = new URL("http://pubhub.me/api/auth");
-                    HttpURLConnection backend = (HttpURLConnection) server.openConnection();
-                    backend.setRequestProperty("Authorization", "Bearer " + googleToken);
-                    backend.setRequestMethod("GET");
-                    backend.connect();
-
-                    //ger response
-                    if (backend.getResponseCode() == 200) {
-                        BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
-                        phbToken = response.readLine();
-                    } else {
-                        throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
-                    }
-
-                    backend.disconnect();
-
-                } catch (IOException e) {
-                    Log.w(TAG, "Authenticate: error", e);
-                }
+                phbToken = ServerRestConnection.authentication(getString(R.string.phb_url), googleToken);
             }
         });
     }
