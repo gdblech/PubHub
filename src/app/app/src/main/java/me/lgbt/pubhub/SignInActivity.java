@@ -1,6 +1,16 @@
 package me.lgbt.pubhub;
 
-//PubHub 2018, Blair Gentry & Geoffrey Blech
+/*
+ * Copyright 2018 LGBT - PubHub
+ *
+ * Geoffrey Blech, Blair Gentry, Linh Tran, Travis Cox
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *
+ */
+
 
 import android.content.Intent;
 import android.os.AsyncTask;
