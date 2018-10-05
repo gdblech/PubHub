@@ -1,0 +1,27 @@
+{
+	"name": "pubhub-node",
+	"version": "1.0.0",
+	"description": "",
+	"main": "app.js",
+	"scripts": {
+		"migrate": "node_modules/.bin/sequelize db:migrate",
+		"seed": "node_modules/.bin/sequelize db:seed:all",
+		"start-app": "node app.js",
+		"start": "npm run migrate && npm run seed && npm run start-app"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"aws-sdk": "^2.315.0",
+		"config": "^2.0.1",
+		"express": "^4.16.3",
+		"express-bearer-token": "^2.2.0",
+		"google-auth-library": "^2.0.0",
+		"jsonwebtoken": "^8.3.0",
+		"log4js": "^3.0.5",
+		"morgan": "^1.9.1",
+		"mysql2": "^1.6.1",
+		"sequelize": "^4.38.1",
+		"sequelize-cli": "^4.1.1"
+	}
+}
