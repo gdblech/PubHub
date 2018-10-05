@@ -3,7 +3,7 @@ package com.example.blairgentry.pubhub_java;
 //PubHub 2018, Blair Gentry & Geoffrey Blech
 
 import android.content.Intent;
-// import android.net.http.HttpResponseCache;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,11 +19,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
-import java.io.IOException;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -47,6 +42,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //sign in variables
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
+                .requestEmail()
                 .build();
 
 
@@ -88,7 +84,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             googleToken = account.getIdToken();
-            authenticate();
+
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    phbToken = ServerRestConnection.authenticate(googleToken, TAG);
+                }
+            });
+
             updateUI(account);
         } catch (ApiException e) {
             Log.w(TAG, "handleSignInResult:error", e);
@@ -100,31 +103,4 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //TODO this is where we move to the next UI
     }
 
-    private void authenticate() {
-        try {
-
-            //REST API https setup
-            URL server = new URL(getString(R.string.server_backend) + "/api/auth");
-            HttpsURLConnection backend = (HttpsURLConnection) server.openConnection();
-            backend.setRequestProperty("Authorization","Bearer " + googleToken); //auth needs to be setup
-            backend.setRequestMethod("GET");
-//            backend.setDoInput(true);
-
-            //set up cache to store messages from the backend
-//            long cacheSize = 10 * 1024 * 1024; // 10MB
-//            HttpResponseCache backendCache = HttpResponseCache.install(getCacheDir(), cacheSize);
-
-//            backend.getOutputStream().write(googleToken.getBytes()); //token in body.
-            if(backend.getResponseCode() == 200) {
-                phbToken = backend.getResponseMessage();
-            }else{
-                //failed to get response
-            }
-
-        } catch (IOException e) {
-            Log.w(TAG, "authenticate:error", e);
-        }
-
-
-    }
 }
