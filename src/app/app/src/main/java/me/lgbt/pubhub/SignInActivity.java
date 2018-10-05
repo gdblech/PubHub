@@ -1,6 +1,16 @@
-package com.example.blairgentry.pubhub_java;
+package me.lgbt.pubhub;
 
-//PubHub 2018, Blair Gentry & Geoffrey Blech
+/*
+ * Copyright 2018 LGBT - PubHub
+ *
+ * Geoffrey Blech, Blair Gentry, Linh Tran, Travis Cox
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *
+ */
+
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,18 +27,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int REQ_CODE = 13374;
+    private static final String TAG = "SignInActivity";
     private SignInButton signInButton;
     private String googleToken;
     private String phbToken;
     private GoogleSignInClient googleSignInClient;
-    private static final int REQ_CODE = 13374;
-    private static final String TAG = "SignInActivity";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,23 +53,32 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 .requestEmail()
                 .build();
 
-
         googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        //If the user has already signed in previously, sign them in without the button, and so silently
-        googleSignInClient.silentSignIn()
-                .addOnCompleteListener(this, new OnCompleteListener<GoogleSignInAccount>() {
-                    @Override
-                    public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                        handleSignInResult(task);
-                    }
-                });
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null && !account.isExpired()) {
+            googleToken = account.getIdToken();
+            authenticate();
+
+        }
+        updateUI(account);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == REQ_CODE) {
+            // The Task returned from this call is always completed, no need to attach a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
     }
 
     @Override
@@ -76,31 +93,33 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
-        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(signInIntent);
-        handleSignInResult(task);
+        startActivityForResult(signInIntent, REQ_CODE);
     }
 
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             googleToken = account.getIdToken();
-
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    phbToken = ServerRestConnection.authenticate(googleToken, TAG);
-                }
-            });
+            authenticate();
 
             updateUI(account);
         } catch (ApiException e) {
-            Log.w(TAG, "handleSignInResult:error", e);
+            Log.w(TAG, "signInResult:failed code = " + e.getStatusCode(), e);
             updateUI(null);
         }
     }
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
         //TODO this is where we move to the next UI
+        System.out.println(phbToken);
     }
 
+    private void authenticate() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                phbToken = ServerRestConnection.authentication(getString(R.string.phb_url), googleToken);
+            }
+        });
+    }
 }
