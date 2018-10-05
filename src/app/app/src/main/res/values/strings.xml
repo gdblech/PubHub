@@ -4,5 +4,6 @@
     <string name="title_chat">Chat</string>
     <string name="title_notifications">Notifications</string>
     <string name="server_client_id">980331984960-d33t8e79agt8udf140sm30ob83q020na.apps.googleusercontent.com</string>
-    <string name="server_backend">http://pub-hub.us-east-2.elasticbeanstalk.com</string>
+    <string name="aws_url">http://pub-hub.us-east-2.elasticbeanstalk.com/</string>
+    <string name="phb_url">http://pubhub.me</string>
 </resources>

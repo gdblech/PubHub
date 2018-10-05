@@ -1,4 +1,4 @@
-package com.example.blairgentry.pubhub_java;
+package com.example.blairgentry.app;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.blairgentry.pubhub_java", appContext.getPackageName());
+        assertEquals("com.example.pubhub.com.pubhub.app", appContext.getPackageName());
     }
 }
