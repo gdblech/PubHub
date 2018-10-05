@@ -1,7 +1,9 @@
-package com.example.blairgentry.pubhub_java;
+package me.lgbt.pubhub;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import me.lgbt.pubhub.R;
 
 public class SignOut extends AppCompatActivity {
 
