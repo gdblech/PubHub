@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -33,7 +34,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private static final int REQ_CODE = 13374;
     private static final String TAG = "SignInActivity";
-    private SignInButton signInButton;
     private String googleToken;
     private String phbToken;
     private GoogleSignInClient googleSignInClient;
@@ -44,8 +44,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_signin);
 
         //locate button on the activity gui and set its click behavior
-        signInButton = findViewById(R.id.sign_in_button);
+        SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
+        Button triviaCreationButton = findViewById(R.id.skip_to_current);
+        triviaCreationButton.setOnClickListener(this);
 
         //sign in variables
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -88,8 +90,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.sign_in_button:
                 signIn();
                 break;
+            case R.id.skip_to_current:
+                updateUI();
+                break;
         }
     }
+
 
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
@@ -113,7 +119,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //TODO this is where we move to the next UI
         System.out.println(phbToken);
     }
+    //move onto the trivia creation bypassing everything else
+    private void updateUI(){
 
+    }
     private void authenticate() {
         AsyncTask.execute(new Runnable() {
             @Override

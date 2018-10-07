@@ -2,16 +2,21 @@ package me.lgbt.pubhub.Trivia;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
+
 public class TriviaGame extends Slide {
     private int ID;
     private String host; //TODO change the user object
     private long date;
+    private ArrayList<TriviaRound> rounds;
+    private boolean creationMode = false;
 
     TriviaGame(String title, String text, Bitmap picture, int ID, String host, long date) {
         super(title, text, picture);
         this.ID = ID;
         this.host = host;
         this.date = date;
+        rounds = null;
     }
 
     public int getID() {
@@ -38,4 +43,45 @@ public class TriviaGame extends Slide {
         this.date = date;
     }
 
+    public ArrayList<TriviaRound> getRounds() {
+        return rounds;
+    }
+
+    public void setRounds(ArrayList<TriviaRound> rounds) {
+        this.rounds = rounds;
+    }
+
+    public boolean addRound(TriviaRound round){
+        if(rounds != null){
+            rounds.add(round);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean removeRound(int roundNumber){
+        if(rounds != null){
+            rounds.remove(roundNumber);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    //initializes rounds of value is true and creation mode is false, nulls rounds if false and true.
+    public void setCreationMode(boolean value){
+        if(value && !creationMode){
+            creationMode = true;
+            rounds = new ArrayList<>();
+        }else if(!value && creationMode){
+            creationMode = false;
+            rounds = null;
+        }
+    }
+
+    public boolean getCreantionMode(){
+        return creationMode;
+    }
 }
