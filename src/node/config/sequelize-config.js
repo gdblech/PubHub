@@ -5,7 +5,7 @@ module.exports = {
 		username: 'root',
 		password: 'my-secret-pw',
 		database: 'pubhub-dev',
-		host: '127.0.0.1',
+		host: process.env.RDS_HOSTNAME || '127.0.0.1',
 		dialect: 'mysql',
 		seederStorage: 'sequelize'
 		// seederStorageTableName: 'sequelize_data'
