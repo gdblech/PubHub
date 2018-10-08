@@ -1,4 +1,4 @@
-let auth_mw = async function (req, res, next) {
+const authMiddleware = async function (req, res, next) {
 	const log4js = require('log4js');
 	let logger = log4js.getLogger();
 	logger.level = process.env.LOG_LEVEL || 'info';
@@ -33,4 +33,4 @@ let auth_mw = async function (req, res, next) {
 	}
 }
 
-module.exports = auth_mw;
+module.exports = authMiddleware;

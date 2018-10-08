@@ -4,7 +4,10 @@
 	"description": "",
 	"main": "app.js",
 	"scripts": {
-		"start": "node_modules/.bin/sequelize db:migrate && node_modules/.bin/sequelize db:seed:all && node app.js"
+		"migrate": "node_modules/.bin/sequelize db:migrate",
+		"seed": "node_modules/.bin/sequelize db:seed:all",
+		"start-app": "node app.js",
+		"start": "npm run migrate && npm run seed && npm run start-app"
 	},
 	"author": "",
 	"license": "ISC",

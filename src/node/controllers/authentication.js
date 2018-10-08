@@ -33,7 +33,7 @@ let auth = async (req, res) => {
 		});
 	} catch (err) {
 		logger.error(err);
-		res.status(500).send('Invalid token: ' + err);
+		res.status(401).send('Invalid token: ' + err);
 		return;
 	}
 
