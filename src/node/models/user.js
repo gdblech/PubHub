@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
 		// associations can be defined here
 		User.belongsTo(models.Role);
 		User.belongsTo(models.AuthType);
+		User.hasMany(models.ChatMessage);
+		User.hasMany(models.TriviaGame, {as:'host'});
+		User.belongsToMany(models.Team, {through: 'TeamToUser'});
+
+
 	};
 
 	/**
