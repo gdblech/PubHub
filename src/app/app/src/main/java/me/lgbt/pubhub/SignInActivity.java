@@ -127,7 +127,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void sendMessage(View view){
-        Intent intent = new Intent(this, CreateQuestionsActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent intent = new Intent(this, TriviaGameListActivity.class); // add the activity class you're going to, also uncomment duh.
         intent.putExtra("TOKEN", phbToken);
         startActivity(intent);
     }
