@@ -54,5 +54,4 @@ public class TriviaRound extends Slide{
     public boolean getCreantionMode(){
         return creationMode;
     }
-
 }
