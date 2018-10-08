@@ -1,35 +1,32 @@
 package me.lgbt.pubhub;
 
+import android.arch.lifecycle.ViewModelStoreOwner;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
-import java.security.Principal;
-import java.util.ArrayList;
+public class GameSlideCreationActivity extends AppCompatActivity {
 
-public class TriviaGameListActivity extends AppCompatActivity{
     private String phbToken;
-    private ArrayList<String> listOfGames;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trivia_game_list);
-        FloatingActionButton newGame = findViewById(R.id.newGame);
-        RecyclerView gameList = findViewById(R.id.gameList);
+        setContentView(R.layout.activity_game_slide_creation);
+        FloatingActionButton doneButton = findViewById(R.id.gameSlideDone);
+        TextView title = findViewById(R.id.gameTitle);
+        TextView gameText = findViewById(R.id.gameSlideText);
 
-        //TODO @Blair add list of games stuff.
-
-        newGame.setOnClickListener(new View.OnClickListener() {
+        doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendMessage(view);
             }
         });
+
     }
 
     public void sendMessage(View view){

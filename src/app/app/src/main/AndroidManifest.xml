@@ -28,7 +28,11 @@
             android:name=".CreateQuestionsActivity"
             android:label="@string/title_activity_create_questions"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".TriviaGameListActivity"></activity>
+        <activity android:name=".TriviaGameListActivity" />
+        <activity
+            android:name=".GameSlideCreationActivity"
+            android:parentActivityName=".TriviaGameListActivity" />
+        <activity android:name=".RoundListActivity"></activity>
     </application>
 
 </manifest>
