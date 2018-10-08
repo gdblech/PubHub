@@ -26,11 +26,10 @@ public class GameSlideCreationActivity extends AppCompatActivity {
                 sendMessage(view);
             }
         });
-
     }
 
     public void sendMessage(View view){
-        Intent intent = new Intent(this, GameSlideCreationActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent intent = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
         intent.putExtra("TOKEN", phbToken);
         startActivity(intent);
     }
