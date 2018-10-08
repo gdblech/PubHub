@@ -9,4 +9,6 @@
     <string name="title_activity_trivia_creation">TriviaCreationActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_create_questions">CreateQuestionsActivity</string>
+    <string name="title_activity_trivia_game">TriviaGameActivity</string>
 </resources>

@@ -24,6 +24,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignOut" />
+        <activity
+            android:name=".CreateQuestionsActivity"
+            android:label="@string/title_activity_create_questions"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
