@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   AuthType.associate = function(models) {
     // associations can be defined here
+    AuthType.hasMany(models.User);
   };
   return AuthType;
 };
