@@ -4,53 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameSlideCreationActivity">
+    tools:context=".RoundCreationActivity">
 
     <EditText
-        android:id="@+id/gameTitle"
+        android:id="@+id/roundTitle"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="50"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter Game Title"
+        android:hint="Round Title"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/gameSlideText"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="42dp"
-        android:ems="10"
-        android:hint="Enter Game Text"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ImageView
-        android:id="@+id/gameCreationImage"
-        android:layout_width="wrap_content"
+        android:id="@+id/roundCreationImage"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameTitle"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        app:layout_constraintTop_toBottomOf="@+id/roundTitle"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <EditText
+        android:id="@+id/roundText"
+        android:layout_width="match_parent"
+        android:layout_height="100"
+        android:layout_marginBottom="42dp"
+        android:ems="10"
+        android:hint="Round Text"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/gameSlideDone"
+        android:id="@+id/roundButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="2dp"
         android:clickable="true"
+        android:src="@drawable/ic_baseline_done_24px"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_done_24px" />
-
+        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>
