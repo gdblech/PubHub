@@ -1,11 +1,12 @@
 package me.lgbt.pubhub.Trivia;
 
-import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Slide {
+public class Slide implements Parcelable {
     private String title;
     private String text;
-    private Bitmap picture;
+    private String picture;
 
     Slide(){
         title = null;
@@ -13,11 +14,37 @@ public class Slide {
         picture = null;
     }
 
-
-    Slide(String title, String text, Bitmap picture){
+    Slide(String title, String text, String picture){
         this.title = title;
         this.text = text;
         this.picture = picture;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags){
+        out.writeString(title);
+        out.writeString(text);
+        out.writeString(picture);
+    }
+
+    public static final Parcelable.Creator<Slide> CREATOR = new Parcelable.Creator<Slide>() {
+        public Slide createFromParcel(Parcel in) {
+            return new Slide(in);
+        }
+
+        public Slide[] newArray(int size){
+            return new Slide[size];
+        }
+    };
+
+    Slide(Parcel in){
+        title = in.readString();
+        text = in.readString();
+        picture = in.readString();
     }
 
     public String getTitle() {
@@ -36,11 +63,11 @@ public class Slide {
         this.text = question;
     }
 
-    public void setPicture(Bitmap picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 
-    public Bitmap getPicture() {
+    public String getPicture() {
         return picture;
     }
 

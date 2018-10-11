@@ -11,7 +11,7 @@ public class TriviaGame extends Slide {
     private ArrayList<TriviaRound> rounds;
     private boolean creationMode = false;
 
-    TriviaGame(String title, String text, Bitmap picture, int ID, String host, long date) {
+    TriviaGame(String title, String text, String picture, int ID, String host, long date) {
         super(title, text, picture);
         this.ID = ID;
         this.host = host;
