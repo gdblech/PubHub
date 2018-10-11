@@ -47,7 +47,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
         Button triviaCreationButton = findViewById(R.id.skip_to_current);
-       // triviaCreationButton.setOnClickListener(this);
+        // triviaCreationButton.setOnClickListener(this);
 
         //sign in variables
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -114,7 +114,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
         //TODO this is where we move to the next UI
-        System.out.println(phbToken);
     }
 
     private void authenticate() {
@@ -126,7 +125,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    public void sendMessage(View view){
+    public void sendMessage(View view) {
         Intent intent = new Intent(this, TriviaGameListActivity.class); // add the activity class you're going to, also uncomment duh.
         intent.putExtra("TOKEN", phbToken);
         startActivity(intent);

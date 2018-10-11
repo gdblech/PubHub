@@ -1,5 +1,6 @@
 package me.lgbt.pubhub.Trivia;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,15 +19,22 @@ public class TriviaGame extends Slide implements Parcelable {
     private int ID;
     private String host; //TODO change the user object
     private long date;
-    private ArrayList<TriviaRound> rounds;
+    private ArrayList<TriviaRound> rounds = null;
     private boolean creationMode = false;
 
-    TriviaGame(String title, String text, String picture, int ID, String host, long date) {
+    public TriviaGame(String title, String text, Uri picture, int ID, String host, long date) {
         super(title, text, picture);
         this.ID = ID;
         this.host = host;
         this.date = date;
         rounds = null;
+    }
+
+    public TriviaGame(){
+        super();
+        ID = 0;
+        host = null;
+        date = 0;
     }
 
     private TriviaGame(Parcel in) {
@@ -81,6 +89,7 @@ public class TriviaGame extends Slide implements Parcelable {
 
     public void setRounds(ArrayList<TriviaRound> rounds) {
         this.rounds = rounds;
+        creationMode = true;
     }
 
     public boolean addRound(TriviaRound round) {

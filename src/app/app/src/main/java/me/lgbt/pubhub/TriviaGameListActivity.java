@@ -1,16 +1,15 @@
 package me.lgbt.pubhub;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import java.security.Principal;
 import java.util.ArrayList;
 
-public class TriviaGameListActivity extends AppCompatActivity{
+public class TriviaGameListActivity extends AppCompatActivity {
     private String phbToken;
     private ArrayList<String> listOfGames;
 
@@ -22,6 +21,10 @@ public class TriviaGameListActivity extends AppCompatActivity{
         FloatingActionButton newGame = findViewById(R.id.newGame);
         RecyclerView gameList = findViewById(R.id.gameList);
 
+        Intent origin = getIntent();
+        phbToken = origin.getStringExtra("TOKEN");
+
+
         //TODO @Blair add list of games stuff.
 
         newGame.setOnClickListener(new View.OnClickListener() {
@@ -32,7 +35,7 @@ public class TriviaGameListActivity extends AppCompatActivity{
         });
     }
 
-    public void sendMessage(View view){
+    public void sendMessage(View view) {
         Intent intent = new Intent(this, GameSlideCreationActivity.class); // add the activity class you're going to, also uncomment duh.
         intent.putExtra("TOKEN", phbToken);
         startActivity(intent);
