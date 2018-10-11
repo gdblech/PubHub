@@ -1,10 +1,20 @@
 package me.lgbt.pubhub.Trivia;
 
-import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class TriviaGame extends Slide {
+public class TriviaGame extends Slide implements Parcelable {
+    public static final Parcelable.Creator<TriviaGame> CREATOR = new Parcelable.Creator<TriviaGame>() {
+        public TriviaGame createFromParcel(Parcel in) {
+            return new TriviaGame(in);
+        }
+
+        public TriviaGame[] newArray(int size) {
+            return new TriviaGame[size];
+        }
+    };
     private int ID;
     private String host; //TODO change the user object
     private long date;
@@ -17,6 +27,28 @@ public class TriviaGame extends Slide {
         this.host = host;
         this.date = date;
         rounds = null;
+    }
+
+    private TriviaGame(Parcel in) {
+        super(in);
+        ID = in.readInt();
+        host = in.readString();
+        date = in.readLong();
+        rounds = in.createTypedArrayList(TriviaRound.CREATOR);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        super.writeToParcel(out, flags);
+        out.writeInt(ID);
+        out.writeString(host);
+        out.writeLong(date);
+        out.writeTypedList(rounds);
+        out.writeInt(creationMode ? 1 : 0);
     }
 
     public int getID() {
@@ -51,37 +83,37 @@ public class TriviaGame extends Slide {
         this.rounds = rounds;
     }
 
-    public boolean addRound(TriviaRound round){
-        if(rounds != null){
+    public boolean addRound(TriviaRound round) {
+        if (rounds != null) {
             rounds.add(round);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean removeRound(int roundNumber){
-        if(rounds != null){
+    public boolean removeRound(int roundNumber) {
+        if (rounds != null) {
             rounds.remove(roundNumber);
             return true;
-        }else{
+        } else {
             return false;
         }
 
     }
 
     //initializes rounds of value is true and creation mode is false, nulls rounds if false and true.
-    public void setCreationMode(boolean value){
-        if(value && !creationMode){
+    public void setCreationMode(boolean value) {
+        if (value && !creationMode) {
             creationMode = true;
             rounds = new ArrayList<>();
-        }else if(!value && creationMode){
+        } else if (!value && creationMode) {
             creationMode = false;
             rounds = null;
         }
     }
 
-    public boolean getCreantionMode(){
+    public boolean getCreantionMode() {
         return creationMode;
     }
 }

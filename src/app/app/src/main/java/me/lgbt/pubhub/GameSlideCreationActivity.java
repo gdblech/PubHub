@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import me.lgbt.pubhub.Trivia.TriviaGame;
+
 public class GameSlideCreationActivity extends AppCompatActivity {
 
     private String phbToken;
@@ -15,14 +17,21 @@ public class GameSlideCreationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_game_slide_creation);
+
         FloatingActionButton doneButton = findViewById(R.id.gameSlideDone);
         TextView title = findViewById(R.id.gameTitle);
         TextView gameText = findViewById(R.id.gameSlideText);
+        Intent origin = getIntent();
+
+        phbToken = origin.getStringExtra("TOKEN");
+        TriviaGame currentGame = null;
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 sendMessage(view);
             }
         });
