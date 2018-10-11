@@ -1,16 +1,45 @@
 package me.lgbt.pubhub.Trivia;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class TriviaRound extends Slide{
+public class TriviaRound extends Slide implements Parcelable {
     private ArrayList<TriviaQuestion> questions;
     private boolean creationMode = false;
 
-    TriviaRound(String title, String text, Bitmap picture){
-        super(title,text,picture);
+    TriviaRound(String title, String text, String picture){
+        super(title, text, picture);
         questions = null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags){
+        super.writeToParcel(out, flags);
+        out.writeTypedList(questions);
+        out.writeInt(creationMode ? 1 : 0);
+    }
+
+    public static final Parcelable.Creator<TriviaRound> CREATOR = new Parcelable.Creator<TriviaRound>() {
+        public TriviaRound createFromParcel(Parcel in) {
+            return new TriviaRound(in);
+        }
+
+        public TriviaRound[] newArray(int size){
+            return new TriviaRound[size];
+        }
+    };
+
+    private TriviaRound(Parcel in){
+        super(in);
+        questions = in.createTypedArrayList(TriviaQuestion.CREATOR);
+        
     }
 
     public ArrayList<TriviaQuestion> getQuestions() {
