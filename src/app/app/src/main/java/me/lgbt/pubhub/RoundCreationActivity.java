@@ -1,17 +1,19 @@
 package me.lgbt.pubhub;
 
 import android.content.Intent;
-import android.media.Image;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class RoundCreationActivity extends AppCompatActivity {
+
+    public static final int PICK_IMAGE = 125;
+    private String phbToken;
+    private Uri pictureUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,10 @@ public class RoundCreationActivity extends AppCompatActivity {
         ImageView image = findViewById(R.id.roundCreationImage);
         FloatingActionButton doneButton = findViewById(R.id.roundButton);
 
+        Intent origin = getIntent();
+        phbToken = origin.getStringExtra("TOKEN");
+
+
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -30,7 +36,7 @@ public class RoundCreationActivity extends AppCompatActivity {
         });
     }
 
-    public void sendMessage(View view){
+    public void sendMessage(View view) {
         Intent intent = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
 
         startActivity(intent);

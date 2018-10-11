@@ -9,7 +9,7 @@
     <EditText
         android:id="@+id/roundTitle"
         android:layout_width="match_parent"
-        android:layout_height="50"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Round Title"
@@ -33,7 +33,7 @@
     <EditText
         android:id="@+id/roundText"
         android:layout_width="match_parent"
-        android:layout_height="100"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="42dp"
         android:ems="10"
         android:hint="Round Text"

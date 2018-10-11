@@ -2,13 +2,19 @@ package me.lgbt.pubhub.Trivia;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.net.Uri;
 
 public class TriviaQuestion extends Slide implements Parcelable {
     private String answer;
 
-    TriviaQuestion(String title, String text, String picture, String answer){
+    public TriviaQuestion(String title, String text, Uri picture, String answer){
         super(title, text, picture);
         this.answer = answer;
+    }
+
+    public TriviaQuestion(){
+        super();
+        answer = null;
     }
 
     @Override

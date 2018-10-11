@@ -5,14 +5,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import android.net.Uri;
 
 public class TriviaRound extends Slide implements Parcelable {
-    private ArrayList<TriviaQuestion> questions;
+    private ArrayList<TriviaQuestion> questions = null;
     private boolean creationMode = false;
 
-    TriviaRound(String title, String text, String picture){
+    public TriviaRound(String title, String text, Uri picture){
         super(title, text, picture);
-        questions = null;
+    }
+
+    public TriviaRound(){
+        super();
     }
 
     @Override
