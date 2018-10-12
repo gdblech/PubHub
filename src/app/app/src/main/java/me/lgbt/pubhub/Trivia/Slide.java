@@ -29,8 +29,8 @@ public class Slide implements Parcelable {
     public void writeToParcel(Parcel out, int flags){
         out.writeString(title);
         out.writeString(text);
-        picture.writeToParcel(out, flags);
-    }
+        out.writeTypedObject(picture, flags);
+        }
 
     public static final Parcelable.Creator<Slide> CREATOR = new Parcelable.Creator<Slide>() {
         public Slide createFromParcel(Parcel in) {

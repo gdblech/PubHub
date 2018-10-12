@@ -33,7 +33,7 @@ public class TriviaGame extends Slide implements Parcelable {
     public TriviaGame(){
         super();
         ID = 0;
-        host = null;
+        host = "";
         date = 0;
     }
 
@@ -43,6 +43,7 @@ public class TriviaGame extends Slide implements Parcelable {
         host = in.readString();
         date = in.readLong();
         rounds = in.createTypedArrayList(TriviaRound.CREATOR);
+        creationMode =  in.readByte() != 0;
     }
 
     @Override
