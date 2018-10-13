@@ -25,4 +25,4 @@ app.use('/api/auth', authRoute);
 
 app.listen(port, () => logger.info(`Example app listening on port ${port}!`));
 
-let wsh = new WebSocketHandler(8080, Authentication.validate);
+let wsh = new WebSocketHandler(8082, Authentication.validate);

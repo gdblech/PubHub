@@ -77,7 +77,7 @@ class WebSocketHandler {
 		// bind is used to keep the class (this) in the scope of the connectHandler
 		this.wss.on('connection', this.connectHandler.bind(this));
 
-		this.interval = setInterval(this.ping.bind(this), 3000);
+		this.interval = setInterval(this.ping.bind(this), 300000);
 	}
 
 
