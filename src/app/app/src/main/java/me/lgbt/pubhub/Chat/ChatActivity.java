@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import me.lgbt.pubhub.R;
 
 public class ChatActivity extends AppCompatActivity {
@@ -47,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    class User {
+    public class User {
         String nickname;
 
         private String getNickname() {
@@ -76,7 +78,7 @@ public class ChatActivity extends AppCompatActivity {
             messageText.setText(message.getMessage());
 
             // Format the stored timestamp into a readable String using method.
-            timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
+            timeText.setText(Date.formatDateTime(message.getCreatedAt()));
             nameText.setText(message.getSender().getNickname());
 
             // Insert the profile image from the URL into the ImageView.
