@@ -3,7 +3,6 @@ const log4js = require('log4js');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
-const ClientManager = require('./ClientManager');
 const http = require('http');
 const ws = require('ws');
 class WebSocketHandler {
@@ -16,7 +15,6 @@ class WebSocketHandler {
 	// event handler for connections
 	connectHandler(client, info) {
 		logger.debug('WS Connection');
-		this.clients.addClient(info.user.userId, client);
 		client.user = info.user;
 		client.on('message', this.messageHandler.bind(this));
 
@@ -71,7 +69,6 @@ class WebSocketHandler {
 
 	constructor(port, validator) {
 		this.validate = validator;
-		this.clients = new ClientManager();
 		this.wss = new ws.Server({
 			port,
 			verifyClient: this.verifyClient.bind(this)
