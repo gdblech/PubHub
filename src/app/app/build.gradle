@@ -29,4 +29,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     api 'com.google.android.gms:play-services-auth:16.0.0'
+    compileOnly group: 'javax', name: 'javaee-api', version: '8.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.polarion.alm.shared.api.utils'
 }
