@@ -35,8 +35,8 @@ class WSClientMessage {
 }
 
 class ClientServerChatMessage {
-	constructor(message) {
-		this.message = message;
+	constructor(payload) {
+		this.message = payload.message;
 	}
 
 	toObject() {
@@ -64,24 +64,42 @@ class WSServerMessage {
 		} else {
 			throw 'Invalid message type'
 		}
+		this.payload = message;
+	}
 
+	toJSON() {
+		return {
+			messageType: this.messageType,
+			payload: this.payload
+		};
 	}
 }
 
 class ServerClientChatMessage {
-	constructor(sender, message) {
+	constructor(sender, message, timestamp) {
 		this.sender = sender;
 		this.message = message;
+		this.timestamp = timestamp;
 	}
 
 	toServerMessage() {
-		return new WSServerMessage('ServerClientChatMessage', this);
+		return new WSServerMessage(this);
 	}
 
-	toObject() {
-		return {
+	// toObject() {
+	// 	return {
+	// 		sender: this.sender,
+	// 		message: this.message,
+	// 		timestamp: this.timestamp
+	// 	}
+	// }
 
-		}
+	toJSON() {
+		return {
+			sender: this.sender,
+			message: this.message,
+			timestamp: this.timestamp
+		};
 	}
 
 }
