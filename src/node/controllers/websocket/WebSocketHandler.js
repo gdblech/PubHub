@@ -1,15 +1,24 @@
 'use strict';
-const Messages = require('./Messages');
+const ClientMessages = require('./ClientMessages');
+const ServerMessages = require('./ServerMessages');
 const Models = require('../../models');
+const ws = require('ws');
 const log4js = require('log4js');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
-const http = require('http');
-const ws = require('ws');
-
-
+/**
+ * WebSocketHandler
+ * Class for running the WebSocket server that handles real-time communication.
+ */
 class WebSocketHandler {
+	/**
+	 * constructor
+	 * Starts the WebSocket server
+	 * @param {*} port: Port that the server listens on.
+	 * @param {*} validator: Function for validating connections; it should
+	 * 		accept a token and return the corresponding user.
+	 */
 	constructor(port, validator) {
 		this.validate = validator;
 		this.wss = new ws.Server({
@@ -23,7 +32,13 @@ class WebSocketHandler {
 		this.interval = setInterval(this.ping.bind(this), 300000);
 	}
 
-	// event handler for connections
+	/**
+	 * connectHandler
+	 * Event handler for new client connections.
+	 * @param {*} client: The client object for the new connection.
+	 * @param {*} info: Additional information for the connection, contains
+	 * 		the validated user object.
+	 */
 	connectHandler(client, info) {
 		logger.debug('WS Connection');
 		client.user = info.user;
@@ -32,7 +47,7 @@ class WebSocketHandler {
 		client.on('message', (data) => {
 			let clientMessage;
 			try {
-				clientMessage = new Messages.WSClientMessage(data);
+				clientMessage = new ClientMessages.WSClientMessage(data);
 			} catch (err) {
 				logger.error(`Error parsing websocket message: ${err}`);
 				let response = {
@@ -43,7 +58,7 @@ class WebSocketHandler {
 				return;
 			}
 
-			if (clientMessage.messageType === Messages.WSClientMessage.MESSAGE_TYPES.ClientServerChatMessage) {
+			if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.ClientServerChatMessage) {
 				this.chatHandler(clientMessage.payload, client);
 			} else {
 				let response = {
@@ -58,17 +73,20 @@ class WebSocketHandler {
 			logger.debug(`User: ${client.user.userName} disconnected`);
 		});
 
+		// Send chat history to client
+		this.sendAllMessages(client);
+
+		// Setup for tracking if client connection is broken.
 		client.isAlive = true;
 		client.on('pong', this.heartbeat);
-		this.sendAllMessages(client);
 	}
 
-	// event handler for checking broken connections connections
-	heartbeat() {
-		this.isAlive = true;
-	}
-
-	// ping client to check if connection is broken
+	/**
+	 * ping
+	 * Function for sending pings to clients and detecting if the connection is
+	 * broken. If the client's 'isAlive' is false it is broken and connection is
+	 * terminated. It is then set to false and a ping is sent.
+	 */
 	ping() {
 		this.wss.clients.forEach((client) => {
 			if (client.isAlive === false) {
@@ -79,6 +97,21 @@ class WebSocketHandler {
 		})
 	}
 
+	/**
+	 * heartbeat
+	 * Event handler for checking broken connections connections. When a client
+	 * responds to a ping, its 'isAlive' property is set to true.
+	 */
+	heartbeat() {
+		this.isAlive = true;
+	}
+
+	/**
+	 * disconnectUser
+	 * Checks if a user is connected and disconnects them. Called when a user
+	 * connects to ensure each user is connected only once.
+	 * @param {*} userId: User to disconnect.
+	 */
 	disconnectUser(userId) {
 		this.wss.clients.forEach((client) => {
 			if (client.user.userId === userId) {
@@ -87,7 +120,17 @@ class WebSocketHandler {
 		});
 	}
 
-
+	/**
+	 * verifyClient
+	 * Function that the WebSocket server will use to verify new clients. Uses'
+	 * the validator function that the WebSocketHandler was initialized with to
+	 * retrieve the client's user object and attaches it to the info parameter to
+	 * be used in the connect event handler.
+	 * @param {*} info: Info about the incoming connection; contains the client JWT.
+	 * @param {*} cb: Callback to call when verification is complete. Call with true
+	 * 		if verification succeeds. Call with false, error code, and message if
+	 * 		verification fails.
+	 */
 	async verifyClient(info, cb) {
 		let jwt = info.req.headers.authorization.replace('Bearer ', '');
 		try {
@@ -107,7 +150,14 @@ class WebSocketHandler {
 		}
 	}
 
-	// event handler for ws messages
+	/**
+	 * chatHandler
+	 * Event handler for chat messages. Receives a message and sends it to all
+	 * users.
+	 * @param {*} message: JSON string with the WSClientMessage containing a
+	 * 		ClientServerChatMessage.
+	 * @param {*} client: the client object of the sender.
+	 */
 	async chatHandler(message, client) {
 		var utc = new Date().toJSON();
 		let chatMessage = await Models.ChatMessage.create({
@@ -118,7 +168,7 @@ class WebSocketHandler {
 		await chatMessage.setUser(client.user);
 		chatMessage.User = client.user;
 
-		let serverChatMessage = new Messages.ServerClientChatMessage(chatMessage);
+		let serverChatMessage = new ServerMessages.ServerClientChatMessage(chatMessage);
 		let outgoingMessage = JSON.stringify(serverChatMessage.toServerMessage());
 
 		this.wss.clients.forEach((sclient) => {
@@ -128,7 +178,13 @@ class WebSocketHandler {
 		});
 	}
 
-	// event handler for ws messages
+	/**
+	 * sendAllMessages
+	 * Function for sending all chat messages to a newly connected client. Sends
+	 * a JSON string containing a WSServerMessage containing a
+	 * ServerClientChatMessage with an array of messages.
+	 * @param {*} client: The client to send all messages to.
+	 */
 	async sendAllMessages(client) {
 		let messages;
 		try {
@@ -142,8 +198,8 @@ class WebSocketHandler {
 			})
 			return;
 		}
-		console.log(`Num messages: ${messages.length}`);
-		let serverChatMessage = new Messages.ServerClientChatMessage(messages);
+
+		let serverChatMessage = new ServerMessages.ServerClientChatMessage(messages);
 		let outgoingMessage = JSON.stringify(serverChatMessage.toServerMessage());
 		client.send(outgoingMessage);
 	}
