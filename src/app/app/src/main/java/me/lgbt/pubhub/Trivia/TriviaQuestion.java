@@ -41,5 +41,4 @@ public class TriviaQuestion extends Slide implements Parcelable {
         super(in);
         answer = in.readString();
     }
-
 }

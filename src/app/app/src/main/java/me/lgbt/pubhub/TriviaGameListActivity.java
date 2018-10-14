@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class TriviaGameListActivity extends AppCompatActivity {
     private String phbToken;
+    private String googleToken;
     private ArrayList<String> listOfGames;
 
 
@@ -21,8 +22,7 @@ public class TriviaGameListActivity extends AppCompatActivity {
         FloatingActionButton newGame = findViewById(R.id.newGame);
         RecyclerView gameList = findViewById(R.id.gameList);
 
-        Intent origin = getIntent();
-        phbToken = origin.getStringExtra("TOKEN");
+        unPack();
 
 
         //TODO @Blair add list of games stuff.
@@ -36,8 +36,20 @@ public class TriviaGameListActivity extends AppCompatActivity {
     }
 
     public void sendMessage(View view) {
-        Intent intent = new Intent(this, GameSlideCreationActivity.class); // add the activity class you're going to, also uncomment duh.
-        intent.putExtra("TOKEN", phbToken);
-        startActivity(intent);
+        Intent nextActivity = new Intent(this, GameSlideCreationActivity.class); // add the activity class you're going to, also uncomment duh.
+        Bundle extras = new Bundle();
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putString(IntentKeys.GOOGLE, googleToken);
+        nextActivity.putExtras(extras);
+        startActivity(nextActivity);
+        finish();
+    }
+
+    public void  unPack(){
+        Bundle data = getIntent().getExtras();
+        if (data != null) {
+            phbToken = data.getString(IntentKeys.PUBHUB);
+            googleToken = data.getString(IntentKeys.GOOGLE);
+        }
     }
 }

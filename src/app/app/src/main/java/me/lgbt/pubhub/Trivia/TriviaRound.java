@@ -43,7 +43,7 @@ public class TriviaRound extends Slide implements Parcelable {
     private TriviaRound(Parcel in){
         super(in);
         questions = in.createTypedArrayList(TriviaQuestion.CREATOR);
-        
+        creationMode =  in.readByte() != 0;
     }
 
     public ArrayList<TriviaQuestion> getQuestions() {
