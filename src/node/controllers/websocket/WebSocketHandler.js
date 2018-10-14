@@ -44,7 +44,7 @@ class WebSocketHandler {
 			}
 
 			if (clientMessage.messageType === Messages.WSClientMessage.MESSAGE_TYPES.ClientServerChatMessage) {
-				this.chatHandler(data, client);
+				this.chatHandler(clientMessage.payload, client);
 			} else {
 				let response = {
 					messageType: 'Error',
@@ -86,8 +86,9 @@ class WebSocketHandler {
 		});
 	}
 
+
 	async verifyClient(info, cb) {
-		var jwt = info.req.headers.authorization.replace('Bearer ', '');
+		let jwt = info.req.headers.authorization.replace('Bearer ', '');
 		try {
 			let user = await this.validate(jwt);
 			info.req.user = user;
@@ -106,14 +107,23 @@ class WebSocketHandler {
 	}
 
 	// event handler for ws messages
-	chatHandler(data, client) {
-		// let message = Models.
+	async chatHandler(message, client) {
+		var utc = new Date().toJSON();
+		let chatMessage = await Models.ChatMessage.create({
+			message: message.message,
+			timestamp: utc
+		});
+
+		await chatMessage.setUser(client.user);
+		let serverChatMessage = new Messages.ServerClientChatMessage(client.user.userName, chatMessage.message, chatMessage.timestamp);
+		let outgoingMessage = JSON.stringify(serverChatMessage.toServerMessage());
+
+		this.wss.clients.forEach((sclient) => {
+			if (client !== sclient) {
+				sclient.send(outgoingMessage);
+			}
+		});
 	}
-
-
-
 }
-
-
 
 module.exports = WebSocketHandler;
