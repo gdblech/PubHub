@@ -126,7 +126,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     public void sendMessage(View view) {
 //        Intent intent = new Intent(this, TriviaGameListActivity.class); // add the activity class you're going to, also uncomment duh.
-        Intent nextActivity = new Intent(this, RoundListActivity.class);
+        Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putString(IntentKeys.GOOGLE, googleToken);

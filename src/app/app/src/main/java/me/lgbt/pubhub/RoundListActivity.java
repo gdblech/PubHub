@@ -27,18 +27,13 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         FloatingActionButton addRoundButton = findViewById(R.id.addRoundButton);
         roundList = findViewById(R.id.roundList);
 
+        unPack();
+
         RoundAdapter adapter = new RoundAdapter(currentGame.getRounds());
         roundList.setAdapter(adapter);
         roundList.setLayoutManager(new LinearLayoutManager(this));
 
         addRoundButton.setOnClickListener(this);
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        unPack();
     }
 
     @Override

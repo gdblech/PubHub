@@ -45,16 +45,11 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
         gameText = findViewById(R.id.gameSlideText);
         picture.setImageResource(R.drawable.add_image_icon);
 
-        System.out.println(phbToken);
-        picture.setOnClickListener(this);
-        doneButton.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         unPack();
         setUpGame();
+
+        picture.setOnClickListener(this);
+        doneButton.setOnClickListener(this);
     }
 
     @Override
