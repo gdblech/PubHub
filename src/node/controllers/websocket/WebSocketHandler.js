@@ -55,11 +55,12 @@ class WebSocketHandler {
 		});
 
 		client.on('close', () => {
-			console.log(`User: ${client.user.userName} disconnected`);
+			logger.debug(`User: ${client.user.userName} disconnected`);
 		});
 
 		client.isAlive = true;
 		client.on('pong', this.heartbeat);
+		this.sendAllMessages(client);
 	}
 
 	// event handler for checking broken connections connections
@@ -115,7 +116,9 @@ class WebSocketHandler {
 		});
 
 		await chatMessage.setUser(client.user);
-		let serverChatMessage = new Messages.ServerClientChatMessage(client.user.userName, chatMessage.message, chatMessage.timestamp);
+		chatMessage.User = client.user;
+
+		let serverChatMessage = new Messages.ServerClientChatMessage(chatMessage);
 		let outgoingMessage = JSON.stringify(serverChatMessage.toServerMessage());
 
 		this.wss.clients.forEach((sclient) => {
@@ -123,6 +126,26 @@ class WebSocketHandler {
 				sclient.send(outgoingMessage);
 			}
 		});
+	}
+
+	// event handler for ws messages
+	async sendAllMessages(client) {
+		let messages;
+		try {
+			messages = await Models.ChatMessage.findAll({
+				include: Models.User
+			});
+		} catch (err) {
+			client.send({
+				messageType: 'Error',
+				error: 'Unable to retrieve message history.'
+			})
+			return;
+		}
+		console.log(`Num messages: ${messages.length}`);
+		let serverChatMessage = new Messages.ServerClientChatMessage(messages);
+		let outgoingMessage = JSON.stringify(serverChatMessage.toServerMessage());
+		client.send(outgoingMessage);
 	}
 }
 
