@@ -15,8 +15,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import me.lgbt.pubhub.Trivia.TriviaGame;
+import me.lgbt.pubhub.Trivia.TriviaRound;
+
 public class CreateQuestionsActivity extends AppCompatActivity {
     private String phbToken;
+    private String googleToken;
+    private TriviaGame currentGame;
+    private TriviaRound currentRound;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -48,6 +54,12 @@ public class CreateQuestionsActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        unPack();
     }
 
     @Override
@@ -136,6 +148,30 @@ public class CreateQuestionsActivity extends AppCompatActivity {
         public int getCount() {
             // Show 3 total pages.
             return 6;
+        }
+    }
+
+    public void sendMessage(View view) {
+        Intent nextActivity = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
+        Bundle extras = new Bundle();
+
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putString(IntentKeys.GOOGLE, googleToken);
+        currentGame.addRound(currentRound);
+        extras.putParcelable(IntentKeys.GAME, currentGame);
+
+        nextActivity.putExtras(extras);
+        startActivity(nextActivity);
+        finish();
+    }
+
+    public void  unPack(){
+        Bundle data = getIntent().getExtras();
+        if (data != null) {
+            phbToken = data.getString(IntentKeys.PUBHUB);
+            googleToken = data.getString(IntentKeys.GOOGLE);
+            currentGame = data.getParcelable(IntentKeys.GAME);
+            currentRound = data.getParcelable(IntentKeys.ROUND);
         }
     }
 }

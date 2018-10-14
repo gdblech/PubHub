@@ -126,4 +126,8 @@ public class TriviaGame extends Slide implements Parcelable {
     public boolean getCreantionMode() {
         return creationMode;
     }
+
+    public int getNumberOfRounds(){
+        return rounds.size();
+    }
 }
