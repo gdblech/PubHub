@@ -76,29 +76,21 @@ class WSServerMessage {
 }
 
 class ServerClientChatMessage {
-	constructor(sender, message, timestamp) {
-		this.sender = sender;
-		this.message = message;
-		this.timestamp = timestamp;
+	constructor(messages) {
+		if (messages.length || messages.length === 0) {
+			this.messages = messages;
+		} else {
+			this.messages = [messages];
+		}
 	}
 
 	toServerMessage() {
 		return new WSServerMessage(this);
 	}
 
-	// toObject() {
-	// 	return {
-	// 		sender: this.sender,
-	// 		message: this.message,
-	// 		timestamp: this.timestamp
-	// 	}
-	// }
-
 	toJSON() {
 		return {
-			sender: this.sender,
-			message: this.message,
-			timestamp: this.timestamp
+			messages: this.messages
 		};
 	}
 
