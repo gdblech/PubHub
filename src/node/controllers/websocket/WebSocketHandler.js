@@ -1,22 +1,62 @@
 'use strict';
+const Messages = require('./Messages');
+const Models = require('../../models');
 const log4js = require('log4js');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
 const http = require('http');
 const ws = require('ws');
-class WebSocketHandler {
 
-	// event handler for ws messages
-	messageHandler(data) {
-		console.log(data);
+
+class WebSocketHandler {
+	constructor(port, validator) {
+		this.validate = validator;
+		this.wss = new ws.Server({
+			port,
+			verifyClient: this.verifyClient.bind(this)
+		});
+
+		// bind is used to keep the class (this) in the scope of the connectHandler
+		this.wss.on('connection', this.connectHandler.bind(this));
+
+		this.interval = setInterval(this.ping.bind(this), 300000);
 	}
 
 	// event handler for connections
 	connectHandler(client, info) {
 		logger.debug('WS Connection');
 		client.user = info.user;
-		client.on('message', this.messageHandler.bind(this));
+
+		// base message handler needs to be defined inside connect handler to keep client in scope
+		client.on('message', (data) => {
+			let clientMessage;
+			try {
+				clientMessage = new Messages.WSClientMessage(data);
+			} catch (err) {
+				logger.error(`Error parsing websocket message: ${err}`);
+				let response = {
+					messageType: 'Error',
+					error: err
+				};
+				client.send(JSON.stringify(response));
+				return;
+			}
+
+			if (clientMessage.messageType === Messages.WSClientMessage.MESSAGE_TYPES.ClientServerChatMessage) {
+				this.chatHandler(data, client);
+			} else {
+				let response = {
+					messageType: 'Error',
+					error: 'Message type not handled'
+				};
+				client.send(JSON.stringify(response));
+			}
+		});
+
+		client.on('close', () => {
+			console.log(`User: ${client.user.userName} disconnected`);
+		});
 
 		client.isAlive = true;
 		client.on('pong', this.heartbeat);
@@ -65,22 +105,15 @@ class WebSocketHandler {
 		}
 	}
 
-
-
-	constructor(port, validator) {
-		this.validate = validator;
-		this.wss = new ws.Server({
-			port,
-			verifyClient: this.verifyClient.bind(this)
-		});
-
-		// bind is used to keep the class (this) in the scope of the connectHandler
-		this.wss.on('connection', this.connectHandler.bind(this));
-
-		this.interval = setInterval(this.ping.bind(this), 300000);
+	// event handler for ws messages
+	chatHandler(data, client) {
+		// let message = Models.
 	}
 
 
+
 }
+
+
 
 module.exports = WebSocketHandler;
