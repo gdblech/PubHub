@@ -27,7 +27,6 @@ public class TriviaGame extends Slide implements Parcelable {
         this.ID = ID;
         this.host = host;
         this.date = date;
-        rounds = null;
     }
 
     public TriviaGame(){
