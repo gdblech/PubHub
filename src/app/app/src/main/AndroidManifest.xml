@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="me.lgbt.pubhub">
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +16,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="me.lgbt.pubhub.SignInActivity"
+            android:name=".SignInActivity"
             android:label="@string/app_name"
             android:theme="@style/AppPubHub">
             <intent-filter>
@@ -21,8 +25,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="me.lgbt.pubhub.SignOut"></activity>
-
+        <activity
+            android:name=".CreateQuestionsActivity"
+            android:label="@string/title_activity_create_questions"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".TriviaGameListActivity" />
+        <activity
+            android:name=".GameSlideCreationActivity"
+            android:parentActivityName=".TriviaGameListActivity" />
+        <activity android:name=".RoundListActivity" />
+        <activity android:name=".RoundCreationActivity" />
+        <activity android:name=".QuestionListActivity"></activity>
     </application>
 
 </manifest>
