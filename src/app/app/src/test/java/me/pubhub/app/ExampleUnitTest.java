@@ -1,4 +1,4 @@
-package com.example.blairgentry.app;
+package me.pubhub.app;
 
 import org.junit.Test;
 
