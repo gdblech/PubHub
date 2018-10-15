@@ -40,4 +40,12 @@ public class TriviaQuestion extends Slide implements Parcelable {
         super.writeToParcel(out, flags);
         out.writeString(answer);
     }
+
+    public String getAnswer(){
+        return  answer;
+    }
+
+    public void setAnswer(String answer){
+        this.answer = answer;
+    }
 }
