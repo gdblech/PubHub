@@ -7,7 +7,7 @@
     tools:context=".RoundListActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/roundList"
+        android:id="@+id/questionList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addRoundButton"
+        android:id="@+id/addQuestionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

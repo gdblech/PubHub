@@ -11,14 +11,21 @@
         android:id="@+id/roundListTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="8" />
 
     <ImageButton
-        android:id="@+id/editRoundButton"
+        android:id="@+id/editButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         app:srcCompat="@drawable/ic_baseline_edit_24px" />
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/ic_baseline_delete_24px" />
 </LinearLayout>

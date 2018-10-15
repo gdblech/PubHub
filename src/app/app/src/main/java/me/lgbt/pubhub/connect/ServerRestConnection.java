@@ -1,4 +1,4 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.connect;
 
 import android.graphics.Bitmap;
 import android.util.Base64OutputStream;

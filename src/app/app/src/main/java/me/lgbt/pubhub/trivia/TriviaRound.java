@@ -1,6 +1,5 @@
-package me.lgbt.pubhub.Trivia;
+package me.lgbt.pubhub.trivia;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
