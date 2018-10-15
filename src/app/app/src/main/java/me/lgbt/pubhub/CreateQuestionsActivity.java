@@ -10,9 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-
 import me.lgbt.pubhub.connect.IntentKeys;
-
 import me.lgbt.pubhub.trivia.TriviaGame;
 import me.lgbt.pubhub.trivia.TriviaQuestion;
 import me.lgbt.pubhub.trivia.TriviaRound;
@@ -61,7 +59,7 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         finish();
     }
 
-    public void  unPack(){
+    public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
@@ -71,11 +69,11 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    public void questionSetUp(){
-        if (currentQuestion == null){
+    public void questionSetUp() {
+        if (currentQuestion == null) {
             currentQuestion = new TriviaQuestion();
             picture.setImageResource(R.drawable.add_image_icon);
-        }else{
+        } else {
             title.setText(currentQuestion.getTitle());
             text.setText(currentQuestion.getText());
             picture.setImageURI(currentQuestion.getPicture());
@@ -84,7 +82,7 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.questionDoneButton:
                 currentQuestion.setPicture(pictureUri);
                 currentQuestion.setTitle(title.getText().toString());

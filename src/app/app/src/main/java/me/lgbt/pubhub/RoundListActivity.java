@@ -26,6 +26,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_round_list);
         FloatingActionButton addRoundButton = findViewById(R.id.addRoundButton);
+        FloatingActionButton doneRoundButton = findViewById(R.id.roundListDoneButton);
         roundList = findViewById(R.id.roundList);
 
         unPack();
@@ -37,17 +38,34 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         addRoundButton.setOnClickListener(this);
     }
 
+    public void doneMessage(View view) {
+        Intent doneActivity = new Intent(this, TriviaGameListActivity.class);
+        Bundle extras = new Bundle();
+
+        currentGame.trimQuestion();
+        extras.putParcelable(IntentKeys.GAME, currentGame);
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putString(IntentKeys.GOOGLE, googleToken);
+        doneActivity.putExtras(extras);
+
+        startActivity(doneActivity);
+        finish();
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addRoundButton:
                 sendMessage(view);
                 break;
+            case R.id.roundListDoneButton:
+                doneMessage(view);
+                break;
         }
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this, RoundCreationActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, RoundCreationActivity.class); //todo add gameDone Activity
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putString(IntentKeys.GOOGLE, googleToken);

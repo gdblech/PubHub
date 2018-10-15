@@ -54,10 +54,10 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
 
     void setUpGame() {
 
-        if (currentGame == null){
+        if (currentGame == null) {
             currentGame = new TriviaGame();
             picture.setImageResource(R.drawable.add_image_icon);
-        }else{
+        } else {
             title.setText(currentGame.getTitle());
             gameText.setText(currentGame.getText());
             picture.setImageURI(currentGame.getPicture());
@@ -66,7 +66,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.gameCreationImage:
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -74,7 +74,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
                 break;
             case R.id.gameSlideDone:
-                if(currentGame == null){
+                if (currentGame == null) {
                     currentGame = new TriviaGame();
                 }
                 currentGame.setCreationMode(true);
@@ -87,7 +87,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this,  RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putString(IntentKeys.GOOGLE, googleToken);
@@ -97,7 +97,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
         finish();
     }
 
-    public void  unPack(){
+    public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);

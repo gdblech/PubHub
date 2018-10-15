@@ -29,7 +29,7 @@ public class TriviaGame extends Slide implements Parcelable {
         this.date = date;
     }
 
-    public TriviaGame(){
+    public TriviaGame() {
         super();
         ID = 0;
         host = "";
@@ -42,7 +42,7 @@ public class TriviaGame extends Slide implements Parcelable {
         host = in.readString();
         date = in.readLong();
         rounds = in.createTypedArrayList(TriviaRound.CREATOR);
-        creationMode =  in.readByte() != 0;
+        creationMode = in.readByte() != 0;
     }
 
     @Override
@@ -94,19 +94,17 @@ public class TriviaGame extends Slide implements Parcelable {
 
     public boolean addRound(TriviaRound round) {
         if (rounds != null) {
-            rounds.add(round);
-            return true;
+            return rounds.add(round);
         } else {
             return false;
         }
     }
 
-    public boolean removeRound(int roundNumber) {
+    public TriviaRound removeRound(int roundNumber) {
         if (rounds != null) {
-            rounds.remove(roundNumber);
-            return true;
+            return rounds.remove(roundNumber);
         } else {
-            return false;
+            return null;
         }
 
     }
@@ -126,7 +124,19 @@ public class TriviaGame extends Slide implements Parcelable {
         return creationMode;
     }
 
-    public int getNumberOfRounds(){
-        return rounds.size();
+    public int getTotalCount() {
+        int count = 1;
+
+        for (TriviaRound r : rounds) {
+            count += r.getNumberOfQuestion() + 1;
+        }
+
+        return count;
+    }
+
+    public void trimQuestion() {
+        if (rounds != null) {
+            rounds.trimToSize();
+        }
     }
 }

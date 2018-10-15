@@ -14,7 +14,7 @@ import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.trivia.TriviaGame;
 import me.lgbt.pubhub.trivia.TriviaRound;
 
-public class RoundCreationActivity extends AppCompatActivity implements View.OnClickListener{
+public class RoundCreationActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int PICK_IMAGE = 125;
     private String phbToken;
@@ -42,11 +42,11 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         doneButton.setOnClickListener(this);
     }
 
-    void roundSetUp(){
-        if (currentRound == null){
+    void roundSetUp() {
+        if (currentRound == null) {
             currentRound = new TriviaRound();
             picture.setImageResource(R.drawable.add_image_icon);
-        }else{
+        } else {
             title.setText(currentRound.getTitle());
             text.setText(currentRound.getText());
             picture.setImageURI(currentRound.getPicture());
@@ -64,7 +64,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.roundDoneButton:
                 currentRound.setPicture(pictureUri);
                 currentRound.setTitle(title.getText().toString());
@@ -82,7 +82,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this,  QuestionListActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, QuestionListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -95,7 +95,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         finish();
     }
 
-    public void  unPack(){
+    public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);

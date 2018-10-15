@@ -1,9 +1,9 @@
 package me.lgbt.pubhub;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,20 +14,20 @@ import me.lgbt.pubhub.trivia.TriviaGame;
 import me.lgbt.pubhub.trivia.TriviaQuestion;
 import me.lgbt.pubhub.trivia.TriviaRound;
 
-public class QuestionListActivity extends AppCompatActivity implements View.OnClickListener{
+public class QuestionListActivity extends AppCompatActivity implements View.OnClickListener {
     private String phbToken;
     private String googleToken;
     private TriviaGame currentGame;
     private TriviaRound currentRound;
     private TriviaQuestion selectedQuestion;
-    private RecyclerView questionList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_list);
         FloatingActionButton addQuestion = findViewById(R.id.addQuestionButton);
-        questionList = findViewById(R.id.questionList);
+        FloatingActionButton doneQuestion = findViewById(R.id.quenstionListDoneButton);
+        RecyclerView questionList = findViewById(R.id.questionList);
 
         unPack();
 
@@ -36,17 +36,18 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         questionList.setLayoutManager(new LinearLayoutManager(this));
 
         addQuestion.setOnClickListener(this);
+        doneQuestion.setOnClickListener(this);
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this, CreateQuestionsActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, CreateQuestionsActivity.class);
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putString(IntentKeys.GOOGLE, googleToken);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
-        if(selectedQuestion != null){
+        if (selectedQuestion != null) {
             extras.putParcelable(IntentKeys.QUESTION, selectedQuestion);
         }
 
@@ -55,7 +56,22 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         finish();
     }
 
-    public void  unPack(){
+    public void doneMessage(View view) {
+        Intent doneActivity = new Intent(this, RoundListActivity.class);
+        Bundle extras = new Bundle();
+
+        currentRound.trimQuestions();
+        currentGame.addRound(currentRound);
+        extras.putParcelable(IntentKeys.GAME, currentGame);
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putString(IntentKeys.GOOGLE, googleToken);
+        doneActivity.putExtras(extras);
+
+        startActivity(doneActivity);
+        finish();
+    }
+
+    public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
@@ -67,9 +83,12 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.addQuestionButton:
                 sendMessage(view);
+                break;
+            case R.id.quenstionListDoneButton:
+                doneMessage(view);
                 break;
         }
     }

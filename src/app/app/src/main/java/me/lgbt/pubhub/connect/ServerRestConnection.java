@@ -1,5 +1,11 @@
 package me.lgbt.pubhub.connect;
 
+/**
+ * @author Geoffrey Blech
+ *  Set of methods for interacting with PubHub REST API, all methods need to be called off of the main thread,
+ *  It is suggested to do this with an AsyncTask.execute call.
+ */
+
 import android.graphics.Bitmap;
 import android.util.Base64OutputStream;
 import android.util.Log;
@@ -11,10 +17,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import me.lgbt.pubhub.trivia.TriviaGame;
+
 public class ServerRestConnection {
 
-    static final String TAG = "ServerRESTConnection";
+    private static final String TAG = "ServerRESTConnection";
 
+    /**
+     *
+     * @param url The url of the server
+     * @param googleToken Token received from google after login
+     * @return PubHub JWT for user identification
+     */
     public static String authentication(String url, String googleToken) {
         String phbToken = null;
         String url1 = url + "/api/auth";
@@ -27,7 +41,7 @@ public class ServerRestConnection {
             backend.setRequestMethod("GET");
             backend.connect();
 
-            //ger response
+            //get response from server
             if (backend.getResponseCode() == 200) {
                 BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
                 phbToken = response.readLine();
@@ -43,7 +57,13 @@ public class ServerRestConnection {
         return phbToken;
     }
 
-    public static String pushPicture(String url, Bitmap picture, String phbToken) {
+    /**
+     *
+     * @param url The url of the server
+     * @param picture  The Uri of the picture being uploaded
+     * @param phbToken The PubHub token
+     */
+    public static void pushPicture(String url, Bitmap picture, String phbToken) {
 
         try {
             //Set up http connection
@@ -53,7 +73,7 @@ public class ServerRestConnection {
             backend.setRequestProperty("Authorization", "Bearer " + phbToken);
             backend.setRequestMethod("PUT");
 
-            //convert picture into byte array for sending
+            //convert picture into base64 for sending
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             Base64OutputStream base = new Base64OutputStream(stream, 0);
             picture.compress(Bitmap.CompressFormat.PNG, 50, base);
@@ -74,7 +94,17 @@ public class ServerRestConnection {
             Log.w(TAG, " pushPicture: error ", e);
         }
 
-        return null;
+    }
+
+    /**
+     *
+     * @param url The url of the server
+     * @param game The game being sent to the server
+     * @param phbToken The PubHub token
+     */
+    public static void pushTriviaGame(String url, TriviaGame game, String phbToken){
     }
 
 }
+
+
