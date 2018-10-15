@@ -20,14 +20,15 @@
 
     <EditText
         android:id="@+id/gameSlideText"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="42dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="Enter Game Text"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gameSlideDone"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -47,8 +48,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_done_24px" />
