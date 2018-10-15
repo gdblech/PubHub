@@ -8,11 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import me.lgbt.pubhub.Trivia.RoundAdapter;
-import me.lgbt.pubhub.Trivia.TriviaGame;
-import me.lgbt.pubhub.Trivia.TriviaRound;
+import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.trivia.RoundAdapter;
+import me.lgbt.pubhub.trivia.TriviaGame;
+import me.lgbt.pubhub.trivia.TriviaRound;
 
-public class RoundListActivity extends AppCompatActivity implements View.OnClickListener{
+public class RoundListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String phbToken;
     private TriviaGame currentGame;
@@ -38,7 +39,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.addRoundButton:
                 sendMessage(view);
                 break;
@@ -46,12 +47,12 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this,  RoundCreationActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, RoundCreationActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putString(IntentKeys.GOOGLE, googleToken);
         extras.putParcelable(IntentKeys.GAME, currentGame);
-        if(selectedRound != null){
+        if (selectedRound != null) {
             extras.putParcelable(IntentKeys.ROUND, selectedRound);
         }
         nextActivity.putExtras(extras);
@@ -59,7 +60,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         finish();
     }
 
-    public void  unPack(){
+    public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);

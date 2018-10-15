@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.Trivia;
+package me.lgbt.pubhub.trivia;
 
 import android.net.Uri;
 import android.os.Parcel;

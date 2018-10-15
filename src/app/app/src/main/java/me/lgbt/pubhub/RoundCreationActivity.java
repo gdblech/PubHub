@@ -10,8 +10,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import me.lgbt.pubhub.Trivia.TriviaGame;
-import me.lgbt.pubhub.Trivia.TriviaRound;
+import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.trivia.TriviaGame;
+import me.lgbt.pubhub.trivia.TriviaRound;
 
 public class RoundCreationActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -22,7 +23,6 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
     private EditText title;
     private EditText text;
     private ImageView picture;
-    private FloatingActionButton doneButton;
     private TriviaRound currentRound;
     private TriviaGame currentGame;
 
@@ -33,7 +33,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         title = findViewById(R.id.roundTitle);
         text = findViewById(R.id.roundText);
         picture = findViewById(R.id.roundCreationImage);
-        doneButton = findViewById(R.id.roundDoneButton);
+        FloatingActionButton doneButton = findViewById(R.id.roundDoneButton);
 
         unPack();
         roundSetUp();
@@ -69,6 +69,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
                 currentRound.setPicture(pictureUri);
                 currentRound.setTitle(title.getText().toString());
                 currentRound.setText(text.getText().toString());
+                currentRound.setCreationMode(true);
                 sendMessage(view);
                 break;
             case R.id.roundCreationImage:
@@ -78,11 +79,10 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
                 break;
         }
-
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this,  CreateQuestionsActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this,  QuestionListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);

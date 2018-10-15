@@ -34,7 +34,8 @@
             android:name=".GameSlideCreationActivity"
             android:parentActivityName=".TriviaGameListActivity" />
         <activity android:name=".RoundListActivity" />
-        <activity android:name=".RoundCreationActivity"></activity>
+        <activity android:name=".RoundCreationActivity" />
+        <activity android:name=".QuestionListActivity"></activity>
     </application>
 
 </manifest>
