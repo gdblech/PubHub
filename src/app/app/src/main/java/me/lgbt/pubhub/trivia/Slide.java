@@ -1,24 +1,42 @@
 package me.lgbt.pubhub.trivia;
 
+/**
+ * @author Geoffrey Blech
+ * Base clase for a game of trivia.
+ */
+
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+
 public class Slide implements Parcelable {
+
+    public static final Parcelable.Creator<Slide> CREATOR = new Parcelable.Creator<Slide>() {
+        public Slide createFromParcel(Parcel in) {
+            return new Slide(in);
+        }
+
+        public Slide[] newArray(int size) {
+            return new Slide[size];
+        }
+    };
     private String title;
     private String text;
     private Uri picture;
 
-    Slide(){
-        title = null;
-        text = null;
-        picture = null;
-    }
+    Slide() {}
 
-    Slide(String title, String text, Uri picture){
+    Slide(String title, String text, Uri picture) {
         this.title = title;
         this.text = text;
         this.picture = picture;
+    }
+
+    Slide(Parcel in) {
+        title = in.readString();
+        text = in.readString();
+        picture = in.readTypedObject(Uri.CREATOR);
     }
 
     @Override
@@ -26,26 +44,10 @@ public class Slide implements Parcelable {
         return 0;
     }
 
-    public void writeToParcel(Parcel out, int flags){
+    public void writeToParcel(Parcel out, int flags) {
         out.writeString(title);
         out.writeString(text);
         out.writeTypedObject(picture, flags);
-        }
-
-    public static final Parcelable.Creator<Slide> CREATOR = new Parcelable.Creator<Slide>() {
-        public Slide createFromParcel(Parcel in) {
-            return new Slide(in);
-        }
-
-        public Slide[] newArray(int size){
-            return new Slide[size];
-        }
-    };
-
-    Slide(Parcel in){
-        title = in.readString();
-        text = in.readString();
-        picture = in.readTypedObject(Uri.CREATOR);
     }
 
     public String getTitle() {
@@ -64,12 +66,12 @@ public class Slide implements Parcelable {
         this.text = question;
     }
 
-    public void setPicture(Uri picture) {
-        this.picture = picture;
-    }
-
     public Uri getPicture() {
         return picture;
+    }
+
+    public void setPicture(Uri picture) {
+        this.picture = picture;
     }
 
 }

@@ -47,7 +47,7 @@ public class TriviaGameListActivity extends AppCompatActivity {
         finish();
     }
 
-    public void  unPack(){
+    public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);

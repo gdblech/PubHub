@@ -17,26 +17,13 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> 
 
     private ArrayList<TriviaRound> roundList;
 
-    public RoundAdapter(ArrayList<TriviaRound> roundList){
+    public RoundAdapter(ArrayList<TriviaRound> roundList) {
         this.roundList = roundList;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView title;
-        public ImageButton editButton;
-        public ImageButton deleteButton;
-
-        public ViewHolder(View itemView){
-            super(itemView);
-            title = itemView.findViewById(R.id.roundListTitle);
-            editButton = itemView.findViewById(R.id.editButton);
-            deleteButton = itemView.findViewById(R.id.deleteButton);
-        }
     }
 
     @NonNull
     @Override
-    public RoundAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+    public RoundAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -46,7 +33,7 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RoundAdapter.ViewHolder viewHolder, int position){
+    public void onBindViewHolder(@NonNull RoundAdapter.ViewHolder viewHolder, int position) {
         TriviaRound round = roundList.get(position);
 
         TextView textView = viewHolder.title;
@@ -59,5 +46,18 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return roundList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView title;
+        public ImageButton editButton;
+        public ImageButton deleteButton;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.roundListTitle);
+            editButton = itemView.findViewById(R.id.editButton);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
+        }
     }
 }
