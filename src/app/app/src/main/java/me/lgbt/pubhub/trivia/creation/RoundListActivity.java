@@ -37,6 +37,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         roundList.setLayoutManager(new LinearLayoutManager(this));
 
         addRoundButton.setOnClickListener(this);
+        doneRoundButton.setOnClickListener(this);
     }
 
     public void doneMessage(View view) {
