@@ -1,4 +1,4 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.trivia.creation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.RoundAdapter;
-import me.lgbt.pubhub.trivia.TriviaGame;
-import me.lgbt.pubhub.trivia.TriviaRound;
+import me.lgbt.pubhub.trivia.utils.RoundAdapter;
+import me.lgbt.pubhub.trivia.utils.TriviaGame;
+import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class RoundListActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,7 +40,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void doneMessage(View view) {
-        Intent doneActivity = new Intent(this, TriviaGameListActivity.class);
+        Intent doneActivity = new Intent(this, GameFinishActivity.class);
         Bundle extras = new Bundle();
 
         currentGame.trimQuestion();
@@ -65,7 +66,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this, RoundCreationActivity.class); //todo add gameDone Activity
+        Intent nextActivity = new Intent(this, RoundCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putString(IntentKeys.GOOGLE, googleToken);

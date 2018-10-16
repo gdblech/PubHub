@@ -1,4 +1,4 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.trivia.creation;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -10,10 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.TriviaGame;
-import me.lgbt.pubhub.trivia.TriviaQuestion;
-import me.lgbt.pubhub.trivia.TriviaRound;
+import me.lgbt.pubhub.trivia.utils.TriviaGame;
+import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
+import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class CreateQuestionsActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int PICK_IMAGE = 125;

@@ -1,8 +1,10 @@
 package me.lgbt.pubhub.connect;
 
 /**
- *  Geoffrey Blech, 10/2018
+ *  @author Geoffrey Blech
  *  List of Keys for use with intents and bundles when passing information between activities and services.
+ *
+ * @since 10/13/2018
  */
 public class IntentKeys {
     public static final String GAME = "TRIVIA_GAME";
