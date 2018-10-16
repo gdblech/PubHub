@@ -1,4 +1,4 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.trivia.creation;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -10,37 +10,48 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.TriviaGame;
+import me.lgbt.pubhub.trivia.utils.TriviaGame;
+import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
-public class GameSlideCreationActivity extends AppCompatActivity implements View.OnClickListener {
+public class RoundCreationActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int PICK_IMAGE = 125;
     private String phbToken;
-    private Uri pictureUri;
-    private TriviaGame currentGame;
-    private EditText title;
-    private EditText gameText;
-    private ImageView picture;
     private String googleToken;
+    private Uri pictureUri;
+    private EditText title;
+    private EditText text;
+    private ImageView picture;
+    private TriviaRound currentRound;
+    private TriviaGame currentGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_game_slide_creation);
-
-        picture = findViewById(R.id.gameCreationImage);
-        FloatingActionButton doneButton = findViewById(R.id.gameSlideDone);
-        title = findViewById(R.id.gameTitle);
-        gameText = findViewById(R.id.gameSlideText);
-        picture.setImageResource(R.drawable.add_image_icon);
+        setContentView(R.layout.activity_round_creation);
+        title = findViewById(R.id.roundTitle);
+        text = findViewById(R.id.roundText);
+        picture = findViewById(R.id.roundCreationImage);
+        FloatingActionButton doneButton = findViewById(R.id.roundDoneButton);
 
         unPack();
-        setUpGame();
+        roundSetUp();
 
         picture.setOnClickListener(this);
         doneButton.setOnClickListener(this);
+    }
+
+    void roundSetUp() {
+        if (currentRound == null) {
+            currentRound = new TriviaRound();
+            picture.setImageResource(R.drawable.add_image_icon);
+        } else {
+            title.setText(currentRound.getTitle());
+            text.setText(currentRound.getText());
+            picture.setImageURI(currentRound.getPicture());
+        }
     }
 
     @Override
@@ -52,46 +63,34 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
         }
     }
 
-    void setUpGame() {
-
-        if (currentGame == null) {
-            currentGame = new TriviaGame();
-            picture.setImageResource(R.drawable.add_image_icon);
-        } else {
-            title.setText(currentGame.getTitle());
-            gameText.setText(currentGame.getText());
-            picture.setImageURI(currentGame.getPicture());
-        }
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.gameCreationImage:
+            case R.id.roundDoneButton:
+                currentRound.setPicture(pictureUri);
+                currentRound.setTitle(title.getText().toString());
+                currentRound.setText(text.getText().toString());
+                currentRound.setCreationMode(true);
+                sendMessage(view);
+                break;
+            case R.id.roundCreationImage:
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
                 break;
-            case R.id.gameSlideDone:
-                if (currentGame == null) {
-                    currentGame = new TriviaGame();
-                }
-                currentGame.setCreationMode(true);
-                currentGame.setTitle(title.getText().toString());
-                currentGame.setText(gameText.getText().toString());
-                currentGame.setPicture(pictureUri);
-                sendMessage(view);
-                break;
         }
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, QuestionListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
+
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putString(IntentKeys.GOOGLE, googleToken);
         extras.putParcelable(IntentKeys.GAME, currentGame);
+        extras.putParcelable(IntentKeys.ROUND, currentRound);
+
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();
@@ -103,6 +102,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
             phbToken = data.getString(IntentKeys.PUBHUB);
             googleToken = data.getString(IntentKeys.GOOGLE);
             currentGame = data.getParcelable(IntentKeys.GAME);
+            currentRound = data.getParcelable(IntentKeys.ROUND);
         }
     }
 }

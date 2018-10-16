@@ -1,4 +1,4 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.trivia.creation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.QuestionAdapter;
-import me.lgbt.pubhub.trivia.TriviaGame;
-import me.lgbt.pubhub.trivia.TriviaQuestion;
-import me.lgbt.pubhub.trivia.TriviaRound;
+import me.lgbt.pubhub.trivia.utils.QuestionAdapter;
+import me.lgbt.pubhub.trivia.utils.TriviaGame;
+import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
+import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class QuestionListActivity extends AppCompatActivity implements View.OnClickListener {
     private String phbToken;
@@ -27,12 +28,13 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_question_list);
         FloatingActionButton addQuestion = findViewById(R.id.addQuestionButton);
         FloatingActionButton doneQuestion = findViewById(R.id.quenstionListDoneButton);
-        RecyclerView questionList = findViewById(R.id.questionList);
+        final RecyclerView questionList = findViewById(R.id.questionList);
 
         unPack();
 
         QuestionAdapter adapter = new QuestionAdapter(currentRound.getQuestions());
         questionList.setAdapter(adapter);
+
         questionList.setLayoutManager(new LinearLayoutManager(this));
 
         addQuestion.setOnClickListener(this);

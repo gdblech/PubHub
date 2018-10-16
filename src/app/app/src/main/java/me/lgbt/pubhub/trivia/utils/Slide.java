@@ -1,8 +1,10 @@
-package me.lgbt.pubhub.trivia;
+package me.lgbt.pubhub.trivia.utils;
 
 /**
  * @author Geoffrey Blech
  * Base clase for a game of trivia.
+ *
+ * @since 10/15/2018
  */
 
 import android.net.Uri;
@@ -11,7 +13,6 @@ import android.os.Parcelable;
 
 
 public class Slide implements Parcelable {
-
     public static final Parcelable.Creator<Slide> CREATOR = new Parcelable.Creator<Slide>() {
         public Slide createFromParcel(Parcel in) {
             return new Slide(in);
@@ -21,6 +22,7 @@ public class Slide implements Parcelable {
             return new Slide[size];
         }
     };
+
     private String title;
     private String text;
     private Uri picture;
@@ -73,5 +75,4 @@ public class Slide implements Parcelable {
     public void setPicture(Uri picture) {
         this.picture = picture;
     }
-
 }
