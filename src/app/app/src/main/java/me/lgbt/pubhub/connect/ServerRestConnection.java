@@ -29,7 +29,7 @@ public class ServerRestConnection {
     private static final String TAG = "ServerRESTConnection";
 
     /**
-     *
+     * Authenticates with the backend
      * @param url The url of the server
      * @param googleToken Token received from google after login
      * @return PubHub JWT for user identification
@@ -64,7 +64,7 @@ public class ServerRestConnection {
     }
 
     /**
-     *
+     * Sends a picture to the server
      * @param url The url of the server
      * @param pictureUri  The Uri of the picture being uploaded
      * @param phbToken The PubHub token
@@ -109,7 +109,7 @@ public class ServerRestConnection {
     }
 
     /**
-     *
+     *  Pushes a trivia game JSON to the server
      * @param url The url of the server
      * @param gameJson The json of the game being sent to the server
      * @param phbToken The PubHub token
