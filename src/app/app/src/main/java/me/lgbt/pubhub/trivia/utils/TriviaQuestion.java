@@ -41,11 +41,11 @@ public class TriviaQuestion extends Slide implements Parcelable {
         out.writeString(answer);
     }
 
-    public String getAnswer(){
-        return  answer;
+    public String getAnswer() {
+        return answer;
     }
 
-    public void setAnswer(String answer){
+    public void setAnswer(String answer) {
         this.answer = answer;
     }
 }

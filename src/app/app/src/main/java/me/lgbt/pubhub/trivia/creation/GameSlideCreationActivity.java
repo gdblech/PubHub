@@ -23,7 +23,6 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
     private EditText title;
     private EditText gameText;
     private ImageView picture;
-    private String googleToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,6 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
         Intent nextActivity = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
@@ -102,7 +100,6 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
             currentGame = data.getParcelable(IntentKeys.GAME);
         }
     }

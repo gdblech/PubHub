@@ -19,7 +19,6 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
 
     public static final int PICK_IMAGE = 125;
     private String phbToken;
-    private String googleToken;
     private Uri pictureUri;
     private EditText title;
     private EditText text;
@@ -87,7 +86,6 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
 
@@ -100,7 +98,6 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
         }

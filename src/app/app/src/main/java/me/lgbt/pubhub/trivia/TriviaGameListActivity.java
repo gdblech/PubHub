@@ -11,8 +11,8 @@ import android.view.View;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
 
 public class TriviaGameListActivity extends AppCompatActivity {
@@ -43,15 +43,15 @@ public class TriviaGameListActivity extends AppCompatActivity {
         });
     }
 
-    public void fetchGameList(){
+    public void fetchGameList() {
         listOfGames = new ArrayList<>();
         listOfGames.add("Test Game Please Ignore");
     }
+
     public void sendMessage(View view) {
         Intent nextActivity = new Intent(this, GameSlideCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();

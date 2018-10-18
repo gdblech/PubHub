@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
 
-public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>{ 
+public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
     private ArrayList<String> gameList;
 
     public GameAdapter(ArrayList<String> gameList) {
@@ -41,12 +41,13 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>{
         textView.setText(game);
         //TODO add imageButton touch listener
     }
+
     @Override
     public int getItemCount() {
         return gameList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title;
         public ImageButton editButton;
         public ImageButton deleteButton;

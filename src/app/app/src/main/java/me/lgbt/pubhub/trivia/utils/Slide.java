@@ -3,7 +3,6 @@ package me.lgbt.pubhub.trivia.utils;
 /**
  * @author Geoffrey Blech
  * Base clase for a game of trivia.
- *
  * @since 10/15/2018
  */
 
@@ -27,7 +26,8 @@ public class Slide implements Parcelable {
     private String text;
     private Uri picture;
 
-    Slide() {}
+    Slide() {
+    }
 
     Slide(String title, String text, Uri picture) {
         this.title = title;
