@@ -19,7 +19,6 @@ import me.lgbt.pubhub.trivia.utils.TriviaRound;
 public class CreateQuestionsActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int PICK_IMAGE = 125;
     private String phbToken;
-    private String googleToken;
     private TriviaGame currentGame;
     private TriviaRound currentRound;
     private TriviaQuestion currentQuestion;
@@ -52,7 +51,6 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
 
@@ -65,7 +63,6 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
         }

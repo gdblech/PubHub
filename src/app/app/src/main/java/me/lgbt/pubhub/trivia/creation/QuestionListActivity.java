@@ -17,7 +17,6 @@ import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class QuestionListActivity extends AppCompatActivity implements View.OnClickListener {
     private String phbToken;
-    private String googleToken;
     private TriviaGame currentGame;
     private TriviaRound currentRound;
     private TriviaQuestion selectedQuestion;
@@ -46,7 +45,6 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         if (selectedQuestion != null) {
@@ -66,7 +64,6 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         currentGame.addRound(currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         doneActivity.putExtras(extras);
 
         startActivity(doneActivity);
@@ -77,7 +74,6 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
         }

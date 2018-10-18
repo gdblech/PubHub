@@ -1,9 +1,8 @@
 package me.lgbt.pubhub.connect;
 
 /**
- *  @author Geoffrey Blech
- *  List of Keys for use with intents and bundles when passing information between activities and services.
- *
+ * @author Geoffrey Blech
+ * List of Keys for use with intents and bundles when passing information between activities and services.
  * @since 10/13/2018
  */
 public class IntentKeys {

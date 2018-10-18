@@ -2,16 +2,14 @@ package me.lgbt.pubhub.connect;
 
 /**
  * @author Geoffrey Blech
- *  Set of methods for interacting with PubHub REST API, all methods need to be called off of the main thread,
- *  It is suggested to do this with an AsyncTask.execute call.
- *
+ * Set of methods for interacting with PubHub REST API, all methods need to be called off of the main thread,
+ * It is suggested to do this with an AsyncTask.execute call.
  * @since 10/1/2018
  */
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Base64OutputStream;
 import android.util.Log;
 
@@ -21,8 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import me.lgbt.pubhub.trivia.utils.TriviaGame;
 
 public class ServerRestConnection {
 
@@ -114,7 +110,7 @@ public class ServerRestConnection {
      * @param gameJson The json of the game being sent to the server
      * @param phbToken The PubHub token
      */
-    public static void pushTriviaGame(String url, String gameJson, String phbToken){
+    public static void pushTriviaGame(String url, String gameJson, String phbToken) {
         String url1 = url + "/api/trivia";
 
         try {
