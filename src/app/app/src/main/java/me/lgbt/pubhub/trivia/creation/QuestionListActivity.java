@@ -1,4 +1,4 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.trivia.creation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,15 +8,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.QuestionAdapter;
-import me.lgbt.pubhub.trivia.TriviaGame;
-import me.lgbt.pubhub.trivia.TriviaQuestion;
-import me.lgbt.pubhub.trivia.TriviaRound;
+import me.lgbt.pubhub.trivia.utils.QuestionAdapter;
+import me.lgbt.pubhub.trivia.utils.TriviaGame;
+import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
+import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class QuestionListActivity extends AppCompatActivity implements View.OnClickListener {
     private String phbToken;
-    private String googleToken;
     private TriviaGame currentGame;
     private TriviaRound currentRound;
     private TriviaQuestion selectedQuestion;
@@ -27,12 +27,13 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_question_list);
         FloatingActionButton addQuestion = findViewById(R.id.addQuestionButton);
         FloatingActionButton doneQuestion = findViewById(R.id.quenstionListDoneButton);
-        RecyclerView questionList = findViewById(R.id.questionList);
+        final RecyclerView questionList = findViewById(R.id.questionList);
 
         unPack();
 
         QuestionAdapter adapter = new QuestionAdapter(currentRound.getQuestions());
         questionList.setAdapter(adapter);
+
         questionList.setLayoutManager(new LinearLayoutManager(this));
 
         addQuestion.setOnClickListener(this);
@@ -44,7 +45,6 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         if (selectedQuestion != null) {
@@ -64,7 +64,6 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         currentGame.addRound(currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         doneActivity.putExtras(extras);
 
         startActivity(doneActivity);
@@ -75,7 +74,6 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
         }
