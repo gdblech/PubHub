@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.trivia;
+package me.lgbt.pubhub.trivia.utils;
 
 import android.net.Uri;
 import android.os.Parcel;
@@ -39,5 +39,13 @@ public class TriviaQuestion extends Slide implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         super.writeToParcel(out, flags);
         out.writeString(answer);
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

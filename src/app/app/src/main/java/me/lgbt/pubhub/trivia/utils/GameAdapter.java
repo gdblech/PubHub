@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.trivia;
+package me.lgbt.pubhub.trivia.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,42 +13,41 @@ import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
 
-public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> {
+public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
+    private ArrayList<String> gameList;
 
-    private ArrayList<TriviaRound> roundList;
-
-    public RoundAdapter(ArrayList<TriviaRound> roundList) {
-        this.roundList = roundList;
+    public GameAdapter(ArrayList<String> gameList) {
+        this.gameList = gameList;
     }
 
     @NonNull
     @Override
-    public RoundAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GameAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View roundView = inflater.inflate(R.layout.recycler_object, parent, false);
+        View gameView = inflater.inflate(R.layout.recycler_object, parent, false);
 
-        return new ViewHolder(roundView);
+        return new GameAdapter.ViewHolder(gameView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RoundAdapter.ViewHolder viewHolder, int position) {
-        TriviaRound round = roundList.get(position);
+    public void onBindViewHolder(@NonNull GameAdapter.ViewHolder viewHolder, int position) {
+        String game = gameList.get(position);
 
         TextView textView = viewHolder.title;
         ImageButton imageButton = viewHolder.editButton;
 
-        textView.setText(round.getTitle());
+        textView.setText(game);
         //TODO add imageButton touch listener
     }
 
     @Override
     public int getItemCount() {
-        return roundList.size();
+        return gameList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title;
         public ImageButton editButton;
         public ImageButton deleteButton;
@@ -58,6 +57,13 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> 
             title = itemView.findViewById(R.id.roundListTitle);
             editButton = itemView.findViewById(R.id.editButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+            editButton.setOnClickListener(this);
+            deleteButton.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
 }

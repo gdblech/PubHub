@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.Task;
 
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.ServerRestConnection;
+import me.lgbt.pubhub.trivia.TriviaGameListActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -128,11 +129,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void sendMessage(View view) {
-//        Intent intent = new Intent(this, TriviaGameListActivity.class); // add the activity class you're going to, also uncomment duh.
         Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();

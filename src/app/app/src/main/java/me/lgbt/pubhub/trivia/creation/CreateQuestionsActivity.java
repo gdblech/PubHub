@@ -1,4 +1,4 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.trivia.creation;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -10,21 +10,22 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.TriviaGame;
-import me.lgbt.pubhub.trivia.TriviaQuestion;
-import me.lgbt.pubhub.trivia.TriviaRound;
+import me.lgbt.pubhub.trivia.utils.TriviaGame;
+import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
+import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class CreateQuestionsActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int PICK_IMAGE = 125;
     private String phbToken;
-    private String googleToken;
     private TriviaGame currentGame;
     private TriviaRound currentRound;
     private TriviaQuestion currentQuestion;
     private Uri pictureUri;
     private EditText title;
     private EditText text;
+    private EditText answer;
     private ImageView picture;
     private FloatingActionButton doneButton;
 
@@ -34,6 +35,7 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_create_questions);
         title = findViewById(R.id.questionTitle);
         text = findViewById(R.id.questionText);
+        answer = findViewById(R.id.answerText);
         picture = findViewById(R.id.questionCreationImage);
         doneButton = findViewById(R.id.questionDoneButton);
 
@@ -49,8 +51,6 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
-        currentRound.addQuestion(currentQuestion);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
 
@@ -63,7 +63,6 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
         }
@@ -77,6 +76,7 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
             title.setText(currentQuestion.getTitle());
             text.setText(currentQuestion.getText());
             picture.setImageURI(currentQuestion.getPicture());
+            answer.setText(currentQuestion.getAnswer());
         }
     }
 
@@ -87,6 +87,8 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
                 currentQuestion.setPicture(pictureUri);
                 currentQuestion.setTitle(title.getText().toString());
                 currentQuestion.setText(text.getText().toString());
+                currentQuestion.setAnswer(answer.getText().toString());
+                currentRound.addQuestion(currentQuestion);
                 sendMessage(view);
                 break;
             case R.id.questionCreationImage:

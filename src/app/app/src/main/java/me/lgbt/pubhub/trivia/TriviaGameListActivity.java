@@ -1,20 +1,24 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.trivia;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
 
+import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
+import me.lgbt.pubhub.trivia.utils.GameAdapter;
 
 public class TriviaGameListActivity extends AppCompatActivity {
     private String phbToken;
     private String googleToken;
-    private ArrayList<String> listOfGames;
+    private ArrayList<String> listOfGames; //TODO needs to be populated
 
 
     @Override
@@ -25,9 +29,11 @@ public class TriviaGameListActivity extends AppCompatActivity {
         RecyclerView gameList = findViewById(R.id.gameList);
 
         unPack();
+        fetchGameList();
 
-
-        //TODO @Blair add list of games stuff.
+        GameAdapter adapter = new GameAdapter(listOfGames);
+        gameList.setAdapter(adapter);
+        gameList.setLayoutManager(new LinearLayoutManager(this));
 
         newGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,11 +43,15 @@ public class TriviaGameListActivity extends AppCompatActivity {
         });
     }
 
+    public void fetchGameList() {
+        listOfGames = new ArrayList<>();
+        listOfGames.add("Test Game Please Ignore");
+    }
+
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this, GameSlideCreationActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, GameSlideCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
-        extras.putString(IntentKeys.GOOGLE, googleToken);
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();
