@@ -1,15 +1,17 @@
 package me.lgbt.pubhub.Users;
 
+import android.net.Uri;
+
 public class User {
 
-    int userId;
-    String email;
-    String userName;
-    String roleName;
-    int authType;
-    String profilePicPath;
-    int teamId;
-    String teamName;
+    private int userId;
+    private String email;
+    private String userName;
+    private String roleName;
+    private int authType;
+    private Uri profilePicture;
+    private int teamId;
+    private String teamName;
 
     public User() {
         userId = 0;
@@ -17,18 +19,29 @@ public class User {
         userName = null;
         roleName = null;
         authType = 0;
-        profilePicPath = null;
+        profilePicture = null;
         teamId = 0;
         teamName = null;
     }
 
-    public User(int userId, String email, String userName, String roleName, int authType, String profilePicPath, int teamId, String teamName) {
+    public User(int userId, String email, String userName, String roleName, int authType, String profilePicturePath, int teamId, String teamName) {
         this.userId = userId;
         this.email = email;
         this.userName = userName;
         this.roleName = roleName;
         this.authType = authType;
-        this.profilePicPath = profilePicPath;
+        this.profilePicture = Uri.parse(profilePicturePath);
+        this.teamId = teamId;
+        this.teamName = teamName;
+    }
+
+    public User(int userId, String email, String userName, String roleName, int authType, Uri profilePicture, int teamId, String teamName) {
+        this.userId = userId;
+        this.email = email;
+        this.userName = userName;
+        this.roleName = roleName;
+        this.authType = authType;
+        this.profilePicture = profilePicture;
         this.teamId = teamId;
         this.teamName = teamName;
     }
@@ -89,11 +102,19 @@ public class User {
         this.authType = authType;
     }
 
-    public String getProfilePicPath() {
-        return profilePicPath;
+    public String getProfilePicturePath() {
+        return profilePicture.toString();
     }
 
-    public void setProfilePicPath(String profilePicPath) {
-        this.profilePicPath = profilePicPath;
+    public Uri getPrifilePicture(){
+        return profilePicture;
+    }
+
+    public void setProfilePicture(Uri profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicturePath) {
+        this.profilePicture = Uri.parse(profilePicturePath);
     }
 }
