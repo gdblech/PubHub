@@ -7,19 +7,19 @@
     tools:context=".trivia.creation.RoundCreationActivity">
 
     <EditText
-        android:id="@+id/questionTitle"
+        android:id="@+id/roundTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="@string/question_title"
+        android:hint="@string/round_title"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/questionCreationImage"
+        android:id="@+id/roundCreationImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -27,24 +27,24 @@
         android:adjustViewBounds="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/questionTitle"
+        app:layout_constraintTop_toBottomOf="@+id/roundTitle"
         tools:src="@tools:sample/backgrounds/scenic" />
 
     <EditText
-        android:id="@+id/questionText"
-        android:layout_width="match_parent"
+        android:id="@+id/roundText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
-        android:hint="@string/question_text"
+        android:hint="@string/round_text"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/answerText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/roundDoneButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/questionDoneButton"
+        android:id="@+id/roundDoneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
@@ -54,17 +54,4 @@
         android:src="@drawable/ic_baseline_done_24px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/answerText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:hint="@string/enter_answer"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/questionDoneButton"
-        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
