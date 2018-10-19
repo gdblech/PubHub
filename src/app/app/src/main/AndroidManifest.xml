@@ -28,7 +28,7 @@
             android:name=".CreateQuestionsActivity"
             android:label="@string/title_activity_create_questions"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ChatClient.ChatTabActivity"></activity>
+        <activity android:name=".WSClient.ChatTabActivity"></activity>
     </application>
 
 </manifest>

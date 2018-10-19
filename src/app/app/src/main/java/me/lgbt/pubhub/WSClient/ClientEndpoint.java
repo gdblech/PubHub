@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.ChatClient;
+package me.lgbt.pubhub.WSClient;
 
 import java.io.IOException;
 
@@ -23,6 +23,9 @@ public class ClientEndpoint {
     **/
     @OnMessage
     public void onMessage(Session session, String msg) {
+
+        // json parsing
+
         try {
             for (Session s : session.getOpenSessions()) {
                 if (s.isOpen())
@@ -36,8 +39,4 @@ public class ClientEndpoint {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {}
-
-
-
-
 }
