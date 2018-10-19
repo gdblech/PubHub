@@ -11,6 +11,15 @@ public class Teams {
         User[] players = new User[MAX_PLAYERS];
         int numPlayers = 0;
         String teamName;
+        int teamId;
+
+        public Team(String message, Throwable cause, User[] players, int numPlayers, String teamName, int identification) {
+            super(message, cause);
+            this.players = players;
+            this.numPlayers = numPlayers;
+            this.teamName = teamName;
+            this.teamId = identification;
+        }
 
         public Team(String teamName) {
             this.teamName = teamName;
@@ -51,6 +60,46 @@ public class Teams {
                 }
             }
             return -1; // player not found
+        }
+
+        public int getMAX_PLAYERS() {
+            return MAX_PLAYERS;
+        }
+
+        public void setMAX_PLAYERS(int MAX_PLAYERS) {
+            this.MAX_PLAYERS = MAX_PLAYERS;
+        }
+
+        public User[] getPlayers() {
+            return players;
+        }
+
+        public void setPlayers(User[] players) {
+            this.players = players;
+        }
+
+        public int getNumPlayers() {
+            return numPlayers;
+        }
+
+        public void setNumPlayers(int numPlayers) {
+            this.numPlayers = numPlayers;
+        }
+
+        public String getTeamName() {
+            return teamName;
+        }
+
+        public void setTeamName(String teamName) {
+            this.teamName = teamName;
+        }
+
+        public int getIdentification() {
+            return teamId;
+        }
+
+        public void setIdentification(int identification) {
+            this.teamId = identification;
         }
     }
 
