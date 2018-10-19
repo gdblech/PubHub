@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.Chat;
+package me.lgbt.pubhub.ChatClient;
 
 import com.google.gson.Gson;
 
