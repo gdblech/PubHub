@@ -30,6 +30,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.connect.ServerRestConnection;
+import me.lgbt.pubhub.trivia.TriviaGameListActivity;
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQ_CODE = 13374;
@@ -47,7 +51,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
         Button triviaCreationButton = findViewById(R.id.skip_to_current);
-       // triviaCreationButton.setOnClickListener(this);
+        // triviaCreationButton.setOnClickListener(this);
 
         //sign in variables
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -93,7 +97,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, REQ_CODE);
@@ -114,7 +117,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
         //TODO this is where we move to the next UI
-        System.out.println(phbToken);
     }
 
     private void authenticate() {
@@ -126,9 +128,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    public void sendMessage(View view){
-        Intent intent = new Intent(this, CreateQuestionsActivity.class); // add the activity class you're going to, also uncomment duh.
-        intent.putExtra("TOKEN", phbToken);
-        startActivity(intent);
+    public void sendMessage(View view) {
+        Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        nextActivity.putExtras(extras);
+        startActivity(nextActivity);
+        finish();
     }
 }
