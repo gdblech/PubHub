@@ -2,7 +2,7 @@ package me.lgbt.pubhub.trivia.creation;
 
 /**
  * @author Geoffrey Blech
- * Proccess a game of Trivia and sending it to the backend
+ * Proccess a game of trivia and sending it to the backend
  * @since 10/13/2018
  */
 

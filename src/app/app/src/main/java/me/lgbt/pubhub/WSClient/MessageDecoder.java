@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.WSClient;
+package me.lgbt.pubhub.wsclient;
 
 import com.google.gson.Gson;
 

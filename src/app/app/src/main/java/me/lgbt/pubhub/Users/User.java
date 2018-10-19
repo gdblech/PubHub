@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.Users;
+package me.lgbt.pubhub.users;
 
 import android.net.Uri;
 

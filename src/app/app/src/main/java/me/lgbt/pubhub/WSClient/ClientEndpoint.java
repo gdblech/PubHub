@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.WSClient;
+package me.lgbt.pubhub.wsclient;
 
 import java.io.IOException;
 
