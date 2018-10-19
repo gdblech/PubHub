@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.blairgentry.pubhub_java">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="me.lgbt.pubhub">
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".SignInActivity"
             android:label="@string/app_name"
@@ -19,8 +25,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SignOut"></activity>
+        <activity
+            android:name=".trivia.creation.CreateQuestionsActivity"
+            android:label="@string/title_activity_create_questions"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".trivia.TriviaGameListActivity" />
+        <activity
+            android:name=".trivia.creation.GameSlideCreationActivity"
+            android:parentActivityName=".trivia.TriviaGameListActivity" />
+        <activity android:name=".trivia.creation.RoundListActivity" />
+        <activity android:name=".trivia.creation.RoundCreationActivity" />
+        <activity android:name=".trivia.creation.QuestionListActivity" />
+        <activity android:name=".trivia.creation.GameFinishActivity"></activity>
     </application>
 
 </manifest>
