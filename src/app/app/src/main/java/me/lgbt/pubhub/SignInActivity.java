@@ -30,6 +30,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import me.lgbt.pubhub.WSClient.ChatTabActivity;
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQ_CODE = 13374;
