@@ -1,5 +1,11 @@
 package me.lgbt.pubhub.trivia.creation;
 
+/**
+ * @author Geoffrey Blech
+ * Activity for Creating Questions for games of Trivia
+ * @since 10/13/2018
+ */
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
