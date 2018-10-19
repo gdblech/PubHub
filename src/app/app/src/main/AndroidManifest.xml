@@ -37,7 +37,7 @@
         <activity android:name=".trivia.creation.RoundCreationActivity" />
         <activity android:name=".trivia.creation.QuestionListActivity" />
         <activity android:name=".trivia.creation.GameFinishActivity"></activity>
-        <activity android:name=".WSClient.ChatTabActivity"></activity>
+        <activity android:name=".wsclient.ChatTabActivity"></activity>
     </application>
 
 </manifest>

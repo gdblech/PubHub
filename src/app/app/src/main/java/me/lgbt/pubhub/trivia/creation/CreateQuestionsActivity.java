@@ -2,7 +2,7 @@ package me.lgbt.pubhub.trivia.creation;
 
 /**
  * @author Geoffrey Blech
- * Activity for Creating Questions for games of Trivia
+ * Activity for Creating Questions for games of trivia
  * @since 10/13/2018
  */
 

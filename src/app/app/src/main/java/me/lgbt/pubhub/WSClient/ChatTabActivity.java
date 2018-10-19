@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.WSClient;
+package me.lgbt.pubhub.wsclient;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
