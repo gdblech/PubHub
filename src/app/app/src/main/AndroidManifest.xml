@@ -13,31 +13,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
         <activity
             android:name=".SignInActivity"
             android:label="@string/app_name"
             android:theme="@style/AppPubHub">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".SignOut" />
-
         <activity
             android:name=".CreateQuestionsActivity"
             android:label="@string/title_activity_create_questions"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".Chat.ChatActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+        <activity android:name=".ChatClient.ChatTabActivity"></activity>
     </application>
 
 </manifest>

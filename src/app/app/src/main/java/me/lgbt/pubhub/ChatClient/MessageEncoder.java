@@ -1,10 +1,11 @@
-package me.lgbt.pubhub.Chat;
+package me.lgbt.pubhub.ChatClient;
 
 import com.google.gson.Gson;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
+import me.lgbt.pubhub.ChatClient.Message;
 
 public class MessageEncoder implements Encoder.Text<Message> {
     private static Gson gson = new Gson();
