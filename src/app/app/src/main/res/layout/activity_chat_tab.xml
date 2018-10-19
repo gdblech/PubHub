@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatClient.ChatTabActivity">
+    tools:context=".WSClient.ChatTabActivity">
 
     <!--//SOURCE: https://blog.sendbird.com/android-chat-tutorial-building-a-messaging-ui-->
 
