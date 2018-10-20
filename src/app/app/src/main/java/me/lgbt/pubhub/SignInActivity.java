@@ -11,7 +11,6 @@ package me.lgbt.pubhub;
  *
  */
 
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;

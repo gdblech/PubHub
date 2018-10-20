@@ -11,10 +11,15 @@ import me.lgbt.pubhub.R;
 
 public class ChatTabActivity extends AppCompatActivity {
 
+    String output;
+    TextView contentView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_tab);
+        contentView = (TextView)findViewById(R.id.text_message_body);
+        contentView.setText(output);
     }
 
     /* Displays a message received */
@@ -30,7 +35,7 @@ public class ChatTabActivity extends AppCompatActivity {
 
         void bind(Message message) {
             messageText.setText(message.getMessage());
-
         }
+
     }
 }
