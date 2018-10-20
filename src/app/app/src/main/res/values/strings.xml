@@ -21,4 +21,7 @@
     <string name="question_text">Question Text</string>
     <string name="enter_answer">Enter Answer</string>
     <string name="question_title">Question Title</string>
+    <string name="enter_game_name">Enter Game Name</string>
+    <string name="check_name">Check Name</string>
+    <string name="upload">Upload</string>
 </resources>

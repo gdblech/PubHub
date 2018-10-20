@@ -60,51 +60,6 @@ public class ServerRestConnection {
     }
 
     /**
-     * Sends a picture to the server
-     * @param url The url of the server
-     * @param pictureUri  The Uri of the picture being uploaded
-     * @param phbToken The PubHub token
-     */
-    public static String pushPicture(String url, Uri pictureUri, String phbToken) {
-
-        Bitmap picture = BitmapFactory.decodeFile(pictureUri.getPath());
-        String id = "";
-        try {
-            //Set up http connection
-            String url1 = url + "/api/trivia/picture"; //TODO add correct REST location
-            URL server = new URL(url1);
-            HttpURLConnection backend = (HttpURLConnection) server.openConnection();
-            backend.setRequestProperty("Authorization", "Bearer " + phbToken);
-            backend.setRequestMethod("PUT");
-
-            //convert picture into base64 for sending
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            Base64OutputStream base = new Base64OutputStream(stream, 0);
-            picture.compress(Bitmap.CompressFormat.PNG, 50, base);
-            byte[] picBytes = stream.toByteArray();
-            stream.close();
-
-
-            backend.setDoOutput(true);
-            backend.getOutputStream().write(picBytes);
-
-            backend.connect();
-            //get response from stream
-            if (backend.getResponseCode() != 200) {
-                throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
-            }
-            BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
-            id = response.readLine();
-            response.close();
-            backend.disconnect();
-
-        } catch (IOException e) {
-            Log.w(TAG, " pushPicture: error ", e);
-        }
-        return id;
-    }
-
-    /**
      *  Pushes a trivia game JSON to the server
      * @param url The url of the server
      * @param gameJson The json of the game being sent to the server
