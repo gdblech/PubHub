@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.wsclient;
+//package me.lgbt.pubhub.wsclient;
 
 import android.support.v7.widget.RecyclerView;
 
