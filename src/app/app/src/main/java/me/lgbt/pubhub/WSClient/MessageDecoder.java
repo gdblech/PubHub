@@ -10,8 +10,8 @@ public class MessageDecoder implements Decoder.Text<Message> {
     private static Gson gson = new Gson();
 
     @Override
-    public Message decode(String s) throws DecodeException {
-        return gson.fromJson(s, Message.class);
+    public Message decode(String payload) throws DecodeException {
+        return gson.fromJson(payload, Message.class);
     }
 
     @Override
