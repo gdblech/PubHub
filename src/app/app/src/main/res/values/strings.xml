@@ -11,6 +11,9 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_create_questions">CreateQuestionsActivity</string>
     <string name="title_activity_trivia_game">TriviaGameActivity</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="send">SEND</string>
+    <string name="enter_message">Enter message</string>
     <string name="round_text">Round Text</string>
     <string name="round_title">Round Title</string>
     <string name="enter_game_text">Enter Game Text</string>
@@ -18,4 +21,7 @@
     <string name="question_text">Question Text</string>
     <string name="enter_answer">Enter Answer</string>
     <string name="question_title">Question Title</string>
+    <item name="content_view" type="string" />
+    <item name="message_content" type="string"/>
+
 </resources>

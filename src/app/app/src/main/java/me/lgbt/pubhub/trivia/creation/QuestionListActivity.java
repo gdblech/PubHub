@@ -56,6 +56,7 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         finish();
     }
 
+    /* Goes back one level to Round List view */
     public void doneMessage(View view) {
         Intent doneActivity = new Intent(this, RoundListActivity.class);
         Bundle extras = new Bundle();
