@@ -6,4 +6,16 @@
     <string name="server_client_id">980331984960-d33t8e79agt8udf140sm30ob83q020na.apps.googleusercontent.com</string>
     <string name="aws_url">http://pub-hub.us-east-2.elasticbeanstalk.com/</string>
     <string name="phb_url">http://pubhub.me</string>
+    <string name="title_activity_trivia_creation">TriviaCreationActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_create_questions">CreateQuestionsActivity</string>
+    <string name="title_activity_trivia_game">TriviaGameActivity</string>
+    <string name="round_text">Round Text</string>
+    <string name="round_title">Round Title</string>
+    <string name="enter_game_text">Enter Game Text</string>
+    <string name="enter_game_title">Enter Game Title</string>
+    <string name="question_text">Question Text</string>
+    <string name="enter_answer">Enter Answer</string>
+    <string name="question_title">Question Title</string>
 </resources>
