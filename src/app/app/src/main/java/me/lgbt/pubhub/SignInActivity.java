@@ -11,7 +11,6 @@ package me.lgbt.pubhub;
  *
  */
 
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,9 +29,9 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import me.lgbt.pubhub.wsclient.ChatTabActivity;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.ServerRestConnection;
-import me.lgbt.pubhub.trivia.TriviaGameListActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -129,7 +128,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void sendMessage(View view) {
-        Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
+        Intent nextActivity = new Intent(this, ChatTabActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         nextActivity.putExtras(extras);
