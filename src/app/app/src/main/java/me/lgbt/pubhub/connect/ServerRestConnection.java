@@ -13,10 +13,12 @@ import android.net.Uri;
 import android.util.Base64OutputStream;
 import android.util.Log;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -121,8 +123,8 @@ public class ServerRestConnection {
             backend.setRequestMethod("GET");
 
             backend.setDoOutput(true);
-            backend.getOutputStream().write(gameJson.getBytes());
-            backend.connect();
+            OutputStream out = new BufferedOutputStream(backend.getOutputStream());
+            out.write(gameJson.getBytes());
 
             //get response from server
             if (backend.getResponseCode() != 200) {
