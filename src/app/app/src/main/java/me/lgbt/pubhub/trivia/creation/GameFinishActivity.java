@@ -8,9 +8,9 @@ package me.lgbt.pubhub.trivia.creation;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +24,8 @@ import java.io.IOException;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.ServerRestConnection;
+import me.lgbt.pubhub.connect.REST.ConnectionTypes;
+import me.lgbt.pubhub.connect.REST.RestPushGame;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
@@ -109,17 +110,19 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     }
 
     void sendGame() {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                if(getResources().getBoolean(R.bool.backend)){
-                    ServerRestConnection.pushTriviaGame(getString(R.string.testingBackend), jsonGame, phbToken);
-                }else {
-                    ServerRestConnection.pushTriviaGame(getString(R.string.phb_url), jsonGame, phbToken);
-                }
-                //       ServerRestConnection.pushTriviaGame(getString(R.string.phb_url), jsonGame, phbToken);
-            }
-        });
+        RestPushGame push;
+        Resources res = getResources();
+        if (res.getBoolean(R.bool.backend)) {
+            push = new RestPushGame(getString(R.string.testingBackend), phbToken, jsonGame);
+        } else {
+            push = new RestPushGame(getString(R.string.phb_url), phbToken, jsonGame);
+        }
+
+        if (res.getBoolean(R.bool.https)) {
+            push.setMode(ConnectionTypes.HTTPS);
+        }
+
+        push.start();
     }
 
     private String picToBase64(Uri pictureUri) {
