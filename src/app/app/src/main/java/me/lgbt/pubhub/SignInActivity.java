@@ -96,7 +96,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 signIn();
                 break;
             case R.id.skip_to_current:
-                sendMessage(view);
+                sendMessage();
                 break;
         }
     }
@@ -158,7 +158,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void sendMessage(View view) {
+    private void sendMessage() {
         Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);

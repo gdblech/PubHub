@@ -34,9 +34,8 @@ public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         switch (requestCode){
-            case PERMISSION_CAMERA:
+            case PERMISSION_CAMERA: //todo handle permission failure
         }
     }
 

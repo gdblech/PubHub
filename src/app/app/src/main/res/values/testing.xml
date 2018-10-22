@@ -1,10 +1,10 @@
 <resources>
     <!-- true to do backend testing locally, false to use production elements -->
     <bool name="backend">false</bool>
-    <string name="testingBackend">127.0.0.1</string>
+    <string name="testingBackend">localhost</string>
 
     <!-- set true to use the app camera, false to use enter the code. -->
-    <bool name="camera">false</bool>
+    <bool name="camera">true</bool>
 
     <!-- set true if https if usable-->
     <bool name="https">false</bool>

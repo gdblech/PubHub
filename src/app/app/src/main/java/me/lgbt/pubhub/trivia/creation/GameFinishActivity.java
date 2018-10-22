@@ -18,6 +18,8 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,14 +38,15 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     private TriviaGame currentGame;
     private String jsonGame;
     private ProgressBar progressBar;
+    private TextView gameName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_finish);
         progressBar = findViewById(R.id.progressBar);
-        Button checkName = findViewById(R.id.checkNameButton);
         Button upload = findViewById(R.id.uploadButton);
+        gameName = findViewById(R.id.gameNameFinish);
 
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -53,7 +56,6 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
             progressBar.setMax(currentGame.getTotalCount());
         }
 
-        checkName.setOnClickListener(this);
         upload.setOnClickListener(this);
     }
 
@@ -65,15 +67,25 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    //check if name is unique, true if it is false if it isn't
+    private boolean isUnique(){
+        return false;
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.uploadButton:
-                progressBar.setVisibility(View.VISIBLE);
-                createJson();
+                String gName = gameName.getText().toString();
 
-                break;
-            case R.id.checkNameButton:
+                if(gName == null){
+                    Toast.makeText(this, "Trivia Game Requires a Name", Toast.LENGTH_SHORT).show();
+                }else if(!isUnique()){
+                    Toast.makeText(this, "Trivia Game Requires a unique name", Toast.LENGTH_SHORT).show();
+                }else {
+                    currentGame.setGameName(gName);
+                    progressBar.setVisibility(View.VISIBLE);
+                    createJson();
+                }
                 break;
         }
     }
