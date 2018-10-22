@@ -86,11 +86,10 @@ public class RestAuthenticate extends Thread {
 
     public void run() {
         try {
-            URL server = new URL(url);
-
             switch (mode) {
                 case ConnectionTypes.HTTP: {
                     //Connect
+                    URL server = new URL("http://" + url);
                     HttpURLConnection backend = (HttpURLConnection) server.openConnection();
                     connection(backend);
                     break;
@@ -98,6 +97,7 @@ public class RestAuthenticate extends Thread {
 
                 case ConnectionTypes.HTTPS: {
                     //connection setup
+                    URL server = new URL("https://" + url);
                     HttpsURLConnection backend = (HttpsURLConnection) server.openConnection();
                     connection(backend);
                     break;
