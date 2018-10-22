@@ -11,4 +11,5 @@ public class IntentKeys {
     public static final String PUBHUB = "002";
     public static final String GOOGLE = "003";
     public static final String QUESTION = "004";
+    public static final String TEAM = "005";
 }
