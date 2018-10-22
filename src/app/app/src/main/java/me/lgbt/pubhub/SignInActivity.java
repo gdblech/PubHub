@@ -53,8 +53,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //locate button on the activity gui and set its click behavior
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
-        Button triviaCreationButton = findViewById(R.id.skip_to_current);
-        // triviaCreationButton.setOnClickListener(this);
+        Button skipToWorkButton= findViewById(R.id.skip_to_current);
+        skipToWorkButton.setOnClickListener(this);
 
         //sign in variables
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -94,6 +94,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.sign_in_button:
                 signIn();
+                break;
+            case R.id.skip_to_current:
+                sendMessage(view);
                 break;
         }
     }
