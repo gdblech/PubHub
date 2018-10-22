@@ -7,15 +7,10 @@ package me.lgbt.pubhub.connect;
  * @since 10/1/2018
  */
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.util.Base64OutputStream;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -28,7 +23,8 @@ public class ServerRestConnection {
 
     /**
      * Authenticates with the backend
-     * @param url The url of the server
+     *
+     * @param url         The url of the server
      * @param googleToken Token received from google after login
      * @return PubHub JWT for user identification
      */
@@ -62,8 +58,9 @@ public class ServerRestConnection {
     }
 
     /**
-     *  Pushes a trivia game JSON to the server
-     * @param url The url of the server
+     * Pushes a trivia game JSON to the server
+     *
+     * @param url      The url of the server
      * @param gameJson The json of the game being sent to the server
      * @param phbToken The PubHub token
      */

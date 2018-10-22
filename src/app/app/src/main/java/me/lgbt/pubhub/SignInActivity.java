@@ -13,6 +13,7 @@ package me.lgbt.pubhub;
 
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -65,14 +66,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onStart() {
         super.onStart();
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null && !account.isExpired()) {
-            googleToken = account.getIdToken();
-            authenticate();
-
-        }
-        updateUI(account);
+//
+//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+//
+//        if (account != null && !account.isExpired()) {
+//            googleToken = account.getIdToken();
+//            authenticate();
+//        }
+        handleSignInResult(googleSignInClient.silentSignIn());
+//        updateUI(account);
     }
 
     @Override
@@ -105,9 +107,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            googleToken = account.getIdToken();
-            authenticate();
+            if (account != null) {
+                googleToken = account.getIdToken();
+                authenticate();
 
+            }
             updateUI(account);
         } catch (ApiException e) {
             Log.w(TAG, "signInResult:failed code = " + e.getStatusCode(), e);
@@ -116,19 +120,34 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
-        //TODO this is where we move to the next UI
+        if(account != null && phbToken != null){
+            Intent nextActivity = new Intent(this, TeamSelectionActivity.class);
+            Bundle extras = new Bundle();
+            extras.putString(IntentKeys.PUBHUB, phbToken);
+            nextActivity.putExtras(extras);
+            startActivity(nextActivity);
+            finish();
+        }else{
+            System.out.print("Null account or Token");
+        }
     }
 
     private void authenticate() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                phbToken = ServerRestConnection.authentication(getString(R.string.phb_url), googleToken);
+                if(getResources().getBoolean(R.bool.backend)){
+                    phbToken = ServerRestConnection.authentication(getString(R.string.testingBackend), googleToken);
+                }else {
+                    phbToken = ServerRestConnection.authentication(getString(R.string.phb_url), googleToken);
+                }
             }
         });
+
+
     }
 
-    public void sendMessage(View view) {
+    private void sendMessage(View view) {
         Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);

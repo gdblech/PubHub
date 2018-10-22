@@ -1,0 +1,7 @@
+<resources>
+    <bool name="backend">false</bool>
+    <string name="testingBackend">127.0.0.1</string>
+
+    <bool name="camera">false</bool>
+
+</resources>

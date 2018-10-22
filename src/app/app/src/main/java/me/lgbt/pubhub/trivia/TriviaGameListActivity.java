@@ -17,7 +17,6 @@ import me.lgbt.pubhub.trivia.utils.GameAdapter;
 
 public class TriviaGameListActivity extends AppCompatActivity {
     private String phbToken;
-    private String googleToken;
     private ArrayList<String> listOfGames; //TODO needs to be populated
 
 
@@ -61,7 +60,6 @@ public class TriviaGameListActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
         }
     }
 }

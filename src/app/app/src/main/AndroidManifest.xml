@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -35,8 +36,10 @@
         <activity android:name=".trivia.creation.RoundListActivity" />
         <activity android:name=".trivia.creation.RoundCreationActivity" />
         <activity android:name=".trivia.creation.QuestionListActivity" />
-        <activity android:name=".trivia.creation.GameFinishActivity"></activity>
-        <activity android:name=".WSClient.ChatTabActivity"></activity>
+        <activity android:name=".trivia.creation.GameFinishActivity" />
+        <activity android:name=".WSClient.ChatTabActivity" />
+        <activity android:name=".TeamSelectionActivity" />
+        <activity android:name=".QRCodeScanner" />
     </application>
 
 </manifest>

@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.connect.ServerRestConnection;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
@@ -111,6 +112,11 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                if(getResources().getBoolean(R.bool.backend)){
+                    ServerRestConnection.pushTriviaGame(getString(R.string.testingBackend), jsonGame, phbToken);
+                }else {
+                    ServerRestConnection.pushTriviaGame(getString(R.string.phb_url), jsonGame, phbToken);
+                }
                 //       ServerRestConnection.pushTriviaGame(getString(R.string.phb_url), jsonGame, phbToken);
             }
         });
