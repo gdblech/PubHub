@@ -14,7 +14,6 @@ package me.lgbt.pubhub;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,13 +28,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import me.lgbt.pubhub.connect.REST.ConnectionTypes;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.ServerRestConnection;
+import me.lgbt.pubhub.connect.REST.RestAuthenticate;
 import me.lgbt.pubhub.trivia.TriviaGameListActivity;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int REQ_CODE = 13374;
     private static final String TAG = "SignInActivity";
@@ -66,15 +68,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onStart() {
         super.onStart();
-//
-//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-//
-//        if (account != null && !account.isExpired()) {
-//            googleToken = account.getIdToken();
-//            authenticate();
-//        }
-        handleSignInResult(googleSignInClient.silentSignIn());
-//        updateUI(account);
+
+        if(!getResources().getBoolean(R.bool.development)) {
+            Task<GoogleSignInAccount> task = googleSignInClient.silentSignIn();
+            handleSignInResult(task);
+        }
+
     }
 
     @Override
@@ -133,18 +132,27 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void authenticate() {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                if(getResources().getBoolean(R.bool.backend)){
-                    phbToken = ServerRestConnection.authentication(getString(R.string.testingBackend), googleToken);
-                }else {
-                    phbToken = ServerRestConnection.authentication(getString(R.string.phb_url), googleToken);
-                }
-            }
-        });
 
+        RestAuthenticate auth;
+        Resources res = getResources();
+        if(res.getBoolean(R.bool.backend)){
+            auth = new RestAuthenticate(getString(R.string.testingBackend), googleToken);
+        }else{
+            auth = new RestAuthenticate(getString(R.string.phb_url), googleToken);
+        }
 
+        if(res.getBoolean(R.bool.https)){
+            auth.setMode(ConnectionTypes.HTTPS);
+        }
+
+        auth.start();
+
+        try {
+            auth.join();
+            phbToken = auth.getPhbToken();
+        } catch (InterruptedException e) {
+            phbToken = "Connection Timed Out"; //todo handle properly
+        }
     }
 
     private void sendMessage(View view) {
