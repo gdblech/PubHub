@@ -1,4 +1,10 @@
 <resources>
+    <!-- Connection Strings -->
+    <string name="server_client_id">980331984960-d33t8e79agt8udf140sm30ob83q020na.apps.googleusercontent.com</string>
+    <string name="aws_url">pub-hub.us-east-2.elasticbeanstalk.com/</string>
+    <string name="phb_url">pubhub.me</string>
+    <string name="host_name_verifier">temp</string>
+
     <!-- activity strings -->
     <string name="app_name">PubHub</string>
     <string name="title_trivia">Trivia</string>
@@ -22,9 +28,11 @@
     <string name="enter_game_name">Enter Game Name</string>
     <string name="check_name">Check Name</string>
     <string name="upload">Upload</string>
+    <string name="skip_to_work">Skip To Work</string>
+    <string name="enter_host_name">Enter Host Name</string>
 
-    <!-- Connection Strings -->
-    <string name="server_client_id">980331984960-d33t8e79agt8udf140sm30ob83q020na.apps.googleusercontent.com</string>
-    <string name="aws_url">pub-hub.us-east-2.elasticbeanstalk.com/</string>
-    <string name="phb_url">pubhub.me</string>
+
+
+
+
 </resources>

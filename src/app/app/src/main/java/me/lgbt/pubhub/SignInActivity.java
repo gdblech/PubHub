@@ -34,6 +34,7 @@ import me.lgbt.pubhub.connect.rest.ConnectionTypes;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.rest.RestAuthenticate;
 import me.lgbt.pubhub.trivia.TriviaGameListActivity;
+import me.lgbt.pubhub.trivia.creation.GameFinishActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -120,16 +121,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
-        if(account != null && phbToken != null){
-            Intent nextActivity = new Intent(this, TeamSelectionActivity.class);
-            Bundle extras = new Bundle();
-            extras.putString(IntentKeys.PUBHUB, phbToken);
-            nextActivity.putExtras(extras);
-            startActivity(nextActivity);
-            finish();
-        }else{
-            System.out.print("Null account or Token");
-        }
+//        if(account != null && phbToken != null){
+//            Intent nextActivity = new Intent(this, TeamSelectionActivity.class);
+//            Bundle extras = new Bundle();
+//            extras.putString(IntentKeys.PUBHUB, phbToken);
+//            nextActivity.putExtras(extras);
+//            startActivity(nextActivity);
+//            finish();
+//        }else{
+//            System.out.print("Null account or Token");
+//        }
     }
 
     private void authenticate() {
