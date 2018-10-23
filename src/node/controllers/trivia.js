@@ -1,4 +1,4 @@
-const models = require('../models');
+const Models = require('../models');
 const TriviaGame = require('../models').TriviaGame;
 const TriviaRound = require('../models').TriviaRound;
 const Team = require('../models').Team;
@@ -70,11 +70,16 @@ let add = async(req, res) =>{
         
         let triviagame = await TriviaGame.create(req.body, {
             include: [{
-                association: models.TriviaGame.associations.TriviaRounds,
-                include: [models.TriviaQuestion]
+                model: Models.TriviaRound,
+                as: 'triviaRounds',
+                include: [{
+                    model: Models.TriviaQuestion,
+                    as: 'triviaQuestions'
+                }]
             }]
         });
-        await user.addTriviaGame(triviagame);
+
+        await triviagame.setHost(user);
 
         res.status(200).send(triviagame);
     } catch (err) {
