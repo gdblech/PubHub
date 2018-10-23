@@ -1,5 +1,6 @@
 const log4js = require('log4js');
 let logger = log4js.getLogger();
+logger.level = process.env.LOG_LEVEL || 'info';
 
 const DEFAULT_ROLE = 'Customer';
 const DEFAULT_PROVIDER = 'google';
