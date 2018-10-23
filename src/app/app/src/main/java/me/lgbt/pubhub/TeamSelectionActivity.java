@@ -22,12 +22,12 @@ public class TeamSelectionActivity extends AppCompatActivity implements View.OnC
 
         if (!sessionCheck()) {
             //user is not already on a team, get get QR info or if testing use fake team.
-            if(!getResources().getBoolean(R.bool.camera)){
+            if (!getResources().getBoolean(R.bool.camera)) {
                 teamID = "GenericBar:001";
-            }else{
+            } else {
                 scanQR();
             }
-        }else{
+        } else {
             sendMessage();
         }
     }
@@ -61,7 +61,7 @@ public class TeamSelectionActivity extends AppCompatActivity implements View.OnC
             if (teamCheck()) {
                 //user joins an existing team and moves on.
                 //todo join team send, to backend
-            } else{
+            } else {
                 //user creates a team then moves on
                 //todo create team if doesn't exist, send to back end
             }
