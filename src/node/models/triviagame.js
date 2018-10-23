@@ -13,8 +13,9 @@ module.exports = (sequelize, DataTypes) => {
 		TriviaGame.belongsTo(models.User, {
 			as: 'host'
 		});
-		TriviaGame.hasMany(models.TriviaRound);
-
+		TriviaGame.hasMany(models.TriviaRound, {
+			as: 'triviaRounds'
+		});
 		TriviaGame.hasMany(models.Team);
 	};
 	return TriviaGame;
