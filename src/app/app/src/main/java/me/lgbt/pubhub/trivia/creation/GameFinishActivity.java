@@ -17,8 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -38,7 +38,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     private TriviaGame currentGame;
     private String jsonGame;
     private ProgressBar progressBar;
-    private TextView gameName;
+    private EditText gameName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +68,21 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     }
 
     //check if name is unique, true if it is false if it isn't
-    private boolean isUnique(){
+    private boolean isUnique() {
         return false;
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.uploadButton:
                 String gName = gameName.getText().toString();
 
-                if(gName == null){
+                if (gName == null) {
                     Toast.makeText(this, "Trivia Game Requires a Name", Toast.LENGTH_SHORT).show();
-                }else if(!isUnique()){
+                } else if (!isUnique()) {
                     Toast.makeText(this, "Trivia Game Requires a unique name", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     currentGame.setGameName(gName);
                     progressBar.setVisibility(View.VISIBLE);
                     createJson();
@@ -119,6 +120,8 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
             json.append('}');
         }
         json.append('}');
+
+        jsonGame = json.toString();
     }
 
     void sendGame() {
