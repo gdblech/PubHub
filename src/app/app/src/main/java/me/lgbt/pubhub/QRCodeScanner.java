@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.google.zxing.Result;
 
@@ -35,7 +36,8 @@ public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){
-            case PERMISSION_CAMERA: //todo handle permission failure
+            case PERMISSION_CAMERA:
+                Toast.makeText(this, "Camera Permission Required", Toast.LENGTH_SHORT).show(); //may require sending user back to the activity
         }
     }
 

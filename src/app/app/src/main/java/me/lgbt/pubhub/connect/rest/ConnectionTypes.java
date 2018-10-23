@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.connect.REST;
+package me.lgbt.pubhub.connect.rest;
 
 /**
  * @author Geoffrey Blech

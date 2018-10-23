@@ -28,13 +28,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import me.lgbt.pubhub.connect.REST.ConnectionTypes;
+import me.lgbt.pubhub.connect.rest.ConnectionTypes;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.REST.RestAuthenticate;
+import me.lgbt.pubhub.connect.rest.RestAuthenticate;
 import me.lgbt.pubhub.trivia.TriviaGameListActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
@@ -154,7 +152,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             auth.join();
             phbToken = auth.getPhbToken();
         } catch (InterruptedException e) {
-            phbToken = "Connection Timed Out"; //todo handle properly
+            String message = "Thread Error: " + e.getMessage();
+            Log.e("Sign in Activity", message);
         }
     }
 

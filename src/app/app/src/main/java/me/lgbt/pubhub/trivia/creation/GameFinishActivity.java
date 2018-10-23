@@ -26,8 +26,8 @@ import java.io.IOException;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.REST.ConnectionTypes;
-import me.lgbt.pubhub.connect.REST.RestPushGame;
+import me.lgbt.pubhub.connect.rest.ConnectionTypes;
+import me.lgbt.pubhub.connect.rest.RestPushGame;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
