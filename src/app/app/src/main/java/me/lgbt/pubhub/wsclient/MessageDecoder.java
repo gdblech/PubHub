@@ -10,7 +10,7 @@ public class MessageDecoder implements Decoder.Text<Message> {
     private static Gson gson = new Gson();
 
     @Override
-    public Message decode(String payload) throws DecodeException {
+    public Message decode(String payload) {
         return gson.fromJson(payload, Message.class);
     }
 
