@@ -8,17 +8,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.connect.rest.RestGameList;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
 
 public class TriviaGameListActivity extends AppCompatActivity {
     private String phbToken;
-    private String googleToken;
-    private ArrayList<String> listOfGames; //TODO needs to be populated
+    private ArrayList<String> listOfGames;
 
 
     @Override
@@ -45,7 +49,30 @@ public class TriviaGameListActivity extends AppCompatActivity {
 
     public void fetchGameList() {
         listOfGames = new ArrayList<>();
-        listOfGames.add("Test Game Please Ignore");
+        RestGameList list = new RestGameList(getString(R.string.phb_url), phbToken);
+        list.start();
+        try {
+            list.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        JSONArray jsonList;
+        String json = list.getGameList();
+        if(json != null && !json.equals("")) {
+            try {
+                jsonList = new JSONArray(json);
+                for (int i = 0; i < jsonList.length(); i++) {
+                    JSONObject obj = jsonList.getJSONObject(i);
+                    String str = obj.getString("gameName") + ", " +
+                            obj.getString("hostName") + ", " + obj.getString("date");
+                    if (!str.contains("null")) {
+                        listOfGames.add(str);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void sendMessage(View view) {
@@ -61,7 +88,6 @@ public class TriviaGameListActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
         }
     }
 }
