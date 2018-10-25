@@ -2,13 +2,11 @@ const log4js = require('log4js');
 const express = require('express');
 const morgan = require('morgan');
 const bearerToken = require('express-bearer-token');
-const authMiddleware = require('./utils/authMiddleware'); <<
-<< << < HEAD
+const authMiddleware = require('./utils/authMiddleware');
 const WebSocketHandler = require('./controllers/websocket/WebSocketHandler');
-const Authentication = require('./controllers/authentication'); ===
-=== =
-const bodyParser = require('body-parser'); >>>
->>> > dev
+const Authentication = require('./controllers/authentication');
+const bodyParser = require('body-parser');
+
 
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
