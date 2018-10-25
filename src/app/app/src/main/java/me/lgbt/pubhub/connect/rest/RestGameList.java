@@ -3,8 +3,9 @@ package me.lgbt.pubhub.connect.rest;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -18,20 +19,17 @@ import javax.net.ssl.HttpsURLConnection;
  * @version 2.0
  * @since 10/22/2018
  *
- * Sends a a json of a trivia game to the backend, extends Thread, use Thread commands to run.
+ * fetches a list fo game from the server
  */
-
-public class RestPushGame extends Thread {
-    private final String TAG = "Pushing Json";
+public class RestGameList extends Thread {
     private String url;
     private int mode = ConnectionTypes.HTTP;
     private String phbToken;
-    private String gameJSON;
+    private String gameList;
 
-    public RestPushGame(String url, String phbToken, String gameJSON) {
+    public RestGameList(String url, String phbToken) {
         this.url = url + "/api/trivia";
         this.phbToken = phbToken;
-        this.gameJSON = gameJSON;
     }
 
     public void setMode(int mode) {
@@ -67,56 +65,61 @@ public class RestPushGame extends Thread {
         }
     }
 
-    private void connection(HttpsURLConnection backend) {
+    private void connection(HttpURLConnection backend) {
         try {
+            //send out
             backend.setRequestProperty("Authorization", "Bearer " + phbToken);
-            backend.setRequestMethod("POST");
-            backend.setChunkedStreamingMode(0);
+            backend.setRequestMethod("GET");
+            backend.connect();
 
-            backend.setDoOutput(true);
-            OutputStream out = new BufferedOutputStream(backend.getOutputStream());
-            out.write(gameJSON.getBytes());
-
-            //get response from server
-            if (backend.getResponseCode() != 200) {
+            //get return
+            if (backend.getResponseCode() == 200) {
+                BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
+                gameList = response.readLine();
+                response.close();
+            } else {
                 throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
             }
             backend.disconnect();
+
         } catch (ProtocolException e) {
             //Request method is hard coded and should not throw an error. but if it does:
             String message = "ttp Url Connection error: " + e.getMessage() + "\n Check request method";
-            Log.e("RestAuthenticate Conn", message);
+            Log.e("RestGameList Conn", message);
         } catch (IOException e) {
             String message = "Http Url Connection error: " + e.getMessage();
-            Log.e("RestAuthenticate Conn", message);
+            Log.e("RestGameList Conn", message);
         }
     }
 
-    private void connection(HttpURLConnection backend) {
+    private void connection(HttpsURLConnection backend) {
         try {
+            //send out
             backend.setRequestProperty("Authorization", "Bearer " + phbToken);
-            backend.setRequestMethod("POST");
- //           backend.setChunkedStreamingMode(0);
+            backend.setRequestMethod("GET");
+            backend.connect();
 
-            backend.setDoOutput(true);
-//            DataOutputStream wr = new DataOutputStream(backend.getOutputStream());
-//            wr.writeBytes(gameJSON);
-            OutputStream out = new BufferedOutputStream(backend.getOutputStream());
-            out.write(gameJSON.getBytes());
-//            backend.getOutputStream().write(gameJSON.getBytes());
-
-            //get response from server
-            if (backend.getResponseCode() != 200) {
+            //get return
+            if (backend.getResponseCode() == 200) {
+                BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
+                gameList = response.readLine();
+                response.close();
+            } else {
                 throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
             }
             backend.disconnect();
+
         } catch (ProtocolException e) {
             //Request method is hard coded and should not throw an error. but if it does:
             String message = "ttp Url Connection error: " + e.getMessage() + "\n Check request method";
-            Log.e("RestAuthenticate Conn", message);
+            Log.e("RestGameList Conn", message);
         } catch (IOException e) {
             String message = "Http Url Connection error: " + e.getMessage();
-            Log.e("RestAuthenticate Conn", message);
+            Log.e("RestGameList Conn", message);
         }
+    }
+
+    public String getGameList() {
+        return gameList;
     }
 }
