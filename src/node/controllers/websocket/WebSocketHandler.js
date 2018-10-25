@@ -172,9 +172,9 @@ class WebSocketHandler {
 		let outgoingMessage = JSON.stringify(serverChatMessage.toServerMessage());
 
 		this.wss.clients.forEach((sclient) => {
-			if (client !== sclient) {
-				sclient.send(outgoingMessage);
-			}
+			// if (client !== sclient) {
+			sclient.send(outgoingMessage);
+			// }
 		});
 	}
 
