@@ -49,16 +49,16 @@ public class ClientEndpoint extends AppCompatActivity {
     @OnOpen
     public void onOpen(
             Session session,
-            @PathParam("username") String username) throws IOException, EncodeException {
+            @PathParam("username") String username) {
 
         this.session = session;
         clientEndpoints.add(this);
         users.put(session.getId(), username);
 
-        Message message = new Message(); // message created and sent to all endpoints using the broadcast method
-        message.setFrom(username);
-        message.setContent("Connected!");
-        broadcast(message);
+//        Message message = new Message(); // message created and sent to all endpoints using the broadcast method
+//        message.setFrom(username);
+//        message.setContent("Connected!");
+//        broadcast(message);
     }
 
     @OnMessage
@@ -72,13 +72,13 @@ public class ClientEndpoint extends AppCompatActivity {
     /* Clears the endpoint and broadcasts to all users that a user has been disconnected */
 
     @OnClose
-    public void onClose(Session session) throws IOException, EncodeException {
+    public void onClose(Session session) {
 
         clientEndpoints.remove(this);
-        Message message = new Message();
-        message.setFrom(users.get(session.getId()));
-        message.setContent("Disconnected!");
-        broadcast(message);
+//        Message message = new Message();
+//        message.setFrom(users.get(session.getId()));
+//        message.setContent("Disconnected!");
+//        broadcast(message);
     }
 
     @OnError
@@ -87,8 +87,7 @@ public class ClientEndpoint extends AppCompatActivity {
     }
 
     /* Message sent to all endpoints */
-    private static void broadcast(Message message)
-            throws IOException, EncodeException {
+    private static void broadcast(Message message) {
 
         for (ClientEndpoint ce : clientEndpoints)
             synchronized (ce) {
