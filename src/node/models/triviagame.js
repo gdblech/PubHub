@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 	const TriviaGame = sequelize.define('TriviaGame', {
 		date: DataTypes.DATE,
 		hostName: DataTypes.STRING,
+		gameName: DataTypes.STRING,
 		title: DataTypes.STRING,
 		text: DataTypes.STRING,
 		image: DataTypes.STRING
@@ -12,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
 		TriviaGame.belongsTo(models.User, {
 			as: 'host'
 		});
-		TriviaGame.hasMany(models.TriviaRound);
+		TriviaGame.hasMany(models.TriviaRound, {
+			as: 'triviaRounds'
+		});
 		TriviaGame.hasMany(models.Team);
 	};
 	return TriviaGame;
