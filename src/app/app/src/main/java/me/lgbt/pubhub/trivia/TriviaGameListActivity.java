@@ -65,9 +65,9 @@ public class TriviaGameListActivity extends AppCompatActivity {
                     JSONObject obj = jsonList.getJSONObject(i);
                     String str = obj.getString("gameName") + ", " +
                             obj.getString("hostName") + ", " + obj.getString("date");
-//                    if (!str.contains("null")) {
-//                        listOfGames.add(str);
-//                    }
+                    if (!str.contains("null")) {
+                        listOfGames.add(str);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

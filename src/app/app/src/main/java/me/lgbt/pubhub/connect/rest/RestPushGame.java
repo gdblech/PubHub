@@ -96,14 +96,17 @@ public class RestPushGame extends Thread {
         try {
             backend.setRequestProperty("Authorization", "Bearer " + phbToken);
             backend.setRequestMethod("POST");
+            backend.setRequestProperty("Content-Type", "application/json");
+           // backend.setRequestProperty("Accept-Encoding", "identity");
+
  //           backend.setChunkedStreamingMode(0);
 
             backend.setDoOutput(true);
 //            DataOutputStream wr = new DataOutputStream(backend.getOutputStream());
 //            wr.writeBytes(gameJSON);
-            OutputStream out = new BufferedOutputStream(backend.getOutputStream());
-            out.write(gameJSON.getBytes());
-//            backend.getOutputStream().write(gameJSON.getBytes());
+//            OutputStream out = new BufferedOutputStream(backend.getOutputStream());
+ //           out.write(gameJSON.getBytes());
+            backend.getOutputStream().write(gameJSON.getBytes());
 
             //get response from server
             if (backend.getResponseCode() != 200) {
@@ -117,6 +120,8 @@ public class RestPushGame extends Thread {
         } catch (IOException e) {
             String message = "Http Url Connection error: " + e.getMessage();
             Log.e("RestAuthenticate Conn", message);
+        } finally {
+            backend.disconnect();
         }
     }
 }

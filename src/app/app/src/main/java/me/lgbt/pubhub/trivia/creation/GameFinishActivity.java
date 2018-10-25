@@ -125,8 +125,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
             gameJson.put("date", gameDate);
             gameJson.put("title", currentGame.getTitle());
             gameJson.put("text", currentGame.getTitle());
-            gameJson.put("image", "ImageG");
-            // gameJson.put("image", picToBase64(currentGame.getPicture()));
+            gameJson.put("image", picToBase64(currentGame.getPicture()));
             progressBar.incrementProgressBy(1);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -140,8 +139,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
                 jsonRound.put("roundNumber", i);
                 jsonRound.put("title", r.getTitle());
                 jsonRound.put("text", r.getTitle());
-                jsonRound.put("image", "ImageR");
-                //jsonRound.put("image", picToBase64(r.getPicture()));
+                jsonRound.put("image", picToBase64(r.getPicture()));
                 progressBar.incrementProgressBy(1);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -155,8 +153,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
                     jsonQuest.put("questionNumber", j);
                     jsonQuest.put("title", q.getTitle());
                     jsonQuest.put("text", q.getTitle());
-                    jsonQuest.put("image", "ImageQ");
-                    //jsonQuest.put("image", picToBase64(q.getPicture()));
+                    jsonQuest.put("image", picToBase64(q.getPicture()));
                     jsonQuest.put("answer", q.getAnswer());
                     questArray.put(jsonQuest);
                     progressBar.incrementProgressBy(1);
