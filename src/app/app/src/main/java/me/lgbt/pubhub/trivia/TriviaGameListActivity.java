@@ -57,11 +57,13 @@ public class TriviaGameListActivity extends AppCompatActivity {
         finish();
     }
 
+    /* Use this method somewhere without google token */
+
     public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-            googleToken = data.getString(IntentKeys.GOOGLE);
+            googleToken = data.getString(IntentKeys.GOOGLE); // TODO DELETE this line
         }
     }
 }
