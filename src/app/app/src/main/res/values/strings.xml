@@ -26,7 +26,6 @@
     <string name="enter_answer">Enter Answer</string>
     <string name="question_title">Question Title</string>
     <item name="content_view" type="string" />
-    <item name="message_content" type="string"/>
     <string name="enter_game_name">Enter Game Name</string>
     <string name="check_name">Check Name</string>
     <string name="upload">Upload</string>
@@ -36,5 +35,6 @@
 
 
 
+>>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
 
 </resources>

@@ -30,7 +30,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.ServerRestConnection;
 import me.lgbt.pubhub.connect.rest.ConnectionTypes;
 import me.lgbt.pubhub.connect.rest.RestAuthenticate;
 import me.lgbt.pubhub.trivia.TriviaGameListActivity;
