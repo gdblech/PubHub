@@ -22,6 +22,6 @@
     <string name="enter_answer">Enter Answer</string>
     <string name="question_title">Question Title</string>
     <item name="content_view" type="string" />
-    <item name="message_content" type="string"/>
+    <item name="message_content" type="string" />
 
 </resources>
