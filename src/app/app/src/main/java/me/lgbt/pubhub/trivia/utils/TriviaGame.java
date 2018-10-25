@@ -16,31 +16,24 @@ public class TriviaGame extends Slide implements Parcelable {
             return new TriviaGame[size];
         }
     };
-    private int ID;
-    private String host; //TODO change the user object
-    private long date;
+    private String gameName;
+
     private ArrayList<TriviaRound> rounds = null;
     private boolean creationMode = false;
 
-    public TriviaGame(String title, String text, Uri picture, int ID, String host, long date) {
+    public TriviaGame(String title, String text, Uri picture, String gameName) {
         super(title, text, picture);
-        this.ID = ID;
-        this.host = host;
-        this.date = date;
+        this.gameName = gameName;
     }
 
     public TriviaGame() {
         super();
-        ID = 0;
-        host = "";
-        date = 0;
+        gameName = "";
     }
 
     private TriviaGame(Parcel in) {
         super(in);
-        ID = in.readInt();
-        host = in.readString();
-        date = in.readLong();
+        gameName = in.readString();
         rounds = in.createTypedArrayList(TriviaRound.CREATOR);
         creationMode = in.readByte() != 0;
     }
@@ -52,35 +45,17 @@ public class TriviaGame extends Slide implements Parcelable {
 
     public void writeToParcel(Parcel out, int flags) {
         super.writeToParcel(out, flags);
-        out.writeInt(ID);
-        out.writeString(host);
-        out.writeLong(date);
+        out.writeString(gameName);
         out.writeTypedList(rounds);
         out.writeInt(creationMode ? 1 : 0);
     }
 
-    public int getID() {
-        return ID;
+    public String getGameName() {
+        return gameName;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public long getDate() {
-        return date;
-    }
-
-    public void setDate(long date) {
-        this.date = date;
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
     }
 
     public ArrayList<TriviaRound> getRounds() {

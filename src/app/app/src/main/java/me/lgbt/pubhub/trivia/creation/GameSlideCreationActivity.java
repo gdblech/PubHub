@@ -1,5 +1,6 @@
 package me.lgbt.pubhub.trivia.creation;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
@@ -68,21 +70,31 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.gameCreationImage:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
                 break;
-            case R.id.gameSlideDone:
-                if (currentGame == null) {
-                    currentGame = new TriviaGame();
+            case R.id.gameSlideDone:{
+                String gTitle = title.getText().toString();
+                String gText = gameText.getText().toString();
+                if(pictureUri == null){
+                    Toast.makeText(this, "A Picture is Required", Toast.LENGTH_LONG).show();
+                }else if(gTitle.equals("")){
+                    Toast.makeText(this, "A Title is Required", Toast.LENGTH_LONG).show();
+                }else if(gText.equals("")){
+                    Toast.makeText(this, "A Text is Required", Toast.LENGTH_LONG).show();
+                }else{
+                    currentGame.setPicture(pictureUri);
+                    currentGame.setTitle(gTitle);
+                    currentGame.setText(gText);
+                    currentGame.setCreationMode(true);
+                    sendMessage(view);
                 }
-                currentGame.setCreationMode(true);
-                currentGame.setTitle(title.getText().toString());
-                currentGame.setText(gameText.getText().toString());
-                currentGame.setPicture(pictureUri);
-                sendMessage(view);
                 break;
+            }
         }
     }
 
