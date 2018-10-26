@@ -30,17 +30,17 @@
             android:name=".trivia.creation.CreateQuestionsActivity"
             android:label="@string/title_activity_create_questions"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".trivia.TriviaGameListActivity" />
+        <activity android:name=".trivia.start.TriviaGameListActivity" />
         <activity
             android:name=".trivia.creation.GameSlideCreationActivity"
-            android:parentActivityName=".trivia.TriviaGameListActivity" />
+            android:parentActivityName=".trivia.start.TriviaGameListActivity" />
         <activity android:name=".trivia.creation.RoundListActivity" />
         <activity android:name=".trivia.creation.RoundCreationActivity" />
         <activity android:name=".trivia.creation.QuestionListActivity" />
         <activity android:name=".trivia.creation.GameFinishActivity" />
         <activity android:name=".WSClient.ChatTabActivity" />
-        <activity android:name=".TeamSelectionActivity" />
-        <activity android:name=".QRCodeScanner" />
+        <activity android:name=".trivia.start.TeamSelectionActivity" />
+        <activity android:name=".trivia.start.QRCodeScanner" />
     </application>
 
 </manifest>
