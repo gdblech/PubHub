@@ -3,7 +3,6 @@ package me.lgbt.pubhub.connect.rest;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -17,7 +16,7 @@ import javax.net.ssl.HttpsURLConnection;
  * @author Geoffrey Blech
  * @version 2.0
  * @since 10/22/2018
- *
+ * <p>
  * Sends a a json of a trivia game to the backend, extends Thread, use Thread commands to run.
  */
 
@@ -97,15 +96,15 @@ public class RestPushGame extends Thread {
             backend.setRequestProperty("Authorization", "Bearer " + phbToken);
             backend.setRequestMethod("POST");
             backend.setRequestProperty("Content-Type", "application/json");
-           // backend.setRequestProperty("Accept-Encoding", "identity");
+            // backend.setRequestProperty("Accept-Encoding", "identity");
 
- //           backend.setChunkedStreamingMode(0);
+            //           backend.setChunkedStreamingMode(0);
 
             backend.setDoOutput(true);
 //            DataOutputStream wr = new DataOutputStream(backend.getOutputStream());
 //            wr.writeBytes(gameJSON);
 //            OutputStream out = new BufferedOutputStream(backend.getOutputStream());
- //           out.write(gameJSON.getBytes());
+            //           out.write(gameJSON.getBytes());
             backend.getOutputStream().write(gameJSON.getBytes());
 
             //get response from server
