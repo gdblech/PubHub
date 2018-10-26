@@ -90,19 +90,19 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.questionDoneButton:{
+            case R.id.questionDoneButton: {
                 String gTitle = title.getText().toString();
                 String gText = text.getText().toString();
                 String gAnswer = answer.getText().toString();
-                if(pictureUri == null){
+                if (pictureUri == null) {
                     Toast.makeText(this, "A Picture is Required", Toast.LENGTH_LONG).show();
-                }else if(gTitle.equals("")){
+                } else if (gTitle.equals("")) {
                     Toast.makeText(this, "A Title is Required", Toast.LENGTH_LONG).show();
-                }else if(gText.equals("")){
+                } else if (gText.equals("")) {
                     Toast.makeText(this, "A Text is Required", Toast.LENGTH_LONG).show();
-                }else if(gAnswer.equals("")){
+                } else if (gAnswer.equals("")) {
                     Toast.makeText(this, "An Answer is Required", Toast.LENGTH_LONG).show();
-                } else{
+                } else {
                     currentQuestion.setPicture(pictureUri);
                     currentQuestion.setTitle(gTitle);
                     currentQuestion.setText(gText);

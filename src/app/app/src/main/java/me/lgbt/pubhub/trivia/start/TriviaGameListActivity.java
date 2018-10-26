@@ -58,7 +58,7 @@ public class TriviaGameListActivity extends AppCompatActivity {
         }
         JSONArray jsonList;
         String json = list.getGameList();
-        if(json != null && !json.equals("")) {
+        if (json != null && !json.equals("")) {
             try {
                 jsonList = new JSONArray(json);
                 for (int i = 0; i < jsonList.length(); i++) {

@@ -34,27 +34,26 @@ public class Teams {
         public void removeUser(User user) {
             int teamPosition = getPosition(user);
             players[teamPosition] = null;
-            for (int i=teamPosition; i< players.length; i++) {
-                players[i] = players[i+1];
+            for (int i = teamPosition; i < players.length; i++) {
+                players[i] = players[i + 1];
                 // call method to update user position
             }
         }
 
         public int getNextEmpty(int nextEmpty) {
 
-            for (int i=0; i<players.length; i++) {
+            for (int i = 0; i < players.length; i++) {
                 if (players[nextEmpty] == null) {
                     return nextEmpty;
-                }
-                else {
-                    getNextEmpty(nextEmpty+1);
+                } else {
+                    getNextEmpty(nextEmpty + 1);
                 }
             }
             return nextEmpty;
         }
 
         public int getPosition(User user) {
-            for (int i=0; i<players.length; i++) {
+            for (int i = 0; i < players.length; i++) {
                 if (user == players[i]) {
                     return i;
                 }

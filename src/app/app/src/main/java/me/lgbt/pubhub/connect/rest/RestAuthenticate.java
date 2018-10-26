@@ -16,7 +16,7 @@ import javax.net.ssl.HttpsURLConnection;
  * @author Geoffrey Blech
  * @version 2.0
  * @since 10/22/2018
- *
+ * <p>
  * Sends a google Token and gets back a PubHub token, extends Thread, use Thread commands to run.
  */
 public class RestAuthenticate extends Thread {

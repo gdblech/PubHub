@@ -1,6 +1,5 @@
 package me.lgbt.pubhub.trivia.creation;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -77,16 +76,16 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
                 intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
                 break;
-            case R.id.gameSlideDone:{
+            case R.id.gameSlideDone: {
                 String gTitle = title.getText().toString();
                 String gText = gameText.getText().toString();
-                if(pictureUri == null){
+                if (pictureUri == null) {
                     Toast.makeText(this, "A Picture is Required", Toast.LENGTH_LONG).show();
-                }else if(gTitle.equals("")){
+                } else if (gTitle.equals("")) {
                     Toast.makeText(this, "A Title is Required", Toast.LENGTH_LONG).show();
-                }else if(gText.equals("")){
+                } else if (gText.equals("")) {
                     Toast.makeText(this, "A Text is Required", Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     currentGame.setPicture(pictureUri);
                     currentGame.setTitle(gTitle);
                     currentGame.setText(gText);

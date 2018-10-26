@@ -30,12 +30,12 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-import me.lgbt.pubhub.connect.rest.ConnectionTypes;
 import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.connect.rest.ConnectionTypes;
 import me.lgbt.pubhub.connect.rest.RestAuthenticate;
 import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQ_CODE = 13374;
     private static final String TAG = "SignInActivity";
@@ -51,7 +51,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //locate button on the activity gui and set its click behavior
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
-        Button skipToWorkButton= findViewById(R.id.skip_to_current);
+        Button skipToWorkButton = findViewById(R.id.skip_to_current);
         skipToWorkButton.setOnClickListener(this);
 
         //sign in variables
@@ -67,7 +67,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     protected void onStart() {
         super.onStart();
 
-        if(!getResources().getBoolean(R.bool.development)) {
+        if (!getResources().getBoolean(R.bool.development)) {
             Task<GoogleSignInAccount> task = googleSignInClient.silentSignIn();
             handleSignInResult(task);
         }
@@ -136,13 +136,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         RestAuthenticate auth;
         Resources res = getResources();
-        if(res.getBoolean(R.bool.backend)){
+        if (res.getBoolean(R.bool.backend)) {
             auth = new RestAuthenticate(getString(R.string.testingBackend), googleToken);
-        }else{
+        } else {
             auth = new RestAuthenticate(getString(R.string.phb_url), googleToken);
         }
 
-        if(res.getBoolean(R.bool.https)){
+        if (res.getBoolean(R.bool.https)) {
             auth.setMode(ConnectionTypes.HTTPS);
         }
 

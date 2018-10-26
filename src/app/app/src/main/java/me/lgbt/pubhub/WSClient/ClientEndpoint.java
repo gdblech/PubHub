@@ -15,12 +15,13 @@ import javax.websocket.server.ServerEndpoint;
 public class ClientEndpoint {
 
     @OnOpen
-    public void onOpen(Session session, EndpointConfig conf) {}
+    public void onOpen(Session session, EndpointConfig conf) {
+    }
 
     /*
-    ** Message Handler to forward all incoming text messages to all connected peers.
-    ** Can also have an @OnMessage tag for binary and pong message types.
-    **/
+     ** Message Handler to forward all incoming text messages to all connected peers.
+     ** Can also have an @OnMessage tag for binary and pong message types.
+     **/
     @OnMessage
     public void onMessage(Session session, String msg) {
 
@@ -31,12 +32,15 @@ public class ClientEndpoint {
                 if (s.isOpen())
                     s.getBasicRemote().sendText(msg);
             }
-        } catch(IOException e){}
+        } catch (IOException e) {
+        }
     }
 
     @OnError
-    public void onError(Session session, Throwable error) {}
+    public void onError(Session session, Throwable error) {
+    }
 
     @OnClose
-    public void onClose(Session session, CloseReason reason) {}
+    public void onClose(Session session, CloseReason reason) {
+    }
 }

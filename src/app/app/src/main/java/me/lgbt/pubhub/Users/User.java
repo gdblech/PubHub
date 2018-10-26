@@ -106,7 +106,7 @@ public class User {
         return profilePicture.toString();
     }
 
-    public Uri getPrifilePicture(){
+    public Uri getPrifilePicture() {
         return profilePicture;
     }
 

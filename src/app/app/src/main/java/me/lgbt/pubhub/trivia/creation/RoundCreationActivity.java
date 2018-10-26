@@ -66,16 +66,16 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.roundDoneButton:{
+            case R.id.roundDoneButton: {
                 String gTitle = title.getText().toString();
                 String gText = text.getText().toString();
-                if(pictureUri == null){
+                if (pictureUri == null) {
                     Toast.makeText(this, "A Picture is Required", Toast.LENGTH_LONG).show();
-                }else if(gTitle.equals("")){
+                } else if (gTitle.equals("")) {
                     Toast.makeText(this, "A Title is Required", Toast.LENGTH_LONG).show();
-                }else if(gText.equals("")){
+                } else if (gText.equals("")) {
                     Toast.makeText(this, "A Text is Required", Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     currentRound.setPicture(pictureUri);
                     currentRound.setTitle(gTitle);
                     currentRound.setText(gText);
