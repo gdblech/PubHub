@@ -7,7 +7,7 @@ import android.view.View;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.TriviaGameListActivity;
+import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
 
 
 public class ChatTabActivity extends AppCompatActivity {

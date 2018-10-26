@@ -1,4 +1,4 @@
-package me.lgbt.pubhub;
+package me.lgbt.pubhub.trivia.start;
 
 import android.Manifest;
 import android.content.Intent;
