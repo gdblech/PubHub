@@ -1,8 +1,9 @@
 const Models = require('../models');
-const Team = require('../models').Team;
+const imageStore = require('../utils/imageStore.js');
 const log4js = require('log4js');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
+
 
 /**
  * Function for listing all availble TrivaiaGames
@@ -69,10 +70,33 @@ let add = async (req, res) => {
 	console.log(user.userName)
 	console.log('below');
 
-	//logger.debug('start');
+	let triviaObj = req.body;
+	//replacing the images with an id
+	try {
+		if (triviaObj.image) {
+			triviaObj.image = await imageStore.put(triviaObj.image);
+		}
+		for (let i = 0; i < triviaObj.triviaRounds.length; i++) {
+			let round = triviaObj.triviaRounds[i];
+			if (round.image) {
+				round.image = await imageStore.put(round.image);
+			}
+			for (let j = 0; j < round.triviaQuestions.length; j++) {
+				let question = round.triviaQuestions[j];
+				if (question.image) {
+					question.image = await imageStore.put(question.image);
+				}
+			}
+		}
+
+	} catch (err) {
+		logger.error(err);
+		res.status(500).send(err);
+	}
+
 	try {
 
-		let triviagame = await TriviaGame.create(req.body, {
+		let triviagame = await Models.TriviaGame.create(triviaObj, {
 			include: [{
 				model: Models.TriviaRound,
 				as: 'triviaRounds',
