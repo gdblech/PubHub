@@ -1,6 +1,7 @@
 package me.lgbt.pubhub.trivia.start;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.rest.RestGameList;
+import me.lgbt.pubhub.connect.rest.RestConnection;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
 
@@ -49,15 +50,23 @@ public class TriviaGameListActivity extends AppCompatActivity {
 
     public void fetchGameList() {
         listOfGames = new ArrayList<>();
-        RestGameList list = new RestGameList(getString(R.string.phb_url), phbToken);
-        list.start();
+
+        RestConnection conn;
+        Resources res = getResources();
+
+        if (res.getBoolean(R.bool.backend)) {
+            conn = new RestConnection(getString(R.string.testingBackend), phbToken);
+        } else {
+            conn = new RestConnection(getString(R.string.phb_url), phbToken);
+        }
+        conn.start(RestConnection.GETGAMES);
         try {
-            list.join();
+            conn.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         JSONArray jsonList;
-        String json = list.getGameList();
+        String json = conn.getResponse();
         if (json != null && !json.equals("")) {
             try {
                 jsonList = new JSONArray(json);
