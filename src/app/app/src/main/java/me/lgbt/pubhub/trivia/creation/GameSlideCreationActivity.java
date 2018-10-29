@@ -90,14 +90,14 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
                     currentGame.setTitle(gTitle);
                     currentGame.setText(gText);
                     currentGame.setCreationMode(true);
-                    sendMessage(view);
+                    sendMessage();
                 }
                 break;
             }
         }
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage() {
         Intent nextActivity = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
