@@ -39,6 +39,12 @@ public class RestConnection extends Thread {
         this.mode = mode;
     }
 
+    public RestConnection(String url, String token) {
+        this.url = url;
+        this.token = token;
+        this.mode = FETCHPROFILE;
+    }
+
     public void setBody(String body){
         this.body = body;
     }

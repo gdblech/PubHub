@@ -31,8 +31,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.rest.ConnectionTypes;
-import me.lgbt.pubhub.connect.rest.RestAuthenticate;
+import me.lgbt.pubhub.connect.rest.RestConnection;
 import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
@@ -134,23 +133,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void authenticate() {
 
-        RestAuthenticate auth;
+        RestConnection conn;
         Resources res = getResources();
         if (res.getBoolean(R.bool.backend)) {
-            auth = new RestAuthenticate(getString(R.string.testingBackend), googleToken);
+            conn = new RestConnection(getString(R.string.testingBackend), googleToken);
         } else {
-            auth = new RestAuthenticate(getString(R.string.phb_url), googleToken);
+            conn = new RestConnection(getString(R.string.phb_url), googleToken);
         }
 
-        if (res.getBoolean(R.bool.https)) {
-            auth.setMode(ConnectionTypes.HTTPS);
-        }
-
-        auth.start();
+        conn.start(RestConnection.AUTHENTICATE);
 
         try {
-            auth.join();
-            phbToken = auth.getPhbToken();
+            conn.join();
+            phbToken = conn.getResponse();
         } catch (InterruptedException e) {
             String message = "Thread Error: " + e.getMessage();
             Log.e("Sign in Activity", message);
