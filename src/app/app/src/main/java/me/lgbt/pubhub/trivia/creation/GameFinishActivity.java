@@ -192,6 +192,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         }
 
         push.start();
+        sendMessage();
     }
 
     private String picToBase64(Uri pictureUri) {
@@ -204,7 +205,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
 
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            picture.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            picture.compress(Bitmap.CompressFormat.WEBP, 85, stream);
             byte[] picBytes = stream.toByteArray();
 
             base64Pic = Base64.encodeToString(picBytes, Base64.DEFAULT);
@@ -219,7 +220,6 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
-
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -254,6 +254,16 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         public String getDate() {
             return date;
         }
+    }
+
+    public void sendMessage() {
+        Intent nextActivity = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
+        Bundle extras = new Bundle();
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putParcelable(IntentKeys.GAME, currentGame);
+        nextActivity.putExtras(extras);
+        startActivity(nextActivity);
+        finish();
     }
 }
 
