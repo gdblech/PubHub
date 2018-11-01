@@ -66,20 +66,24 @@ public class RestConnection extends Thread {
     public void run() {
         switch (mode){
             case AUTHENTICATE:{
-                if(body == null){
-                    response = "No Body Defined";
-                }else{
-                    authenticate();
-                }
+                authenticate();
+                break;
             }
             case GETGAMES:{
                 getGameList();
+                break;
             }
             case SENDGAME:{
-                sendGame();
+                if(body == null){
+                    response = "No Body Defined";
+                }else {
+                    sendGame();
+                }
+                break;
             }
             default:{
                 fetchProfile();
+                break;
             }
 
         }

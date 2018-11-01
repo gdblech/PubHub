@@ -37,6 +37,7 @@ import java.util.Calendar;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.rest.RestConnection;
+import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
@@ -201,7 +202,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
 
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            picture.compress(Bitmap.CompressFormat.WEBP, 85, stream);
+            picture.compress(Bitmap.CompressFormat.PNG, 85, stream);
             byte[] picBytes = stream.toByteArray();
 
             base64Pic = Base64.encodeToString(picBytes, Base64.DEFAULT);
@@ -218,7 +219,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void sendMessage() {
-        Intent nextActivity = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, TriviaGameListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putParcelable(IntentKeys.GAME, currentGame);
