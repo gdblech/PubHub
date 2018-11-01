@@ -1,8 +1,6 @@
 package me.lgbt.pubhub.chat;
 
-import android.app.LauncherActivity;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -15,6 +13,7 @@ import java.util.List;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.chat.BaseMessage.UserMessage;
+import me.lgbt.pubhub.users.User;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
@@ -36,9 +35,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Determines the appropriate ViewType according to the sender of the message.
     @Override
     public int getItemViewType(int position) {
-        UserMessage message = (UserMessage) mMessageList.get(position);
+        UserMessage message;
+        message = (UserMessage) mMessageList.get(position);
 
-        if (message.getSender().getUserId().equals(SendBird.getCurrentUser().getUserId())) {
+        if (message.getSender().getUserId().equals(User.getUserId())) {
             // If the current user is the sender of the message
             return VIEW_TYPE_MESSAGE_SENT;
         } else {
@@ -68,7 +68,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Passes the message object to a ViewHolder so that the contents can be bound to UI.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        BaseMessage.UserMessage message = (BaseMessage.UserMessage) mMessageList.get(position);
+        UserMessage message = (UserMessage) mMessageList.get(position);
 
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
@@ -117,9 +117,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             timeText.setText(DateUtils.formatDateTime(message.getCreatedAt()));
 
             nameText.setText(message.getSender().getNickname());
-
-            // Insert the profile image from the URL into the ImageView.
-            DateUtils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage);
         }
     }
 }
