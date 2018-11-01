@@ -12,6 +12,7 @@ public class User {
     private Uri profilePicture;
     private int teamId;
     private String teamName;
+    private int nickname;
 
     public User() {
         userId = 0;
@@ -106,7 +107,7 @@ public class User {
         return profilePicture.toString();
     }
 
-    public Uri getPrifilePicture(){
+    public Uri getProfilePicture(){
         return profilePicture;
     }
 
@@ -116,5 +117,13 @@ public class User {
 
     public void setProfilePicture(String profilePicturePath) {
         this.profilePicture = Uri.parse(profilePicturePath);
+    }
+
+    public int getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(int nickname) {
+        this.nickname = nickname;
     }
 }
