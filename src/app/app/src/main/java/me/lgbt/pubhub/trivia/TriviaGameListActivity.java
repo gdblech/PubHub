@@ -24,7 +24,6 @@ public class TriviaGameListActivity extends AppCompatActivity {
     private String phbToken;
     private ArrayList<String> listOfGames;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
