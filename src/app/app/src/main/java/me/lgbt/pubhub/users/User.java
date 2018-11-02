@@ -2,23 +2,24 @@ package me.lgbt.pubhub.users;
 
 import android.net.Uri;
 
-public class User {
+//TODO are we using intent keys?
 
+public class User {
     private int userId;
-    private String email;
     private String userName;
-    private String roleName;
+    private int nickname;
+    private String email;
+    private String role;
     private int authType;
     private Uri profilePicture;
     private int teamId;
     private String teamName;
-    private int nickname;
 
     public User() {
         userId = 0;
         email = null;
         userName = null;
-        roleName = null;
+        role = null;
         authType = 0;
         profilePicture = null;
         teamId = 0;
@@ -29,7 +30,7 @@ public class User {
         this.userId = userId;
         this.email = email;
         this.userName = userName;
-        this.roleName = roleName;
+        this.role = roleName;
         this.authType = authType;
         this.profilePicture = Uri.parse(profilePicturePath);
         this.teamId = teamId;
@@ -40,7 +41,7 @@ public class User {
         this.userId = userId;
         this.email = email;
         this.userName = userName;
-        this.roleName = roleName;
+        this.role = roleName;
         this.authType = authType;
         this.profilePicture = profilePicture;
         this.teamId = teamId;
@@ -88,11 +89,11 @@ public class User {
     }
 
     public String getRoleName() {
-        return roleName;
+        return role;
     }
 
     public void setRoleName(String roleName) {
-        this.roleName = roleName;
+        this.role = roleName;
     }
 
     public int getAuthType() {
@@ -107,7 +108,7 @@ public class User {
         return profilePicture.toString();
     }
 
-    public Uri getProfilePicture(){
+    public Uri getProfilePicture() {
         return profilePicture;
     }
 

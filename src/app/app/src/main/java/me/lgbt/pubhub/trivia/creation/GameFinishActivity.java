@@ -68,7 +68,6 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         Button setDate = findViewById(R.id.selectDateFinish);
         newFragment = new DatePickerFragment();
 
-
         progressBar.setVisibility(View.INVISIBLE);
 
         unPack();

@@ -158,6 +158,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void sendMessage() {
+        System.out.println("doot doot");
         Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);

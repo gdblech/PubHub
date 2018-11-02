@@ -49,7 +49,6 @@ public class RestAuthenticate extends Thread {
                     connection(backend);
                     break;
                 }
-
                 case ConnectionTypes.HTTPS: {
                     //connection setup
                     URL server = new URL("https://" + url);
@@ -67,6 +66,7 @@ public class RestAuthenticate extends Thread {
         }
     }
 
+    // HTTPS Connection
     private void connection(HttpsURLConnection backend) {
         try {
             //send out
@@ -86,7 +86,7 @@ public class RestAuthenticate extends Thread {
 
         } catch (ProtocolException e) {
             //Request method is hard coded and should not throw an error. but if it does:
-            String message = "ttp Url Connection error: " + e.getMessage() + "\n Check request method";
+            String message = "Http Url Connection error: " + e.getMessage() + "\n Check request method";
             Log.e("RestAuthenticate Conn", message);
         } catch (IOException e) {
             String message = "Http Url Connection error: " + e.getMessage();
@@ -94,6 +94,7 @@ public class RestAuthenticate extends Thread {
         }
     }
 
+    // HTTP Connection
     private void connection(HttpURLConnection backend) {
         try {
             //send out
