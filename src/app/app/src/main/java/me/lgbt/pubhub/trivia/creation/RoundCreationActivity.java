@@ -26,6 +26,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
     private ImageView picture;
     private TriviaRound currentRound;
     private TriviaGame currentGame;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,8 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         } else {
             title.setText(currentRound.getTitle());
             text.setText(currentRound.getText());
-            picture.setImageURI(currentRound.getPicture());
+            pictureUri = currentRound.getPicture();
+            picture.setImageURI(pictureUri);
         }
     }
 
@@ -80,7 +82,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
                     currentRound.setTitle(gTitle);
                     currentRound.setText(gText);
                     currentRound.setCreationMode(true);
-                    sendMessage(view);
+                    sendMessage();
                 }
                 break;
             }
@@ -95,13 +97,14 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage() {
         Intent nextActivity = new Intent(this, QuestionListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
+        extras.putInt(IntentKeys.RPOSITION, position);
 
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
@@ -114,6 +117,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
             phbToken = data.getString(IntentKeys.PUBHUB);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
+            position = data.getInt(IntentKeys.RPOSITION);
         }
     }
 }

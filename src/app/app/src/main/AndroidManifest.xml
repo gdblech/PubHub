@@ -41,6 +41,7 @@
         <activity android:name=".WSClient.ChatTabActivity" />
         <activity android:name=".trivia.start.TeamSelectionActivity" />
         <activity android:name=".trivia.start.QRCodeScanner" />
+        <activity android:name=".trivia.start.WaitingForGameActivity"></activity>
     </application>
 
 </manifest>

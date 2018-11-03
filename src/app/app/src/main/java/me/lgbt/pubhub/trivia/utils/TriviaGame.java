@@ -114,4 +114,8 @@ public class TriviaGame extends Slide implements Parcelable {
             rounds.trimToSize();
         }
     }
+
+    public void replaceRound(int position, TriviaRound round) {
+        rounds.set(position, round);
+    }
 }

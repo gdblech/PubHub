@@ -31,7 +31,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.rest.RestConnection;
+import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {

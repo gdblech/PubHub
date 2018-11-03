@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.rest.RestConnection;
+import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
 

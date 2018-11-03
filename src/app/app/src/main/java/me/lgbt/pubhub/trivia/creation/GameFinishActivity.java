@@ -36,7 +36,7 @@ import java.util.Calendar;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.rest.RestConnection;
+import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
@@ -202,7 +202,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
 
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            picture.compress(Bitmap.CompressFormat.PNG, 85, stream);
+            picture.compress(Bitmap.CompressFormat.WEBP, 85, stream);
             byte[] picBytes = stream.toByteArray();
 
             base64Pic = Base64.encodeToString(picBytes, Base64.DEFAULT);

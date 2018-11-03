@@ -26,6 +26,8 @@ import me.lgbt.pubhub.trivia.utils.TriviaRound;
 public class CreateQuestionsActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int PICK_IMAGE = 125;
     private String phbToken;
+    private int questionPosition;
+    private int roundPosition;
     private TriviaGame currentGame;
     private TriviaRound currentRound;
     private TriviaQuestion currentQuestion;
@@ -53,13 +55,15 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         doneButton.setOnClickListener(this);
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage() {
         Intent nextActivity = new Intent(this, QuestionListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
+        extras.putInt(IntentKeys.RPOSITION, roundPosition);
+
 
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
@@ -72,6 +76,9 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
             phbToken = data.getString(IntentKeys.PUBHUB);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
+            currentQuestion = data.getParcelable(IntentKeys.QUESTION);
+            questionPosition = data.getInt(IntentKeys.QPOSITION);
+            roundPosition = data.getInt(IntentKeys.RPOSITION);
         }
     }
 
@@ -82,8 +89,10 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         } else {
             title.setText(currentQuestion.getTitle());
             text.setText(currentQuestion.getText());
-            picture.setImageURI(currentQuestion.getPicture());
+            pictureUri = currentQuestion.getPicture();
+            picture.setImageURI(pictureUri);
             answer.setText(currentQuestion.getAnswer());
+
         }
     }
 
@@ -107,9 +116,12 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
                     currentQuestion.setTitle(gTitle);
                     currentQuestion.setText(gText);
                     currentQuestion.setAnswer(gAnswer);
-                    currentRound.addQuestion(currentQuestion);
-
-                    sendMessage(view);
+                    if (questionPosition == -1) {
+                        currentRound.addQuestion(currentQuestion);
+                    } else {
+                        currentRound.replaceQuestion(questionPosition, currentQuestion);
+                    }
+                    sendMessage();
                 }
                 break;
             }
