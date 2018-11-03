@@ -5,7 +5,7 @@ import android.net.Uri;
 //TODO are we using intent keys?
 
 public class User {
-    private int userId;
+    private static int userId;
     private String userName;
     private int nickname;
     private String email;
@@ -64,7 +64,7 @@ public class User {
         this.teamName = teamName;
     }
 
-    public int getUserId() {
+    public static int getUserId() {
         return userId;
     }
 

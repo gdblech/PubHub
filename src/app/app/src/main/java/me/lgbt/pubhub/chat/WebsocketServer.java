@@ -2,6 +2,7 @@
 
 package me.lgbt.pubhub.chat;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -16,9 +17,9 @@ import javax.websocket.server.ServerEndpoint;
  *
  * Use wss (websocket secure)
  */
-
+@ApplicationScoped
 @ServerEndpoint("ws://pubhub.me:8082")
-public class WebsocketHandler {
+public class WebsocketServer { //TODO Rename Class to Listener?
 
     @OnOpen
     public void openSession(Session session) {
