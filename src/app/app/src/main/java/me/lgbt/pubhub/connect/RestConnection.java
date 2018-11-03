@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.connect.rest;
+package me.lgbt.pubhub.connect;
 
 import android.util.Log;
 

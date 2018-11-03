@@ -10,16 +10,20 @@ import android.view.View;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.trivia.utils.ClickListener;
 import me.lgbt.pubhub.trivia.utils.QuestionAdapter;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
-public class QuestionListActivity extends AppCompatActivity implements View.OnClickListener {
+public class QuestionListActivity extends AppCompatActivity implements View.OnClickListener, ClickListener {
     private String phbToken;
     private TriviaGame currentGame;
     private TriviaRound currentRound;
     private TriviaQuestion selectedQuestion;
+    private int questionPosition;
+    private int roundPosition;
+    private QuestionAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,7 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
 
         unPack();
 
-        QuestionAdapter adapter = new QuestionAdapter(currentRound.getQuestions());
+        adapter = new QuestionAdapter(currentRound.getQuestions(), this);
         questionList.setAdapter(adapter);
 
         questionList.setLayoutManager(new LinearLayoutManager(this));
@@ -40,15 +44,19 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         doneQuestion.setOnClickListener(this);
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage() {
         Intent nextActivity = new Intent(this, CreateQuestionsActivity.class);
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
+        extras.putInt(IntentKeys.RPOSITION, roundPosition);
         if (selectedQuestion != null) {
             extras.putParcelable(IntentKeys.QUESTION, selectedQuestion);
+            extras.putInt(IntentKeys.QPOSITION, questionPosition);
+        } else {
+            extras.putInt(IntentKeys.QPOSITION, -1);
         }
 
         nextActivity.putExtras(extras);
@@ -56,12 +64,17 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         finish();
     }
 
-    public void doneMessage(View view) {
+    public void doneMessage() {
         Intent doneActivity = new Intent(this, RoundListActivity.class);
         Bundle extras = new Bundle();
 
         currentRound.trimQuestions();
-        currentGame.addRound(currentRound);
+        if (roundPosition == -1) {
+            currentGame.addRound(currentRound);
+        } else {
+            currentGame.replaceRound(roundPosition, currentRound);
+        }
+
         extras.putParcelable(IntentKeys.GAME, currentGame);
         extras.putString(IntentKeys.PUBHUB, phbToken);
         doneActivity.putExtras(extras);
@@ -76,6 +89,7 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
             phbToken = data.getString(IntentKeys.PUBHUB);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
+            roundPosition = data.getInt(IntentKeys.RPOSITION);
         }
     }
 
@@ -83,10 +97,25 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addQuestionButton:
-                sendMessage(view);
+                sendMessage();
                 break;
             case R.id.quenstionListDoneButton:
-                doneMessage(view);
+                doneMessage();
+                break;
+        }
+    }
+
+    @Override
+    public void onPositionClicked(int position, int button) {
+        switch (button) {
+            case R.id.editButton:
+                selectedQuestion = currentRound.getQuestions().get(position);
+                questionPosition = position;
+                sendMessage();
+                break;
+            case R.id.deleteButton:
+                currentRound.removeQuestion(position); //todo add confirmation alert dialog box
+                adapter.notifyItemRemoved(position);
                 break;
         }
     }
