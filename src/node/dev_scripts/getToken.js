@@ -7,7 +7,8 @@ let getToken = async (email) => {
 		let user = await User.find({
 			where: {
 				email
-			}
+			},
+			include: [Role]
 		});
 
 		// Generate pubhub JWT and send as response

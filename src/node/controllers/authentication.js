@@ -5,9 +5,14 @@ logger.level = process.env.LOG_LEVEL || 'info';
 const DEFAULT_ROLE = 'Customer';
 const DEFAULT_PROVIDER = 'google';
 const jwt = require('jsonwebtoken');
-const User = require('../models').User;
-const Role = require('../models').Role;
+const Models = require('../models');
+const OAuth2Client = require('google-auth-library').OAuth2Client;
 
+
+// configure Google OAuth2Client
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+logger.debug(CLIENT_ID);
+const OAClient = new OAuth2Client(CLIENT_ID);
 /**
  * Function for handling a authorization request, validates the
  * Google sign in JWT, and sends a PubHub generated JWT
@@ -15,20 +20,12 @@ const Role = require('../models').Role;
  * @param {*} res 
  */
 let auth = async (req, res) => {
-	// configure Google OAuth2Client
-	const {
-		OAuth2Client
-	} = require('google-auth-library');
-	const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-	logger.debug(CLIENT_ID);
-	const client = new OAuth2Client(CLIENT_ID);
-
 	let gtoken = req.token;
 	let ticket;
 
 	// validate token and get id from it
 	try {
-		ticket = await client.verifyIdToken({
+		ticket = await OAClient.verifyIdToken({
 			idToken: gtoken,
 			audience: CLIENT_ID
 		});
@@ -55,7 +52,7 @@ let auth = async (req, res) => {
 
 	// Load the user if they exist, create a new user if not, using information from JWT
 	try {
-		let user = await User.findOrCreate2({
+		let user = await Models.User.findOrCreate2({
 			where: {
 				userId
 			},
@@ -97,11 +94,11 @@ let validate = async (token) => {
 
 	let user;
 	try {
-		user = await User.find({
+		user = await Models.User.find({
 			where: {
 				userId: decoded.userId
 			},
-			include: [Role]
+			include: [Models.Role]
 		});
 	} catch (err) {
 		err.type = "USER-LOAD";
@@ -119,8 +116,18 @@ let getProfile = async (req, res) => {
 	res.send(JSON.stringify(req.user.getJSON()));
 }
 
+let getDependencies = () => {
+	return {
+		jwt,
+		Models,
+		OAClient
+	};
+};
+
+
 module.exports = {
 	auth,
 	validate,
-	getProfile
+	getProfile,
+	getDependencies
 }
