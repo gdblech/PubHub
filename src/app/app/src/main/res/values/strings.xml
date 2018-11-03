@@ -17,10 +17,12 @@
     <string name="upload">Upload</string>
     <string name="skip_to_work">Skip To Work</string>
     <string name="enter_host_name">Enter Host Name</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 
-
-
->>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
+    >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
 
 </resources>
