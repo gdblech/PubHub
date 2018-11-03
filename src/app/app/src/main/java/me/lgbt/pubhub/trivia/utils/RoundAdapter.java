@@ -71,16 +71,7 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-            int buttonID = 0;
-            switch (view.getId()) {
-                case R.id.editButton:
-                    buttonID = R.id.editButton;
-                    break;
-                case R.id.deleteButton:
-                    buttonID = R.id.deleteButton;
-                    break;
-            }
-            listenerRef.get().onPositionClicked(getAdapterPosition(), buttonID);
+            listenerRef.get().onPositionClicked(getAdapterPosition(), view.getId());
         }
 
     }
