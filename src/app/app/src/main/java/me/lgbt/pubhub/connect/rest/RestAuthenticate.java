@@ -114,7 +114,7 @@ public class RestAuthenticate extends Thread {
 
         } catch (ProtocolException e) {
             //Request method is hard coded and should not throw an error. but if it does:
-            String message = "ttp Url Connection error: " + e.getMessage() + "\n Check request method";
+            String message = "Http Url Connection error: " + e.getMessage() + "\n Check request method";
             Log.e("RestAuthenticate Conn", message);
         } catch (IOException e) {
             String message = "Http Url Connection error: " + e.getMessage();

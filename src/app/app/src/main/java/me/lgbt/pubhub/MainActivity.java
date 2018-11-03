@@ -1,5 +1,6 @@
 package me.lgbt.pubhub;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,38 +8,110 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.trivia.creation.QuestionListActivity;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Headers;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
+
 public class MainActivity extends AppCompatActivity {
+    private Button start;
+    private TextView output;
+    private OkHttpClient client;
+    private String phbToken;
+    private WebSocket ws;
 
-    private TextView mTextMessage;
+    private final class EchoWebSocketListener extends WebSocketListener {
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
 
         @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
-            }
-            return false;
+        public void onOpen(WebSocket webSocket, Response response) {
+            System.out.println("MessageToServer: " + "test successful");
+            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success <3\"}}");
+
+//            webSocket.send("Hello, it's Saurel !");
+//            webSocket.send("What's up ?");
+//            webSocket.send(ByteString.decodeHex("deadbeef"));
+//            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
         }
-    };
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            System.out.println("MessageFromServer: " + text);
+            output("Receiving : " + text);
+        }
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes) {
+            output("Receiving bytes : " + bytes.hex());
+        }
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+            output("Closing : " + code + " / " + reason);
+        }
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            output("Error : " + t.getMessage());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("MainActivity onCreate successful");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        unPack();
+
+        System.out.println("Unpack successful");
+        start = (Button) findViewById(R.id.start);
+        output = (TextView) findViewById(R.id.output);
+        client = new OkHttpClient();
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                start();
+            }
+        });
     }
 
+    public void unPack() {
+        Bundle data = getIntent().getExtras();
+        if (data != null) {
+            phbToken = data.getString(IntentKeys.PUBHUB);
+        }
+    }
+
+    private void start() {
+        System.out.print("I made it to start.");
+        Intent nextActivity = new Intent(this, MainActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+
+        String authHeader = "Bearer " + phbToken;
+        System.out.println("Auth token: " + authHeader);
+
+        Request request = new Request.Builder().url("ws://pubhub.me:8082").addHeader("Authorization", authHeader).build();
+        EchoWebSocketListener listener = new EchoWebSocketListener();
+        ws = client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
+    }
+
+    private void output(final String txt) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                output.setText(output.getText().toString() + "\n\n" + txt);
+            }
+        });
+    }
 }
