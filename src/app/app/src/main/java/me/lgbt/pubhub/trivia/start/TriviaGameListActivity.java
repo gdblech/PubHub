@@ -19,9 +19,10 @@ import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
+import me.lgbt.pubhub.trivia.utils.ClickListener;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
 
-public class TriviaGameListActivity extends AppCompatActivity {
+public class TriviaGameListActivity extends AppCompatActivity implements View.OnClickListener, ClickListener {
     private String phbToken;
     private ArrayList<String> listOfGames;
 
@@ -36,16 +37,11 @@ public class TriviaGameListActivity extends AppCompatActivity {
         unPack();
         fetchGameList();
 
-        GameAdapter adapter = new GameAdapter(listOfGames);
+        GameAdapter adapter = new GameAdapter(listOfGames, this);
         gameList.setAdapter(adapter);
         gameList.setLayoutManager(new LinearLayoutManager(this));
 
-        newGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendMessage(view);
-            }
-        });
+        newGame.setOnClickListener(this);
     }
 
     public void fetchGameList() {
@@ -84,7 +80,7 @@ public class TriviaGameListActivity extends AppCompatActivity {
         }
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage() {
         Intent nextActivity = new Intent(this, GameSlideCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -97,6 +93,28 @@ public class TriviaGameListActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.newGame){
+            sendMessage();
+        }
+    }
+
+    @Override
+    public void onPositionClicked(int position, int button) {
+        switch (button){
+            case R.id.editButton:{
+                break; //todo add edit functionality
+            }
+            case R.id.deleteButton:{
+                break; //todo add delete functionality
+            }
+            case R.id.playButton:{
+                break; //todo add waiting to start activity
+            }
         }
     }
 }

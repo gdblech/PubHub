@@ -22,6 +22,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
     private RecyclerView roundList;
     private TriviaRound selectedRound;
     private int roundPosition;
+    private RoundAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
 
         unPack();
 
-        RoundAdapter adapter = new RoundAdapter(currentGame.getRounds(), this);
+        adapter = new RoundAdapter(currentGame.getRounds(), this);
         roundList.setAdapter(adapter);
         roundList.setLayoutManager(new LinearLayoutManager(this));
 
@@ -99,7 +100,8 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
                 sendMessage();
                 break;
             case R.id.deleteButton:
-                //TODO implement delete functionality
+                currentGame.removeRound(position); //todo add confirmation alert dialog box
+                adapter.notifyItemRemoved(position);
                 break;
         }
     }
