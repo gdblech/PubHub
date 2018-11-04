@@ -38,11 +38,6 @@ public class MainActivity extends AppCompatActivity {
         public void onOpen(WebSocket webSocket, Response response) {
             System.out.println("MessageToServer: " + "test successful");
             webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success <3\"}}");
-
-//            webSocket.send("Hello, it's Saurel !");
-//            webSocket.send("What's up ?");
-//            webSocket.send(ByteString.decodeHex("deadbeef"));
-//            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
         }
         @Override
         public void onMessage(WebSocket webSocket, String text) {
