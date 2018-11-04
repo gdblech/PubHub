@@ -2,6 +2,11 @@ package me.lgbt.pubhub.Users;
 
 import android.net.Uri;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import me.lgbt.pubhub.connect.RestConnection;
+
 public class User {
 
     private int userId;
@@ -44,6 +49,19 @@ public class User {
         this.profilePicture = profilePicture;
         this.teamId = teamId;
         this.teamName = teamName;
+    }
+    public User(String server, String phbToken){
+        String userJson = fetchJsonFromServer(server, phbToken);
+        if(userJson != null){
+            JSONObject json = null;
+            try {
+                json = new JSONObject(userJson);
+                userName = json.getString("userName");
+                roleName = json.getString("role");
+            } catch (JSONException e) {
+                //if it fails give up
+            }
+        }
     }
 
     public int getTeamId() {
@@ -116,5 +134,17 @@ public class User {
 
     public void setProfilePicture(String profilePicturePath) {
         this.profilePicture = Uri.parse(profilePicturePath);
+    }
+
+    private String fetchJsonFromServer(String server, String PHBToken){
+        RestConnection getProfile = new RestConnection(server, PHBToken, RestConnection.FETCHPROFILE);
+        getProfile.start();
+        try {
+            getProfile.join();
+        } catch (InterruptedException e) {
+            return null;
+        }
+        return getProfile.getResponse();
+
     }
 }

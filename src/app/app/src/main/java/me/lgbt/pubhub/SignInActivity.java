@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
+import me.lgbt.pubhub.trivia.start.WaitingForGameActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -120,7 +121,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
 //        if(account != null && phbToken != null){
-//            Intent nextActivity = new Intent(this, TeamSelectionActivity.class);
+//            Intent nextActivity = new Intent(this, WaitingForGameActivity.class);
 //            Bundle extras = new Bundle();
 //            extras.putString(IntentKeys.PUBHUB, phbToken);
 //            nextActivity.putExtras(extras);
