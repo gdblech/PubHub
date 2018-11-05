@@ -23,6 +23,9 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
     private Button start;
     private TextView output;
@@ -42,7 +45,22 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             System.out.println("MessageFromServer: " + text);
-            output("Receiving : " + text);
+            try {
+                JSONObject messageObject = new JSONObject(text);
+                String messageType = messageObject.getString("messageType");
+                if (messageType.equals("ServerClientChatMessage")) {
+                    JSONArray messages = messageObject.getJSONObject("payload").getJSONArray("messages");
+                    for (int i = 0; i < messages.length(); i++) {
+                        JSONObject message = messages.getJSONObject(i);
+                        String user = message.getString("user");
+                        String messageString = message.getString("message");
+                        String displayMessage = user + ": " + messageString;
+                        output(displayMessage);
+                    }
+                }
+            }catch(org.json.JSONException e) {
+                System.out.println(e.getMessage());
+            }
         }
         @Override
         public void onMessage(WebSocket webSocket, ByteString bytes) {
