@@ -31,11 +31,16 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_round_creation);
-        title = findViewById(R.id.roundTitle);
-        text = findViewById(R.id.roundText);
-        picture = findViewById(R.id.roundCreationImage);
-        FloatingActionButton doneButton = findViewById(R.id.roundDoneButton);
+
+        setContentView(R.layout.slide_creation);
+        title = findViewById(R.id.slideCreateTitle);
+        text = findViewById(R.id.slideCreateText1);
+        picture = findViewById(R.id.slideCreateImage);
+        FloatingActionButton doneButton = findViewById(R.id.questionDoneButton);
+
+
+        title.setHint(R.string.round_title);
+        text.setHint(R.string.round_text);
 
         unPack();
         roundSetUp();
@@ -68,7 +73,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.roundDoneButton: {
+            case R.id.questionDoneButton: {
                 String gTitle = title.getText().toString();
                 String gText = text.getText().toString();
                 if (pictureUri == null) {
@@ -86,7 +91,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
                 }
                 break;
             }
-            case R.id.roundCreationImage:
+            case R.id.slideCreateImage:
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);

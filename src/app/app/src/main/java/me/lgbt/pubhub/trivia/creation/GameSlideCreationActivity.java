@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,20 +23,22 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
     private Uri pictureUri;
     private TriviaGame currentGame;
     private EditText title;
-    private EditText gameText;
+    private EditText text;
     private ImageView picture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_game_slide_creation);
+        setContentView(R.layout.slide_creation);
+        title = findViewById(R.id.slideCreateTitle);
+        text = findViewById(R.id.slideCreateText1);
+        picture = findViewById(R.id.slideCreateImage);
+        FloatingActionButton doneButton = findViewById(R.id.questionDoneButton);
 
-        picture = findViewById(R.id.gameCreationImage);
-        FloatingActionButton doneButton = findViewById(R.id.gameSlideDone);
-        title = findViewById(R.id.gameTitle);
-        gameText = findViewById(R.id.gameSlideText);
-        picture.setImageResource(R.drawable.add_image_icon);
+
+        title.setHint(R.string.enter_game_title);
+        text.setHint(R.string.enter_game_text);
 
         unPack();
         setUpGame();
@@ -60,7 +63,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
             picture.setImageResource(R.drawable.add_image_icon);
         } else {
             title.setText(currentGame.getTitle());
-            gameText.setText(currentGame.getText());
+            text.setText(currentGame.getText());
             picture.setImageURI(currentGame.getPicture());
         }
     }
@@ -68,7 +71,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.gameCreationImage:
+            case R.id.slideCreateImage:
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
@@ -76,9 +79,9 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
                 intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
                 break;
-            case R.id.gameSlideDone: {
+            case R.id.questionDoneButton: {
                 String gTitle = title.getText().toString();
-                String gText = gameText.getText().toString();
+                String gText = text.getText().toString();
                 if (pictureUri == null) {
                     Toast.makeText(this, "A Picture is Required", Toast.LENGTH_LONG).show();
                 } else if (gTitle.equals("")) {

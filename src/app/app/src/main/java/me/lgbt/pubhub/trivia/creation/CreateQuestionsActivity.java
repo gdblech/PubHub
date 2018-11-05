@@ -1,12 +1,7 @@
 package me.lgbt.pubhub.trivia.creation;
 
-/**
- * @author Geoffrey Blech
- * Activity for Creating Questions for games of Trivia
- * @since 10/13/2018
- */
-
 import android.content.Intent;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +18,11 @@ import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
+/**
+ * @author Geoffrey Blech
+ * Activity for Creating Questions for games of Trivia
+ * @since 10/13/2018
+ */
 public class CreateQuestionsActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int PICK_IMAGE = 125;
     private String phbToken;
@@ -41,12 +41,17 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_questions);
-        title = findViewById(R.id.questionTitle);
-        text = findViewById(R.id.questionText);
-        answer = findViewById(R.id.answerText);
-        picture = findViewById(R.id.questionCreationImage);
+        setContentView(R.layout.slide_creation);
+        title = findViewById(R.id.slideCreateTitle);
+        text = findViewById(R.id.slideCreateText2);
+        answer = findViewById(R.id.slideCreateText1);
+        picture = findViewById(R.id.slideCreateImage);
         doneButton = findViewById(R.id.questionDoneButton);
+
+        text.setVisibility(View.VISIBLE);
+        title.setHint(R.string.question_title);
+        text.setHint(R.string.question_text);
+        answer.setHint(R.string.enter_answer);
 
         unPack();
         questionSetUp();
@@ -108,7 +113,7 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
                 } else if (gTitle.equals("")) {
                     Toast.makeText(this, "A Title is Required", Toast.LENGTH_LONG).show();
                 } else if (gText.equals("")) {
-                    Toast.makeText(this, "A Text is Required", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "A Question is Required", Toast.LENGTH_LONG).show();
                 } else if (gAnswer.equals("")) {
                     Toast.makeText(this, "An Answer is Required", Toast.LENGTH_LONG).show();
                 } else {
@@ -125,7 +130,7 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             }
-            case R.id.questionCreationImage:
+            case R.id.slideCreateImage:
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
