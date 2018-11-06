@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+
 import me.lgbt.pubhub.chat.ChatClickListener;
 import me.lgbt.pubhub.chat.ChatFragment;
 import me.lgbt.pubhub.chat.UserMessage;
@@ -79,11 +81,19 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         client.dispatcher().executorService().shutdown();
     }
 
-    private void output(final String txt) {
+    private void output(final UserMessage mes) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //output.setText(output.getText().toString() + "\n\n" + txt);
+                chatFrag.addMessage(mes);
+            }
+        });
+    }
+    private void output(final String mes) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //chatFrag.addMessage(mes);
             }
         });
     }
@@ -95,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             System.out.println("MessageToServer: " + "test successful");
-            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success <3\"}}");
+//            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success <3\"}}");
         }
 
         @Override
@@ -110,9 +120,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         JSONObject message = messages.getJSONObject(i);
                         String user = message.getString("user");
                         String messageString = message.getString("message");
-                        //message.getString("time");
-                        UserMessage mes = new UserMessage(messageString, user, 1541524584 + (i * 621));
-                        chatFrag.addMessage(mes);
+                        String timeStamp = message.getString("timestamp");
+                        UserMessage mes = new UserMessage(messageString, user, timeStamp);
+                        output(mes);
                         // String displayMessage = user + ": " + messageString;
                         // output(displayMessage);
                     }
