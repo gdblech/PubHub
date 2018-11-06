@@ -15,14 +15,14 @@ import me.lgbt.pubhub.connect.IntentKeys;
 
 
 public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView.ResultHandler {
-    private ZXingScannerView mScannerView;
     final private int PERMISSION_CAMERA = 1125;
+    private ZXingScannerView mScannerView;
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
 
-        if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CAMERA);
         }
 
@@ -35,7 +35,7 @@ public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case PERMISSION_CAMERA:
                 Toast.makeText(this, "Camera Permission Required", Toast.LENGTH_SHORT).show(); //may require sending user back to the activity
         }
