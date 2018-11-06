@@ -68,8 +68,10 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
                 jsonList = new JSONArray(json);
                 for (int i = 0; i < jsonList.length(); i++) {
                     JSONObject obj = jsonList.getJSONObject(i);
+                    String s = obj.getString("date");
+                    //s = s.substring(0,9);
                     String str = obj.getString("gameName") + ", " +
-                            obj.getString("hostName") + ", " + obj.getString("date");
+                            obj.getString("hostName") + ", " + s;
                     if (!str.contains("null")) {
                         listOfGames.add(str);
                     }
