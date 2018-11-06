@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import me.lgbt.pubhub.chat.ChatClickListener;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.trivia.creation.QuestionListActivity;
 import okhttp3.OkHttpClient;
@@ -26,12 +27,18 @@ import okio.ByteString;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ChatClickListener {
     private Button start;
     private TextView output;
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
+    private String textFromFragment;
+
+    @Override
+    public void clicked(String data) {
+        textFromFragment = data;
+    }
 
     private final class EchoWebSocketListener extends WebSocketListener {
 
