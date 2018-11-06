@@ -72,6 +72,9 @@ module.exports = (sequelize, DataTypes) => {
 		let payload = {};
 		payload.userId = this.userId;
 		payload.userName = this.userName;
+		if (this.Role) {
+			payload.role = this.Role;
+		}
 		return payload;
 	};
 
