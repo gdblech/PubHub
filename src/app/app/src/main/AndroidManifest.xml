@@ -44,7 +44,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
-        <activity android:name=".TestActivty"></activity>
+        <activity android:name=".TestActivty" />
+        <activity android:name=".MainActivity2"></activity>
     </application>
 
 </manifest>
