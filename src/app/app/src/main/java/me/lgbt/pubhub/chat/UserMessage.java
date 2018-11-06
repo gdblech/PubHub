@@ -1,12 +1,14 @@
 package me.lgbt.pubhub.chat;
 
+import android.support.annotation.NonNull;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class UserMessage extends Message{
+public class UserMessage extends Message implements Comparable<UserMessage> {
 
     private long time;
     private String text;
@@ -66,5 +68,11 @@ public class UserMessage extends Message{
         return stamp.getTime() - 18000000L;
 
     }
+
+    @Override
+    public int compareTo(UserMessage msg){
+        return (int)(this.time - msg.getTime());
+    }
+
 
 }
