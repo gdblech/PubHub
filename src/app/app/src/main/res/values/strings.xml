@@ -30,9 +30,9 @@
     <string name="upload">Upload</string>
     <string name="skip_to_work">Skip To Work</string>
     <string name="enter_host_name">Enter Host Name</string>
-
-
-
+    <string name="host">Host</string>
+    <string name="play">Play</string>
+    <string name="waiting_text">Waiting For the Host to Launch the Game</string>
 
 
 </resources>

@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
 		gameName: DataTypes.STRING,
 		title: DataTypes.STRING,
 		text: DataTypes.STRING,
-		image: DataTypes.STRING
+		image: DataTypes.STRING,
+		completed: DataTypes.BOOLEAN
 	}, {});
 	TriviaGame.associate = function (models) {
 		// associations can be defined here
