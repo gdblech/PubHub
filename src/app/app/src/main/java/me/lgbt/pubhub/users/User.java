@@ -50,19 +50,7 @@ public class User {
         this.teamId = teamId;
         this.teamName = teamName;
     }
-    public User(String server, String phbToken){
-        String userJson = fetchJsonFromServer(server, phbToken);
-        if(userJson != null){
-            JSONObject json = null;
-            try {
-                json = new JSONObject(userJson);
-                userName = json.getString("userName");
-                roleName = json.getString("role");
-            } catch (JSONException e) {
-                //if it fails give up
-            }
-        }
-    }
+
 
     public int getTeamId() {
         return teamId;
