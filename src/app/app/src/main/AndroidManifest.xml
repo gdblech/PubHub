@@ -43,7 +43,8 @@
         <activity android:name=".QRCodeScanner" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/title_activity_main" />
+        <activity android:name=".TestActivty"></activity>
     </application>
 
 </manifest>
