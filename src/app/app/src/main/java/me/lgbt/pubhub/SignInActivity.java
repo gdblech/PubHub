@@ -29,15 +29,9 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-//import me.lgbt.pubhub.chat.MessageListActivity;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.rest.ConnectionTypes;
-import me.lgbt.pubhub.connect.rest.RestAuthenticate;
-import me.lgbt.pubhub.trivia.TriviaGameListActivity;
-import me.lgbt.pubhub.trivia.creation.GameFinishActivity;
 import me.lgbt.pubhub.connect.RestConnection;
-import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
-import me.lgbt.pubhub.trivia.start.WaitingForGameActivity;
+
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
