@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.Task;
 
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
+import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
 
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
@@ -49,8 +50,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //locate button on the activity gui and set its click behavior
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
-        Button skipToWorkButton = findViewById(R.id.skip_to_current);
-        skipToWorkButton.setOnClickListener(this);
+        Button createTriviaButton = findViewById(R.id.go_to_create_trivia);
+        createTriviaButton.setOnClickListener(this);
+        Button chatButton = findViewById(R.id.go_to_chat);
+        chatButton.setOnClickListener(this);
 
         //sign in variables
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -91,8 +94,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.sign_in_button:
                 signIn();
                 break;
-            case R.id.skip_to_current:
-                sendMessage();
+            case R.id.go_to_create_trivia:
+                goToCreateTrivia();
+                break;
+            case R.id.go_to_chat:
+                goToChat();
                 break;
         }
     }
@@ -108,7 +114,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             if (account != null) {
                 googleToken = account.getIdToken();
                 authenticate();
-
             }
             updateUI(account);
         } catch (ApiException e) {
@@ -151,7 +156,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void sendMessage() {
+    private void goToCreateTrivia() {
+        Intent nextActivity = new Intent(this, TriviaGameListActivity.class); //TODO Change back to TriviaGameActivity
+        Bundle extras = new Bundle();
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        nextActivity.putExtras(extras);
+        startActivity(nextActivity);
+        finish();
+    }
+
+    private void goToChat() {
         Intent nextActivity = new Intent(this, MainActivity.class); //TODO Change back to TriviaGameActivity
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
