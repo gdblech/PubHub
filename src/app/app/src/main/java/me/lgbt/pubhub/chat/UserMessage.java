@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class UserMessage extends Message{
 
@@ -52,15 +53,18 @@ public class UserMessage extends Message{
     }
 
     public String getTimeString(){
-        SimpleDateFormat sdf = new SimpleDateFormat("H:mm", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm:ss a", Locale.US);
+
         return sdf.format(time);
     }
 
     private long convertTime(String timeStamp){
-//        timeStamp = timeStamp.replace("Z", "");
-//        Timestamp stamp = Timestamp.valueOf(timeStamp);
-//        return stamp.getTime() / 1000L;
-        return 0;
+
+        timeStamp = timeStamp.replace("Z", "");
+        timeStamp = timeStamp.replace("T", " ");
+        Timestamp stamp = Timestamp.valueOf(timeStamp);
+        return stamp.getTime() - 18000000L;
+
     }
 
 }
