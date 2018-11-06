@@ -78,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
 	/**
 	 * return the JSON representation of the user
 	 */
-	User.prototype.getJSON = function () {
+	User.prototype.toJSON = function () {
 		let json = {};
 		json.userId = this.userId;
 		json.userName = this.userName;

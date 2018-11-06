@@ -116,7 +116,7 @@ let validate = async (token) => {
  * @param {*} res 
  */
 let getProfile = async (req, res) => {
-	res.send(JSON.stringify(req.user.getJSON()));
+	res.send(JSON.stringify(req.user));
 }
 
 module.exports = {

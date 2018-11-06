@@ -14,4 +14,5 @@ public class IntentKeys {
     public static final String TEAM = "005";
     public static final String QPOSITION = "006";
     public static final String RPOSITION = "007";
+    public static final String CHAT = "100";
 }
