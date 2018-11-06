@@ -9,15 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
+    private final ClickListener listener;
     private ArrayList<String> gameList;
 
-    public GameAdapter(ArrayList<String> gameList) {
+    public GameAdapter(ArrayList<String> gameList, ClickListener listener) {
         this.gameList = gameList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -28,7 +31,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
 
         View gameView = inflater.inflate(R.layout.recycler_object, parent, false);
 
-        return new GameAdapter.ViewHolder(gameView);
+        return new GameAdapter.ViewHolder(gameView, listener);
     }
 
     @Override
@@ -36,10 +39,11 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
         String game = gameList.get(position);
 
         TextView textView = viewHolder.title;
-        ImageButton imageButton = viewHolder.editButton;
+        ImageButton editButton = viewHolder.editButton;
+        ImageButton playButton = viewHolder.playButton;
+        ImageButton deleteButton = viewHolder.deleteButton;
 
         textView.setText(game);
-        //TODO add imageButton touch listener
     }
 
     @Override
@@ -48,22 +52,28 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView title;
-        public ImageButton editButton;
-        public ImageButton deleteButton;
+        TextView title;
+        ImageButton editButton;
+        ImageButton deleteButton;
+        ImageButton playButton;
+        private WeakReference<ClickListener> listenerRef;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView, ClickListener listener) {
             super(itemView);
+            listenerRef = new WeakReference<>(listener);
             title = itemView.findViewById(R.id.roundListTitle);
             editButton = itemView.findViewById(R.id.editButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+            playButton = itemView.findViewById(R.id.playButton);
+            playButton.setVisibility(View.VISIBLE);
             editButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
+            playButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
+            listenerRef.get().onPositionClicked(getAdapterPosition(), view.getId());
         }
     }
 }

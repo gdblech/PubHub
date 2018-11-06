@@ -18,7 +18,9 @@ app.use(morgan('common'));
 app.use(bearerToken());
 // authMiddleware needs to be after bearerToken
 app.use(authMiddleware);
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+	limit: '200mb'
+}));
 
 
 app.get('/', (req, res) => res.send('Test'));

@@ -2,7 +2,10 @@ package me.lgbt.pubhub.users;
 
 import android.net.Uri;
 
-//TODO are we using intent keys?
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import me.lgbt.pubhub.connect.RestConnection;
 
 public class User {
     private static int userId;
@@ -46,6 +49,19 @@ public class User {
         this.profilePicture = profilePicture;
         this.teamId = teamId;
         this.teamName = teamName;
+    }
+    public User(String server, String phbToken){
+        String userJson = fetchJsonFromServer(server, phbToken);
+        if(userJson != null){
+            JSONObject json = null;
+            try {
+                json = new JSONObject(userJson);
+                userName = json.getString("userName");
+                roleName = json.getString("role");
+            } catch (JSONException e) {
+                //if it fails give up
+            }
+        }
     }
 
     public int getTeamId() {

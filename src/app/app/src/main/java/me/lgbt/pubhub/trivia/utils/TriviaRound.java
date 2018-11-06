@@ -90,6 +90,10 @@ public class TriviaRound extends Slide implements Parcelable {
         }
     }
 
+    public void replaceQuestion(int position, TriviaQuestion question) {
+        questions.set(position, question);
+    }
+
     public int getNumberOfQuestion() {
         return questions.size();
     }

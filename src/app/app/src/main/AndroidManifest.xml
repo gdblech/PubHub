@@ -29,22 +29,32 @@
         <activity
             android:name=".trivia.creation.CreateQuestionsActivity"
             android:label="@string/title_activity_create_questions"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".trivia.TriviaGameListActivity" />
+            android:theme="@style/AppPubHub"
+            />
+        <activity android:name=".trivia.start.TriviaGameListActivity"
+            android:theme="@style/AppPubHub"/>
         <activity
             android:name=".trivia.creation.GameSlideCreationActivity"
-            android:parentActivityName=".trivia.TriviaGameListActivity" />
-        <activity android:name=".trivia.creation.RoundListActivity" />
-        <activity android:name=".trivia.creation.RoundCreationActivity" />
-        <activity android:name=".trivia.creation.QuestionListActivity" />
-        <activity android:name=".trivia.creation.GameFinishActivity" />
+            android:parentActivityName=".trivia.start.TriviaGameListActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.creation.RoundListActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.creation.RoundCreationActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.creation.QuestionListActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.creation.GameFinishActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.start.TeamSelectionActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.start.QRCodeScanner"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.start.WaitingForGameActivity"
+            android:theme="@style/AppPubHub"/>
         <activity android:name=".chat.MessageListActivity" />
-        <activity android:name=".TeamSelectionActivity" />
-        <activity android:name=".QRCodeScanner" />
-        <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
-        <activity android:name=".MainActivity2"></activity>
+        <activity
     </application>
 
 </manifest>
