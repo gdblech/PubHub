@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -29,18 +29,33 @@
         <activity
             android:name=".trivia.creation.CreateQuestionsActivity"
             android:label="@string/title_activity_create_questions"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".trivia.start.TriviaGameListActivity" />
+            android:theme="@style/AppPubHub"
+            />
+        <activity android:name=".trivia.start.TriviaGameListActivity"
+            android:theme="@style/AppPubHub"/>
         <activity
             android:name=".trivia.creation.GameSlideCreationActivity"
-            android:parentActivityName=".trivia.start.TriviaGameListActivity" />
-        <activity android:name=".trivia.creation.RoundListActivity" />
-        <activity android:name=".trivia.creation.RoundCreationActivity" />
-        <activity android:name=".trivia.creation.QuestionListActivity" />
-        <activity android:name=".trivia.creation.GameFinishActivity" />
-        <activity android:name=".WSClient.ChatTabActivity" />
-        <activity android:name=".trivia.start.TeamSelectionActivity" />
-        <activity android:name=".trivia.start.QRCodeScanner" />
+            android:parentActivityName=".trivia.start.TriviaGameListActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.creation.RoundListActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.creation.RoundCreationActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.creation.QuestionListActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.creation.GameFinishActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.start.TeamSelectionActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.start.QRCodeScanner"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".trivia.start.WaitingForGameActivity"
+            android:theme="@style/AppPubHub"/>
+        <activity android:name=".chat.MessageListActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" />
+
     </application>
 
 </manifest>

@@ -24,6 +24,7 @@
 		"mysql2": "^1.6.1",
 		"sequelize": "^4.38.1",
 		"sequelize-cli": "^4.1.1",
+		"ws": "^6.1.0",
 		"uuid": "^3.3.2"
 	},
 	"devDependencies": {

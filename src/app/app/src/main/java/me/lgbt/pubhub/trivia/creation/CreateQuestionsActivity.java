@@ -1,12 +1,7 @@
 package me.lgbt.pubhub.trivia.creation;
 
-/**
- * @author Geoffrey Blech
- * Activity for Creating Questions for games of Trivia
- * @since 10/13/2018
- */
-
 import android.content.Intent;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,9 +18,16 @@ import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
+/**
+ * @author Geoffrey Blech
+ * Activity for Creating Questions for games of Trivia
+ * @since 10/13/2018
+ */
 public class CreateQuestionsActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int PICK_IMAGE = 125;
     private String phbToken;
+    private int questionPosition;
+    private int roundPosition;
     private TriviaGame currentGame;
     private TriviaRound currentRound;
     private TriviaQuestion currentQuestion;
@@ -39,12 +41,17 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_questions);
-        title = findViewById(R.id.questionTitle);
-        text = findViewById(R.id.questionText);
-        answer = findViewById(R.id.answerText);
-        picture = findViewById(R.id.questionCreationImage);
+        setContentView(R.layout.slide_creation);
+        title = findViewById(R.id.slideCreateTitle);
+        text = findViewById(R.id.slideCreateText2);
+        answer = findViewById(R.id.slideCreateText1);
+        picture = findViewById(R.id.slideCreateImage);
         doneButton = findViewById(R.id.questionDoneButton);
+
+        text.setVisibility(View.VISIBLE);
+        title.setHint(R.string.question_title);
+        text.setHint(R.string.question_text);
+        answer.setHint(R.string.enter_answer);
 
         unPack();
         questionSetUp();
@@ -53,13 +60,15 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         doneButton.setOnClickListener(this);
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage() {
         Intent nextActivity = new Intent(this, QuestionListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
 
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
+        extras.putInt(IntentKeys.RPOSITION, roundPosition);
+
 
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
@@ -72,6 +81,9 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
             phbToken = data.getString(IntentKeys.PUBHUB);
             currentGame = data.getParcelable(IntentKeys.GAME);
             currentRound = data.getParcelable(IntentKeys.ROUND);
+            currentQuestion = data.getParcelable(IntentKeys.QUESTION);
+            questionPosition = data.getInt(IntentKeys.QPOSITION);
+            roundPosition = data.getInt(IntentKeys.RPOSITION);
         }
     }
 
@@ -82,38 +94,43 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         } else {
             title.setText(currentQuestion.getTitle());
             text.setText(currentQuestion.getText());
-            picture.setImageURI(currentQuestion.getPicture());
+            pictureUri = currentQuestion.getPicture();
+            picture.setImageURI(pictureUri);
             answer.setText(currentQuestion.getAnswer());
+
         }
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.questionDoneButton:{
+            case R.id.questionDoneButton: {
                 String gTitle = title.getText().toString();
                 String gText = text.getText().toString();
                 String gAnswer = answer.getText().toString();
-                if(pictureUri == null){
+                if (pictureUri == null) {
                     Toast.makeText(this, "A Picture is Required", Toast.LENGTH_LONG).show();
-                }else if(gTitle.equals("")){
+                } else if (gTitle.equals("")) {
                     Toast.makeText(this, "A Title is Required", Toast.LENGTH_LONG).show();
-                }else if(gText.equals("")){
-                    Toast.makeText(this, "A Text is Required", Toast.LENGTH_LONG).show();
-                }else if(gAnswer.equals("")){
+                } else if (gText.equals("")) {
+                    Toast.makeText(this, "A Question is Required", Toast.LENGTH_LONG).show();
+                } else if (gAnswer.equals("")) {
                     Toast.makeText(this, "An Answer is Required", Toast.LENGTH_LONG).show();
-                } else{
+                } else {
                     currentQuestion.setPicture(pictureUri);
                     currentQuestion.setTitle(gTitle);
                     currentQuestion.setText(gText);
                     currentQuestion.setAnswer(gAnswer);
-                    currentRound.addQuestion(currentQuestion);
-
-                    sendMessage(view);
+                    if (questionPosition == -1) {
+                        currentRound.addQuestion(currentQuestion);
+                    } else {
+                        currentRound.replaceQuestion(questionPosition, currentQuestion);
+                    }
+                    sendMessage();
                 }
                 break;
             }
-            case R.id.questionCreationImage:
+            case R.id.slideCreateImage:
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);

@@ -14,18 +14,30 @@
         android:layout_weight="8" />
 
     <ImageButton
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_baseline_play_circle_outline_24px" />
+
+    <ImageButton
         android:id="@+id/editButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         app:srcCompat="@drawable/ic_baseline_edit_24px" />
 
     <ImageButton
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:layout_weight="1"
         app:srcCompat="@drawable/ic_baseline_delete_24px" />
 </LinearLayout>
