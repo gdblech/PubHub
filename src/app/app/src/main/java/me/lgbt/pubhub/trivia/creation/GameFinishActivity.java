@@ -2,7 +2,7 @@ package me.lgbt.pubhub.trivia.creation;
 
 /**
  * @author Geoffrey Blech
- * Proccess a game of Trivia and sending it to the backend
+ * Proccess a game of trivia and sending it to the backend
  * @since 10/13/2018
  */
 
@@ -67,7 +67,6 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         hostName = findViewById(R.id.hostNameFinish);
         Button setDate = findViewById(R.id.selectDateFinish);
         newFragment = new DatePickerFragment();
-
 
         progressBar.setVisibility(View.INVISIBLE);
 

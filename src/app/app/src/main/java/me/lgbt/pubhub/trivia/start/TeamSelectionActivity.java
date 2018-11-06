@@ -22,7 +22,7 @@ public class TeamSelectionActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_team_selection);
 
         if (!sessionCheck()) {
-            //user is not already on a team, get get QR info or if testing use fake team.
+            // user is not already on a team, get get QR info or if testing use fake team.
             if (!getResources().getBoolean(R.bool.camera)) {
                 teamID = "GenericBar:001";
             } else {
@@ -33,22 +33,21 @@ public class TeamSelectionActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-
-    //Return true if they are already on a team, false if they are not.
+    // Return true if they are already on a team, false if they are not.
     private boolean sessionCheck() {
-        //todo check is user on team
+        // todo check is user on team
         return false;
     }
 
-    //Returns true if the team already exists, returns false if the team does not exist.
+    // Returns true if the team already exists, returns false if the team does not
+    // exist.
     private boolean teamCheck() {
-        //todo check if team exists
+        // todo check if team exists
         return false;
     }
-
 
     private void scanQR() {
-        //start QRCodeScanner activity
+        // start QRCodeScanner activity
         Intent scanner = new Intent(this, QRCodeScanner.class);
         startActivityForResult(scanner, REQ_CODE);
     }
@@ -60,11 +59,11 @@ public class TeamSelectionActivity extends AppCompatActivity implements View.OnC
             teamID = data.getStringExtra(IntentKeys.TEAM);
             Toast.makeText(this, teamID, Toast.LENGTH_LONG).show();
             if (teamCheck()) {
-                //user joins an existing team and moves on.
-                //todo join team send, to backend
+                // user joins an existing team and moves on.
+                // todo join team send, to backend
             } else {
-                //user creates a team then moves on
-                //todo create team if doesn't exist, send to back end
+                // user creates a team then moves on
+                // todo create team if doesn't exist, send to back end
             }
         }
     }

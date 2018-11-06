@@ -3,7 +3,10 @@ const express = require('express');
 const morgan = require('morgan');
 const bearerToken = require('express-bearer-token');
 const authMiddleware = require('./utils/authMiddleware');
+const WebSocketHandler = require('./controllers/websocket/WebSocketHandler');
+const Authentication = require('./controllers/authentication');
 const bodyParser = require('body-parser');
+
 
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
@@ -24,8 +27,8 @@ app.get('/', (req, res) => res.send('Test'));
 
 let authRoute = require('./routes/auth.js');
 app.use('/api/auth', authRoute);
-
 let triviaRoute = require('./routes/trivia');
 app.use('/api/trivia', triviaRoute);
 
 app.listen(port, () => logger.info(`Example app listening on port ${port}!`));
+let wsh = new WebSocketHandler(8082, Authentication.validate);
