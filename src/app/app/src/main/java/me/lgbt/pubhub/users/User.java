@@ -1,13 +1,18 @@
-package me.lgbt.pubhub.Users;
+package me.lgbt.pubhub.users;
 
 import android.net.Uri;
 
-public class User {
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    private int userId;
-    private String email;
+import me.lgbt.pubhub.connect.RestConnection;
+
+public class User {
+    private static int userId;
     private String userName;
-    private String roleName;
+    private int nickname;
+    private String email;
+    private String role;
     private int authType;
     private Uri profilePicture;
     private int teamId;
@@ -17,7 +22,7 @@ public class User {
         userId = 0;
         email = null;
         userName = null;
-        roleName = null;
+        role = null;
         authType = 0;
         profilePicture = null;
         teamId = 0;
@@ -28,7 +33,7 @@ public class User {
         this.userId = userId;
         this.email = email;
         this.userName = userName;
-        this.roleName = roleName;
+        this.role = roleName;
         this.authType = authType;
         this.profilePicture = Uri.parse(profilePicturePath);
         this.teamId = teamId;
@@ -39,12 +44,13 @@ public class User {
         this.userId = userId;
         this.email = email;
         this.userName = userName;
-        this.roleName = roleName;
+        this.role = roleName;
         this.authType = authType;
         this.profilePicture = profilePicture;
         this.teamId = teamId;
         this.teamName = teamName;
     }
+
 
     public int getTeamId() {
         return teamId;
@@ -62,7 +68,7 @@ public class User {
         this.teamName = teamName;
     }
 
-    public int getUserId() {
+    public static int getUserId() {
         return userId;
     }
 
@@ -87,11 +93,11 @@ public class User {
     }
 
     public String getRoleName() {
-        return roleName;
+        return role;
     }
 
     public void setRoleName(String roleName) {
-        this.roleName = roleName;
+        this.role = roleName;
     }
 
     public int getAuthType() {
@@ -106,7 +112,7 @@ public class User {
         return profilePicture.toString();
     }
 
-    public Uri getPrifilePicture(){
+    public Uri getProfilePicture() {
         return profilePicture;
     }
 
@@ -116,5 +122,13 @@ public class User {
 
     public void setProfilePicture(String profilePicturePath) {
         this.profilePicture = Uri.parse(profilePicturePath);
+    }
+
+    public int getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(int nickname) {
+        this.nickname = nickname;
     }
 }

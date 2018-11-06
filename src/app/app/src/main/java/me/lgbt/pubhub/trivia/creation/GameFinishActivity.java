@@ -2,7 +2,7 @@ package me.lgbt.pubhub.trivia.creation;
 
 /**
  * @author Geoffrey Blech
- * Proccess a game of Trivia and sending it to the backend
+ * Proccess a game of trivia and sending it to the backend
  * @since 10/13/2018
  */
 
@@ -36,8 +36,8 @@ import java.util.Calendar;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.rest.ConnectionTypes;
-import me.lgbt.pubhub.connect.rest.RestPushGame;
+import me.lgbt.pubhub.connect.RestConnection;
+import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
@@ -67,7 +67,6 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         hostName = findViewById(R.id.hostNameFinish);
         Button setDate = findViewById(R.id.selectDateFinish);
         newFragment = new DatePickerFragment();
-
 
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -179,19 +178,17 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     }
 
     void sendGame() {
-        RestPushGame push;
+        RestConnection conn;
         Resources res = getResources();
         if (res.getBoolean(R.bool.backend)) {
-            push = new RestPushGame(getString(R.string.testingBackend), phbToken, jsonGame);
+            conn = new RestConnection(getString(R.string.testingBackend), phbToken);
         } else {
-            push = new RestPushGame(getString(R.string.phb_url), phbToken, jsonGame);
+            conn = new RestConnection(getString(R.string.phb_url), phbToken);
         }
+        conn.setBody(jsonGame);
 
-        if (res.getBoolean(R.bool.https)) {
-            push.setMode(ConnectionTypes.HTTPS);
-        }
-
-        push.start();
+        conn.start(RestConnection.SENDGAME);
+        sendMessage();
     }
 
     private String picToBase64(Uri pictureUri) {
@@ -204,7 +201,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
 
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            picture.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            picture.compress(Bitmap.CompressFormat.WEBP, 85, stream);
             byte[] picBytes = stream.toByteArray();
 
             base64Pic = Base64.encodeToString(picBytes, Base64.DEFAULT);
@@ -220,6 +217,15 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
+    public void sendMessage() {
+        Intent nextActivity = new Intent(this, TriviaGameListActivity.class); // add the activity class you're going to, also uncomment duh.
+        Bundle extras = new Bundle();
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putParcelable(IntentKeys.GAME, currentGame);
+        nextActivity.putExtras(extras);
+        startActivity(nextActivity);
+        finish();
+    }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
