@@ -35,8 +35,11 @@ import me.lgbt.pubhub.connect.rest.ConnectionTypes;
 import me.lgbt.pubhub.connect.rest.RestAuthenticate;
 import me.lgbt.pubhub.trivia.TriviaGameListActivity;
 import me.lgbt.pubhub.trivia.creation.GameFinishActivity;
+import me.lgbt.pubhub.connect.RestConnection;
+import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
+import me.lgbt.pubhub.trivia.start.WaitingForGameActivity;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQ_CODE = 13374;
     private static final String TAG = "SignInActivity";
@@ -52,7 +55,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //locate button on the activity gui and set its click behavior
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
-        Button skipToWorkButton= findViewById(R.id.skip_to_current);
+        Button skipToWorkButton = findViewById(R.id.skip_to_current);
         skipToWorkButton.setOnClickListener(this);
 
         //sign in variables
@@ -68,7 +71,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     protected void onStart() {
         super.onStart();
 
-        if(!getResources().getBoolean(R.bool.development)) {
+        if (!getResources().getBoolean(R.bool.development)) {
             Task<GoogleSignInAccount> task = googleSignInClient.silentSignIn();
             handleSignInResult(task);
         }
@@ -122,7 +125,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
 //        if(account != null && phbToken != null){
-//            Intent nextActivity = new Intent(this, TeamSelectionActivity.class);
+//            Intent nextActivity = new Intent(this, WaitingForGameActivity.class);
 //            Bundle extras = new Bundle();
 //            extras.putString(IntentKeys.PUBHUB, phbToken);
 //            nextActivity.putExtras(extras);
@@ -135,23 +138,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void authenticate() {
 
-        RestAuthenticate auth;
+        RestConnection conn;
         Resources res = getResources();
-        if(res.getBoolean(R.bool.backend)){
-            auth = new RestAuthenticate(getString(R.string.testingBackend), googleToken);
-        }else{
-            auth = new RestAuthenticate(getString(R.string.phb_url), googleToken);
+        if (res.getBoolean(R.bool.backend)) {
+            conn = new RestConnection(getString(R.string.testingBackend), googleToken);
+        } else {
+            conn = new RestConnection(getString(R.string.phb_url), googleToken);
         }
 
-        if(res.getBoolean(R.bool.https)){
-            auth.setMode(ConnectionTypes.HTTPS);
-        }
-
-        auth.start();
+        conn.start(RestConnection.AUTHENTICATE);
 
         try {
-            auth.join();
-            phbToken = auth.getPhbToken();
+            conn.join();
+            phbToken = conn.getResponse();
         } catch (InterruptedException e) {
             String message = "Thread Error: " + e.getMessage();
             Log.e("Sign in Activity", message);

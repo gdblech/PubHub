@@ -10,16 +10,19 @@ import android.view.View;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.trivia.utils.ClickListener;
 import me.lgbt.pubhub.trivia.utils.RoundAdapter;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
-public class RoundListActivity extends AppCompatActivity implements View.OnClickListener {
+public class RoundListActivity extends AppCompatActivity implements View.OnClickListener, ClickListener {
 
     private String phbToken;
     private TriviaGame currentGame;
     private RecyclerView roundList;
     private TriviaRound selectedRound;
+    private int roundPosition;
+    private RoundAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
 
         unPack();
 
-        RoundAdapter adapter = new RoundAdapter(currentGame.getRounds());
+        adapter = new RoundAdapter(currentGame.getRounds(), this);
         roundList.setAdapter(adapter);
         roundList.setLayoutManager(new LinearLayoutManager(this));
 
@@ -39,7 +42,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         doneRoundButton.setOnClickListener(this);
     }
 
-    public void doneMessage(View view) {
+    public void doneMessage() {
         Intent doneActivity = new Intent(this, GameFinishActivity.class);
         Bundle extras = new Bundle();
 
@@ -56,21 +59,24 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addRoundButton:
-                sendMessage(view);
+                sendMessage();
                 break;
             case R.id.roundListDoneButton:
-                doneMessage(view);
+                doneMessage();
                 break;
         }
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage() {
         Intent nextActivity = new Intent(this, RoundCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         if (selectedRound != null) {
+            extras.putInt(IntentKeys.RPOSITION, roundPosition);
             extras.putParcelable(IntentKeys.ROUND, selectedRound);
+        } else {
+            extras.putInt(IntentKeys.RPOSITION, -1);
         }
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
@@ -82,6 +88,21 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
             currentGame = data.getParcelable(IntentKeys.GAME);
+        }
+    }
+
+    @Override
+    public void onPositionClicked(int position, int button) {
+        switch (button) {
+            case R.id.editButton:
+                selectedRound = currentGame.getRounds().get(position);
+                roundPosition = position;
+                sendMessage();
+                break;
+            case R.id.deleteButton:
+                currentGame.removeRound(position); //todo add confirmation alert dialog box
+                adapter.notifyItemRemoved(position);
+                break;
         }
     }
 }
