@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         System.out.println("Unpack successful");
         client = new OkHttpClient();
+        start();
     }
 
     public void unPack() {
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         String user = message.getString("user");
                         String messageString = message.getString("message");
                         //message.getString("time");
-                        UserMessage mes = new UserMessage(messageString, user, 1541524584 + (i * 62));
+                        UserMessage mes = new UserMessage(messageString, user, 1541524584 + (i * 621));
                         chatFrag.addMessage(mes);
                         // String displayMessage = user + ": " + messageString;
                         // output(displayMessage);
