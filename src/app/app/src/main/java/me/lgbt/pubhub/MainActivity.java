@@ -8,12 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-
-import javax.ws.rs.client.Client;
-
 import me.lgbt.pubhub.chat.ChatClickListener;
-import me.lgbt.pubhub.chat.ChatFragment;
+import me.lgbt.pubhub.main.ChatFragment;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
