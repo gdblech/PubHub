@@ -2,8 +2,12 @@ package me.lgbt.pubhub;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,6 +17,9 @@ import me.lgbt.pubhub.main.ChatFragment;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
+import me.lgbt.pubhub.main.PlayFragment;
+import me.lgbt.pubhub.main.AScoreFragment;
+import me.lgbt.pubhub.main.ATeamFragment;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -20,13 +27,18 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-public class MainActivity extends AppCompatActivity implements ChatClickListener {
+public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
     private String textFromFragment;
     private ChatFragment chatFrag;
-
+    private PlayFragment playFrag;
+    private AScoreFragment scoreFrag;
+    private ATeamFragment teamFrag;
+    private BottomNavigationView navBar;
+    private Fragment active;
+    private FragmentManager manager;
 
     @Override
     public void clicked(String data) {
@@ -40,17 +52,27 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         System.out.println("MainActivity onCreate successful");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        navBar = findViewById(R.id.navigation);
+        navBar.setOnNavigationItemSelectedListener(this);
+        manager = getSupportFragmentManager();
 
-        FragmentManager manager = getSupportFragmentManager();
         if (findViewById(R.id.fragContainer) != null) {
 
             if (savedInstanceState != null) {
                 return;
             }
             chatFrag = new ChatFragment();
-            chatFrag.setArguments(getIntent().getExtras());
+            playFrag = new PlayFragment();
+            scoreFrag = new AScoreFragment();
+            teamFrag = new ATeamFragment();
+            active = chatFrag;
+
 
             manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer,playFrag).hide(playFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer,teamFrag).hide(teamFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer,scoreFrag).hide(scoreFrag).commit();
+
         }
 
         unPack();
@@ -97,6 +119,33 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 //chatFrag.addMessage(mes);
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.navigation_chat:{
+                manager.beginTransaction().hide(active).show(chatFrag).commit();
+                active = chatFrag;
+                return true;
+            }
+            case R.id.navigation_scores:{
+                manager.beginTransaction().hide(active).show(scoreFrag).commit();
+                active = scoreFrag;
+                return true;
+            }
+            case R.id.navigation_team:{
+                manager.beginTransaction().hide(active).show(teamFrag).commit();
+                active = teamFrag;
+                return true;
+                }
+            case R.id.navigation_trivia:{
+                manager.beginTransaction().hide(active).show(playFrag).commit();
+                active = playFrag;
+                return true;
+            }
+        }
+        return false;
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {

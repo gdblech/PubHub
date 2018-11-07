@@ -15,7 +15,7 @@ import android.widget.TextView;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
-public class playingFragment extends Fragment {
+public class PlayFragment extends Fragment {
     TextView title;
     TextView text;
     ImageView picture;
