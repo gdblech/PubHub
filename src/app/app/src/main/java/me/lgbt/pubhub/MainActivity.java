@@ -10,10 +10,13 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 
+import javax.ws.rs.client.Client;
+
 import me.lgbt.pubhub.chat.ChatClickListener;
 import me.lgbt.pubhub.chat.ChatFragment;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
+import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     @Override
     public void clicked(String data) {
         textFromFragment = data;
+        ClientChatMessage message = new ClientChatMessage(data);
+        ws.send(message.toString());
     }
 
     @Override
