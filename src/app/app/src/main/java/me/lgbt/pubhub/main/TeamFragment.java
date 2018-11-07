@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import me.lgbt.pubhub.R;
 
-public class ATeamFragment extends Fragment {
+public class TeamFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
