@@ -18,8 +18,8 @@ import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
 import me.lgbt.pubhub.main.PlayFragment;
-import me.lgbt.pubhub.main.AScoreFragment;
-import me.lgbt.pubhub.main.ATeamFragment;
+import me.lgbt.pubhub.main.ScoreFragment;
+import me.lgbt.pubhub.main.TeamFragment;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private String textFromFragment;
     private ChatFragment chatFrag;
     private PlayFragment playFrag;
-    private AScoreFragment scoreFrag;
-    private ATeamFragment teamFrag;
+    private ScoreFragment scoreFrag;
+    private TeamFragment teamFrag;
     private BottomNavigationView navBar;
     private Fragment active;
     private FragmentManager manager;
@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             }
             chatFrag = new ChatFragment();
             playFrag = new PlayFragment();
-            scoreFrag = new AScoreFragment();
-            teamFrag = new ATeamFragment();
+            scoreFrag = new ScoreFragment();
+            teamFrag = new TeamFragment();
             active = chatFrag;
 
 
