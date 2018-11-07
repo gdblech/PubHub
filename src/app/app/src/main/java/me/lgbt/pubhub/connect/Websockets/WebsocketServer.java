@@ -1,6 +1,6 @@
 // https://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#
 
-package me.lgbt.pubhub.chat;
+package me.lgbt.pubhub.connect.Websockets;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.OnClose;
