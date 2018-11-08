@@ -44,6 +44,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         answer = act.findViewById(R.id.slidePlayAnswer);
         fade = act.findViewById(R.id.fadeBackground);
         fade.setVisibility(View.VISIBLE);
+        fade.bringToFront();
         back.setOnClickListener(this);
         doneOrNext.setOnClickListener(this);
         answer.setVisibility(View.GONE);
