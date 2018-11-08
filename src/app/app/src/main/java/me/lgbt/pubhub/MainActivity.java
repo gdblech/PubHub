@@ -1,5 +1,6 @@
 package me.lgbt.pubhub;
 //todo make nav bar not move with resize as the pan method.
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,10 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import me.lgbt.pubhub.chat.ChatClickListener;
-import me.lgbt.pubhub.main.ChatFragment;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
+import me.lgbt.pubhub.main.ChatFragment;
 import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
@@ -29,6 +30,8 @@ import okhttp3.WebSocketListener;
 import okio.ByteString;
 
 public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener {
+    public final int NEXT = 1;
+    public final int PREVIOUS = -1;
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
@@ -40,8 +43,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private BottomNavigationView navBar;
     private Fragment active;
     private FragmentManager manager;
-    public final int NEXT = 1;
-    public final int PREVIOUS = -1;
 
     @Override
     public void clicked(String data) {
@@ -72,9 +73,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
 
             manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
-            manager.beginTransaction().add(R.id.fragContainer,playFrag).hide(playFrag).commit();
-            manager.beginTransaction().add(R.id.fragContainer,teamFrag).hide(teamFrag).commit();
-            manager.beginTransaction().add(R.id.fragContainer,scoreFrag).hide(scoreFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer, playFrag).hide(playFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
 
         }
 
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             phbToken = data.getString(IntentKeys.PUBHUB);
         }
     }
+
 
     private void start() {
         System.out.print("I made it to start.");
@@ -115,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             }
         });
     }
+
     private void output(final String mes) {
         runOnUiThread(new Runnable() {
             @Override
@@ -126,23 +129,23 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()){
-            case R.id.navigation_chat:{
+        switch (menuItem.getItemId()) {
+            case R.id.navigation_chat: {
                 manager.beginTransaction().hide(active).show(chatFrag).commit();
                 active = chatFrag;
                 return true;
             }
-            case R.id.navigation_scores:{
+            case R.id.navigation_scores: {
                 manager.beginTransaction().hide(active).show(scoreFrag).commit();
                 active = scoreFrag;
                 return true;
             }
-            case R.id.navigation_team:{
+            case R.id.navigation_team: {
                 manager.beginTransaction().hide(active).show(teamFrag).commit();
                 active = teamFrag;
                 return true;
-                }
-            case R.id.navigation_trivia:{
+            }
+            case R.id.navigation_trivia: {
                 manager.beginTransaction().hide(active).show(playFrag).commit();
                 active = playFrag;
                 return true;
@@ -151,21 +154,43 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         return false;
     }
 
+    /*
+     * Start Playing Fragment control code
+     */
+    //a customer sends in an answer
     @Override
     public void answerClicked(String data) {
         //todo get answr and send to team/grading
     }
 
+    //host navigates either to the next or previous slide
     @Override
     public void slideNavClicked(int button) {
-        if(button == NEXT){
+        if (button == NEXT) {
             //todo go back to prev slide
-        }else{
+        } else {
             //todo go to next slide
         }
     }
 
+    //if the user if a host, change the playfragment to host mode
+    private void isHost(boolean isHost) {
+        if (isHost) {
+            playFrag.hostMode();
+        }
+    }
+
+    //being the game
+    private void startGame() {
+        playFrag.startGame();
+    }
+    /*
+     * End Playing Fragment Control Code
+     */
+
+
     private final class EchoWebSocketListener extends WebSocketListener {
+
 
         private static final int NORMAL_CLOSURE_STATUS = 1000;
 

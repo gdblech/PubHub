@@ -65,7 +65,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
     public void addMessage(UserMessage userMessage) {
         messageList.add(userMessage);
-        adapter.notifyItemInserted(messageList.size() - 1);
+        int pos = messageList.size() -1;
+        adapter.notifyItemInserted(pos);
+        chatBox.getLayoutManager().scrollToPosition(pos);
     }
 
     @Override
