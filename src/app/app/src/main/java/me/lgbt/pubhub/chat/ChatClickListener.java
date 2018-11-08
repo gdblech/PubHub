@@ -1,5 +1,5 @@
 package me.lgbt.pubhub.chat;
 
 public interface ChatClickListener {
-    public void clicked(String data);
+    void clicked(String data);
 }
