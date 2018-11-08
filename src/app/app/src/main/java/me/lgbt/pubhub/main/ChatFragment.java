@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.chat;
+package me.lgbt.pubhub.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,6 +17,9 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.chat.ChatClickListener;
+import me.lgbt.pubhub.chat.MessageAdapter;
+import me.lgbt.pubhub.chat.UserMessage;
 
 public class ChatFragment extends Fragment implements View.OnClickListener {
 
