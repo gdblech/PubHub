@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.Users;
+package me.lgbt.pubhub.users;
 
 import android.net.Uri;
 
@@ -8,11 +8,11 @@ import org.json.JSONObject;
 import me.lgbt.pubhub.connect.RestConnection;
 
 public class User {
-
-    private int userId;
-    private String email;
+    private static int userId;
     private String userName;
-    private String roleName;
+    private int nickname;
+    private String email;
+    private String role;
     private int authType;
     private Uri profilePicture;
     private int teamId;
@@ -22,7 +22,7 @@ public class User {
         userId = 0;
         email = null;
         userName = null;
-        roleName = null;
+        role = null;
         authType = 0;
         profilePicture = null;
         teamId = 0;
@@ -33,7 +33,7 @@ public class User {
         this.userId = userId;
         this.email = email;
         this.userName = userName;
-        this.roleName = roleName;
+        this.role = roleName;
         this.authType = authType;
         this.profilePicture = Uri.parse(profilePicturePath);
         this.teamId = teamId;
@@ -44,25 +44,13 @@ public class User {
         this.userId = userId;
         this.email = email;
         this.userName = userName;
-        this.roleName = roleName;
+        this.role = roleName;
         this.authType = authType;
         this.profilePicture = profilePicture;
         this.teamId = teamId;
         this.teamName = teamName;
     }
-    public User(String server, String phbToken){
-        String userJson = fetchJsonFromServer(server, phbToken);
-        if(userJson != null){
-            JSONObject json = null;
-            try {
-                json = new JSONObject(userJson);
-                userName = json.getString("userName");
-                roleName = json.getString("role");
-            } catch (JSONException e) {
-                //if it fails give up
-            }
-        }
-    }
+
 
     public int getTeamId() {
         return teamId;
@@ -80,7 +68,7 @@ public class User {
         this.teamName = teamName;
     }
 
-    public int getUserId() {
+    public static int getUserId() {
         return userId;
     }
 
@@ -105,11 +93,11 @@ public class User {
     }
 
     public String getRoleName() {
-        return roleName;
+        return role;
     }
 
     public void setRoleName(String roleName) {
-        this.roleName = roleName;
+        this.role = roleName;
     }
 
     public int getAuthType() {
@@ -124,7 +112,7 @@ public class User {
         return profilePicture.toString();
     }
 
-    public Uri getPrifilePicture() {
+    public Uri getProfilePicture() {
         return profilePicture;
     }
 
@@ -136,15 +124,11 @@ public class User {
         this.profilePicture = Uri.parse(profilePicturePath);
     }
 
-    private String fetchJsonFromServer(String server, String PHBToken){
-        RestConnection getProfile = new RestConnection(server, PHBToken, RestConnection.FETCHPROFILE);
-        getProfile.start();
-        try {
-            getProfile.join();
-        } catch (InterruptedException e) {
-            return null;
-        }
-        return getProfile.getResponse();
+    public int getNickname() {
+        return nickname;
+    }
 
+    public void setNickname(int nickname) {
+        this.nickname = nickname;
     }
 }

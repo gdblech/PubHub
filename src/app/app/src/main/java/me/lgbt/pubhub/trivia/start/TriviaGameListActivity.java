@@ -26,7 +26,6 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
     private String phbToken;
     private ArrayList<String> listOfGames;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,10 +90,13 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         finish();
     }
 
+    /* Use this method somewhere without google token */
+
     public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
+//            googleToken = data.getString(IntentKeys.GOOGLE); // TODO DELETE this line
         }
     }
 
