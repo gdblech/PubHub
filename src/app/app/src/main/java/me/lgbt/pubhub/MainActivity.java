@@ -20,6 +20,7 @@ import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
 import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
+import me.lgbt.pubhub.trivia.utils.PlayListener;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -27,7 +28,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener {
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private BottomNavigationView navBar;
     private Fragment active;
     private FragmentManager manager;
+    public final int NEXT = 1;
+    public final int PREVIOUS = -1;
 
     @Override
     public void clicked(String data) {
@@ -146,6 +149,20 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             }
         }
         return false;
+    }
+
+    @Override
+    public void answerClicked(String data) {
+        //todo get answr and send to team/grading
+    }
+
+    @Override
+    public void slideNavClicked(int button) {
+        if(button == NEXT){
+            //todo go back to prev slide
+        }else{
+            //todo go to next slide
+        }
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {

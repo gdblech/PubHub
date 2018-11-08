@@ -15,11 +15,13 @@
     <item
         android:id="@+id/navigation_team"
         android:checkable="false"
+        android:enabled="false"
         android:icon="@drawable/ic_baseline_group_24px"
         android:title="@string/menu_team" />
     <item
         android:id="@+id/navigation_scores"
         android:checkable="false"
+        android:enabled="false"
         android:icon="@drawable/ic_baseline_poll_24px"
         android:title="@string/menu_scores" />
 
