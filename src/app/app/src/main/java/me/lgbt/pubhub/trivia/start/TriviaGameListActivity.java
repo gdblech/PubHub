@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import me.lgbt.pubhub.MainActivity;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
@@ -81,7 +82,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         }
     }
 
-    public void sendMessage() {
+    public void sendMessageCreate() {
         Intent nextActivity = new Intent(this, GameSlideCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -90,20 +91,27 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         finish();
     }
 
-    /* Use this method somewhere without google token */
+    public void sendMessagePlay() {
+        Intent nextActivity = new Intent(this, MainActivity.class);
+        Bundle extras = new Bundle();
+        extras.putBoolean(IntentKeys.HOST, true);
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        nextActivity.putExtras(extras);
+        startActivity(nextActivity);
+        finish();
+    }
 
     public void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-//            googleToken = data.getString(IntentKeys.GOOGLE); // TODO DELETE this line
         }
     }
 
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.newGame){
-            sendMessage();
+            sendMessageCreate();
         }
     }
 

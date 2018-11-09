@@ -31,7 +31,7 @@ import com.google.android.gms.tasks.Task;
 
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
-import me.lgbt.pubhub.trivia.start.TriviaGameListActivity;
+import me.lgbt.pubhub.trivia.start.WaitingForGameActivity;
 
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
@@ -157,7 +157,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void goToCreateTrivia() {
-        Intent nextActivity = new Intent(this, TriviaGameListActivity.class); //TODO Change back to TriviaGameActivity
+        Intent nextActivity = new Intent(this, WaitingForGameActivity.class); //TODO Change back to TriviaGameActivity
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         nextActivity.putExtras(extras);

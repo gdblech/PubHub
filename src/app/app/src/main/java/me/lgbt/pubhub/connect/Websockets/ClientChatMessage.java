@@ -1,7 +1,5 @@
 package me.lgbt.pubhub.connect.Websockets;
 
-import javax.ws.rs.client.Client;
-
 public class ClientChatMessage {
 
     private String message;
