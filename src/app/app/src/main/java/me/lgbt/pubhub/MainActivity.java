@@ -32,6 +32,7 @@ import okio.ByteString;
 public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener {
     public final int NEXT = 1;
     public final int PREVIOUS = -1;
+    public final int START = 0;
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private Fragment active;
     private FragmentManager manager;
     private boolean hosting = false;
+    private int gameID;
 
     @Override
     public void clicked(String data) {
@@ -91,12 +93,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
+            gameID = data.getInt(IntentKeys.GAMEID);
             if(data.getBoolean(IntentKeys.HOST)){
                 hosting = true;
             }
         }
     }
-
 
     private void start() {
         System.out.print("I made it to start.");
@@ -170,10 +172,16 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     //host navigates either to the next or previous slide
     @Override
     public void slideNavClicked(int button) {
-        if (button == NEXT) {
-            //todo go back to prev slide
-        } else {
-            //todo go to next slide
+        switch(button){
+            case START:{
+                 break; //todo
+            }
+            case PREVIOUS:{
+                break; //todo
+            }
+            case NEXT:{
+                break; //todo
+            }
         }
     }
 

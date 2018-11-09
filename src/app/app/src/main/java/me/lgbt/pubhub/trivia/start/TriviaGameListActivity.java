@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -22,10 +23,11 @@ import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 import me.lgbt.pubhub.trivia.utils.ClickListener;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
+import me.lgbt.pubhub.trivia.utils.GameDisplay;
 
 public class TriviaGameListActivity extends AppCompatActivity implements View.OnClickListener, ClickListener {
     private String phbToken;
-    private ArrayList<String> listOfGames;
+    private ArrayList<GameDisplay> listOfGames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +70,11 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
                 jsonList = new JSONArray(json);
                 for (int i = 0; i < jsonList.length(); i++) {
                     JSONObject obj = jsonList.getJSONObject(i);
-                    String s = obj.getString("date");
-                    //s = s.substring(0,9);
-                    String str = obj.getString("gameName") + ", " +
-                            obj.getString("hostName") + ", " + s;
-                    if (!str.contains("null")) {
-                        listOfGames.add(str);
+                    String name = obj.getString("gameName");
+                    GameDisplay game = new GameDisplay(name, obj.getString("hostName"),
+                            obj.getString("date"), obj.getInt("id"));
+                    if(!name.equals("") && !name.equalsIgnoreCase("null")){
+                        listOfGames.add(game);
                     }
                 }
             } catch (JSONException e) {
@@ -91,11 +92,12 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         finish();
     }
 
-    public void sendMessagePlay() {
+    public void sendMessagePlay(int id) {
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putBoolean(IntentKeys.HOST, true);
         extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putInt(IntentKeys.GAMEID, id);
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();
@@ -125,7 +127,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
                 break; //todo add delete functionality
             }
             case R.id.playButton:{
-                break; //todo add waiting to start activity
+                sendMessagePlay(listOfGames.get(position).getId());
             }
         }
     }
