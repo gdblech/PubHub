@@ -1,8 +1,8 @@
 'use strict';
 
 class ActiveTriviaGame {
-	constructor() {
-		return;
+	constructor(triviaGame) {
+
 	}
 }
 

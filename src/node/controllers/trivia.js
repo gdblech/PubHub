@@ -92,6 +92,7 @@ let add = async (req, res) => {
 	} catch (err) {
 		logger.error(err);
 		res.status(500).send(err);
+		return;
 	}
 
 	try {
@@ -113,6 +114,7 @@ let add = async (req, res) => {
 	} catch (err) {
 		logger.error(err);
 		res.status(400).send(err);
+		return;
 	}
 
 	// triviagame.hostName = "user.userName ";   

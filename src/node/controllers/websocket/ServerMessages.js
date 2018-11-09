@@ -10,7 +10,9 @@ class WSServerMessage {
 	 */
 	static get MESSAGE_TYPES() {
 		return {
-			ClientServerChatMessage: 'ServerClientChatMessage'
+			ServerClientChatMessage: 'ServerClientChatMessage',
+			ServerHostMessage: 'ServerHostMessage',
+			ServerPlayerMessage: 'ServerPlayerMessage'
 		}
 	}
 
@@ -22,7 +24,11 @@ class WSServerMessage {
 	 */
 	constructor(message) {
 		if (message instanceof ServerClientChatMessage) {
-			this.messageType = 'ServerClientChatMessage';
+			this.messageType = WSServerMessage.MESSAGE_TYPES.ServerClientChatMessage;
+		} else if (message instanceof ServerHostMessage) {
+			this.messageType = WSServerMessage.MESSAGE_TYPES.ServerHostMessage;
+		} else if (message instanceof ServerPlayerMessage) {
+			this.messageType = WSServerMessage.MESSAGE_TYPES.ServerPlayerMessage;
 		} else {
 			throw 'Invalid message type'
 		}
@@ -71,6 +77,14 @@ class ServerClientChatMessage {
 			messages: this.messages
 		};
 	}
+
+}
+
+class ServerHostMessage {
+
+}
+
+class ServerPlayerMessage {
 
 }
 

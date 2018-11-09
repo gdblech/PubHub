@@ -19,5 +19,53 @@ module.exports = (sequelize, DataTypes) => {
 		});
 		TriviaGame.hasMany(models.Team);
 	};
+
+	TriviaGame.prototype.toJSON = function () {
+		let json = {};
+		json.id = this.id;
+		json.date = this.date;
+		json.hostName = this.hostName;
+		json.gameName = this.gameName;
+		json.title = this.title;
+		json.text = this.text;
+		json.image = this.image;
+		json.completed = this.completed;
+
+		if (this.triviaRounds) {
+			let rounds = [];
+			for (let i = 0; i < this.triviaRounds.length; i++) {
+				rounds.push(this.triviaRounds[i].toJSON());
+			}
+			json.triviaRounds = rounds;
+		}
+
+		return json;
+	};
+
+	TriviaGame.prototype.findWithImages = async function (id) {
+		const imageStore = require('../utils/imageStore');
+		let triviaGame = await TriviaGame
+			.findById(id, {
+				include: [{
+					model: Models.TriviaRound,
+					as: 'triviaRounds',
+					include: [{
+						model: Models.TriviaQuestion,
+						as: 'triviaQuestions'
+					}]
+				}],
+			});
+
+		triviaGame.image = await imageStore.get(triviaGame.image);
+		for (let i = 0; i < triviaGame.triviaRounds.length; i++) {
+			triviaGame.triviaRounds[i].image = await imageStore.get(triviaGame.triviaRounds[i].image);
+			for (let j = 0; j < triviaGame.triviaRounds[i].triviaQuestions.length; j++) {
+				triviaGame.triviaRounds[i].triviaRounds[j].image = await imageStore.get(triviaGame.triviaRounds[i].triviaRounds[j].image);
+			}
+		}
+
+		return triviaGame;
+	}
+
 	return TriviaGame;
 };
