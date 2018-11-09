@@ -28,7 +28,7 @@ class WebSocketHandler {
 
 		// bind is used to keep the class (this) in the scope of the connectHandler
 		this.wss.on('connection', this.connectHandler.bind(this));
-
+		this.activeTrivia = null;
 		this.interval = setInterval(this.ping.bind(this), 300000);
 	}
 
@@ -59,7 +59,11 @@ class WebSocketHandler {
 			}
 
 			if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.ClientServerChatMessage) {
-				this.chatHandler(clientMessage.payload, client);
+				this.processChatMessage(clientMessage.payload, client);
+			} else if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.HostServerMessage) {
+				this.processTriviaHostMessage(clientMessage.payload, client);
+			} else if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.PlayerServerMessage) {
+				this.processChatMessage(clientMessage.payload, client);
 			} else {
 				let response = {
 					messageType: 'Error',
@@ -151,14 +155,14 @@ class WebSocketHandler {
 	}
 
 	/**
-	 * chatHandler
+	 * processChatMessage
 	 * Event handler for chat messages. Receives a message and sends it to all
 	 * users.
 	 * @param {*} message: JSON string with the WSClientMessage containing a
 	 * 		ClientServerChatMessage.
 	 * @param {*} client: the client object of the sender.
 	 */
-	async chatHandler(message, client) {
+	async processChatMessage(message, client) {
 		var utc = new Date().toJSON();
 		let chatMessage = await Models.ChatMessage.create({
 			message: message.message,
@@ -176,6 +180,33 @@ class WebSocketHandler {
 			sclient.send(outgoingMessage);
 			// }
 		});
+	}
+
+	async processTriviaHostMessage(message, client) {
+
+		if (message.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.openGame) {
+			let response = {
+				messageType: 'Error',
+				error: `Trivia game with id ${message.payload.gameId} not found.`
+			};
+			client.send(JSON.stringify(response));
+
+			let triviaGame = await Models.TriviaGame.findWithImages(message.payload.id);
+
+			client.send(JSON.stringify(triviaGame))
+
+			if (!triviaGame) {
+				let response = {
+					messageType: 'Error',
+					error: `Trivia game with id ${message.payload.gameId} not found.`
+				};
+				client.send(JSON.stringify(response));
+			}
+
+
+
+
+		}
 	}
 
 	/**

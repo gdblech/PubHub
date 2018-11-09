@@ -1,4 +1,4 @@
 {
 	"S3Bucket": "pubhub-storage",
-	"imageFormat": "image/png"
+	"imageFormat": "image/webp"
 }
