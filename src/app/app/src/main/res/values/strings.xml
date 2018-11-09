@@ -26,6 +26,7 @@
     <string name="menu_scores">Score</string>
     <string name="playingDefault">Title Missing</string>
     <string name="launch_game">Launch Game</string>
+    <string name="waitingtxt">No Games Have Started,   Please Check Back Later</string>
 
 
     >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00

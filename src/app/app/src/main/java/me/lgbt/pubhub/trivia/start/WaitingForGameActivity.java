@@ -32,8 +32,8 @@ public class WaitingForGameActivity extends AppCompatActivity implements View.On
         progressBar = findViewById(R.id.waitingSpinner);
 
         unPack();
-        if(true){
-//        if (isHost()) {
+//        if(true){
+        if (isHost()) {
 
             play.setVisibility(View.VISIBLE);
             host.setVisibility(View.VISIBLE);

@@ -21,6 +21,7 @@ import me.lgbt.pubhub.main.ChatFragment;
 import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
+import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.utils.PlayListener;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private Fragment active;
     private FragmentManager manager;
     private boolean hosting = false;
+    private WaitingOpenFragment waiting;
     private int gameID;
 
     @Override
@@ -70,14 +72,15 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             if (savedInstanceState != null) {
                 return;
             }
+            waiting = new WaitingOpenFragment();
             chatFrag = new ChatFragment();
             playFrag = new PlayFragment();
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
-            active = chatFrag;
+            active = waiting;
 
-
-            manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer, waiting).commit(); //change me to fragment you want to test
+            manager.beginTransaction().add(R.id.fragContainer, chatFrag).hide(chatFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, playFrag).hide(playFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
