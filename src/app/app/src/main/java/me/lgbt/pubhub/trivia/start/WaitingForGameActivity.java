@@ -31,8 +31,10 @@ public class WaitingForGameActivity extends AppCompatActivity implements View.On
         text = findViewById(R.id.waitingText);
         progressBar = findViewById(R.id.waitingSpinner);
 
+        unPack();
+        if(true){
+//        if (isHost()) {
 
-        if (isHost()) {
             play.setVisibility(View.VISIBLE);
             host.setVisibility(View.VISIBLE);
         } else if (gameStarted()) {
@@ -45,6 +47,7 @@ public class WaitingForGameActivity extends AppCompatActivity implements View.On
         play.setOnClickListener(this);
         host.setOnClickListener(this);
     }
+
 
     private boolean isHost() {
         String roll = getRoll();

@@ -22,6 +22,7 @@ import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 public class PlayFragment extends Fragment implements View.OnClickListener {
     public final int NEXT = 1;
     public final int PREVIOUS = -1;
+    public final int START = 0;
     private TextView title;
     private TextView text;
     private ImageView picture;
@@ -34,9 +35,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private Button launchGame;
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         FragmentActivity act = getActivity();
         title = act.findViewById(R.id.slideTitlePlay);
         text = act.findViewById(R.id.slidePlayText);
@@ -45,6 +45,13 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         back = act.findViewById(R.id.prevSlideButton);
         answer = act.findViewById(R.id.slidePlayAnswer);
         fade = act.findViewById(R.id.fadeBackground);
+        launchGame = act.findViewById(R.id.launch_game);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         fade.setVisibility(View.VISIBLE);
         fade.bringToFront();
         back.setOnClickListener(this);
@@ -66,10 +73,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     public void hostMode() {
         answer.setVisibility(View.GONE);
-        fade.setVisibility(View.GONE);
-        back.show();
         launchGame.setVisibility(View.VISIBLE);
-        doneOrNext.setImageResource(R.drawable.ic_baseline_navigate_next_24px);
         host = true;
     }
 
@@ -101,6 +105,13 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 } else {
                     passer.answerClicked(answer.getText().toString());
                 }
+            }
+            case R.id.launch_game:{
+                fade.setVisibility(View.GONE);
+                back.show();
+                launchGame.setVisibility(View.VISIBLE);
+                doneOrNext.setImageResource(R.drawable.ic_baseline_navigate_next_24px);
+                passer.slideNavClicked(START);
             }
         }
     }
