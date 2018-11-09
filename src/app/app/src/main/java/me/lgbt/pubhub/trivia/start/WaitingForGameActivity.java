@@ -46,7 +46,6 @@ public class WaitingForGameActivity extends AppCompatActivity implements View.On
         host.setOnClickListener(this);
     }
 
-    //todo
     private boolean isHost() {
         String roll = getRoll();
         return roll.equalsIgnoreCase("Host") || roll.equalsIgnoreCase("Admin");
@@ -70,6 +69,7 @@ public class WaitingForGameActivity extends AppCompatActivity implements View.On
 
         return roll;
     }
+
     //todo
     private boolean gameStarted() {
         return false;

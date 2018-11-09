@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.utils.GameAdapter;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     private ArrayList<UserMessage> messageList;

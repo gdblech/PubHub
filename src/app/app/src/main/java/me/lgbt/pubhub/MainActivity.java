@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private BottomNavigationView navBar;
     private Fragment active;
     private FragmentManager manager;
+    private boolean hosting = false;
 
     @Override
     public void clicked(String data) {
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         navBar = findViewById(R.id.navigation);
         navBar.setOnNavigationItemSelectedListener(this);
         manager = getSupportFragmentManager();
+
+        unPack();
 
         if (findViewById(R.id.fragContainer) != null) {
 
@@ -79,9 +82,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         }
 
-        unPack();
-
-        System.out.println("Unpack successful");
+        isHost();
         client = new OkHttpClient();
         start();
     }
@@ -90,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
+            if(data.getBoolean(IntentKeys.HOST)){
+                hosting = true;
+            }
         }
     }
 
@@ -173,9 +177,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
-    //if the user if a host, change the playfragment to host mode
-    private void isHost(boolean isHost) {
-        if (isHost) {
+    //if the user if a host, change the play fragment to host mode
+    private void isHost() {
+        if (hosting) {
             playFrag.hostMode();
         }
     }

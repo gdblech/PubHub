@@ -2,11 +2,6 @@ package me.lgbt.pubhub.users;
 
 import android.net.Uri;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import me.lgbt.pubhub.connect.RestConnection;
-
 public class User {
     private static int userId;
     private String userName;

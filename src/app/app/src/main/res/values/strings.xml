@@ -15,7 +15,6 @@
     <string name="question_title">Question Title</string>
     <string name="enter_game_name">Enter Game Name</string>
     <string name="upload">Upload</string>
-    <string name="skip_to_work">Skip To Work</string>
     <string name="enter_host_name">Enter Host Name</string>
     <string name="host">Host</string>
     <string name="play">Play</string>
@@ -26,6 +25,7 @@
     <string name="menu_team">Team</string>
     <string name="menu_scores">Score</string>
     <string name="playingDefault">Title Missing</string>
+    <string name="launch_game">Launch Game</string>
 
 
     >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
