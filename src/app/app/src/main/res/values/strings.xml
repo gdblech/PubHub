@@ -28,6 +28,9 @@
     <string name="launch_game">Launch Game</string>
     <string name="waitingtxt">No Games Have Started,   Please Check Back Later</string>
     <string name="welcomehost">Welcome, Do You want to:</string>
+    <string name="pubhub">PUBHUB</string>
+    <string name="chat">Chat</string>
+    <string name="create_trivia">create trivia</string>
 
 
     >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
