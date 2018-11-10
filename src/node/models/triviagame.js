@@ -42,7 +42,8 @@ module.exports = (sequelize, DataTypes) => {
 		return json;
 	};
 
-	TriviaGame.prototype.findWithImages = async function (id) {
+	TriviaGame.findWithImages = async function (id) {
+		const Models = require('./');
 		const imageStore = require('../utils/imageStore');
 		let triviaGame = await TriviaGame
 			.findById(id, {
@@ -55,12 +56,23 @@ module.exports = (sequelize, DataTypes) => {
 					}]
 				}],
 			});
+		if (!triviaGame) {
+			return triviaGame;
+		}
 
-		triviaGame.image = await imageStore.get(triviaGame.image);
+		if (triviaGame.image) {
+			triviaGame.image = await imageStore.get(triviaGame.image);
+		}
+
 		for (let i = 0; i < triviaGame.triviaRounds.length; i++) {
-			triviaGame.triviaRounds[i].image = await imageStore.get(triviaGame.triviaRounds[i].image);
+			if (triviaGame.triviaRounds[i].image) {
+				triviaGame.triviaRounds[i].image = await imageStore.get(triviaGame.triviaRounds[i].image);
+			}
+
 			for (let j = 0; j < triviaGame.triviaRounds[i].triviaQuestions.length; j++) {
-				triviaGame.triviaRounds[i].triviaRounds[j].image = await imageStore.get(triviaGame.triviaRounds[i].triviaRounds[j].image);
+				if (triviaGame.triviaRounds[i].triviaQuestions[j].image) {
+					triviaGame.triviaRounds[i].triviaQuestions[j].image = await imageStore.get(triviaGame.triviaRounds[i].triviaQuestions[j].image);
+				}
 			}
 		}
 
