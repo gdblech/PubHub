@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         isHost();
         client = new OkHttpClient();
         start();
+        openGame();
     }
 
     private void unPack() {
@@ -104,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     }
 
     private void start() {
-        System.out.print("I made it to start.");
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -204,6 +204,37 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      * End Playing Fragment Control Code
      */
 
+    /*
+     * Opens game so that teams can be created and joined.
+     * Tells server that game has started.
+     * Game ID is from the TriviaGameListActivity.sendMessagePlay(int id) method.
+     */
+    private void openGame() {
+        Bundle extras = getIntent().getExtras();
+        gameID = extras.getInt(IntentKeys.GAMEID);
+        System.out.println("Game ID on openGame(): " + gameID);
+        System.out.println(gameID + " has started.");
+
+        String startGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"openGame\",\"payload\":{\"gameId\":" + gameID + "}}}";
+
+        // send to server
+        System.out.println("openGame JSON: " + startGameJSON);
+        ws.send(startGameJSON);
+    }
+
+/* Tells server that game has ended. */
+
+    private void closeGame() {
+        Bundle extras = getIntent().getExtras();
+        gameID = extras.getInt(IntentKeys.GAMEID);
+
+        String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"endGame\"}}";
+
+        // send to server
+        System.out.println("endGame JSON: " + endGameJSON);
+        ws.send(endGameJSON);
+        System.out.println("Game " + gameID + "has ended.");
+    }
 
     private final class EchoWebSocketListener extends WebSocketListener {
 
@@ -256,4 +287,5 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             output("Error : " + t.getMessage());
         }
     }
+
 }

@@ -144,7 +144,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void sendMessage() {
         Intent nextActivity;
         if (isHost()) {
-            nextActivity = new Intent(this, HostOptionsActivity.class);
+            nextActivity = new Intent(this, HostOptionsActivity.class); //TODO redirect to HostOptionsActivity
         } else {
             nextActivity = new Intent(this, MainActivity.class);
         }
@@ -157,8 +157,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private boolean isHost() {
-        String roll = getRole();
-        //return roll.equalsIgnoreCase("Host") || roll.equalsIgnoreCase("Admin");
+        String role = getRole();
+        //return role.equalsIgnoreCase("Host") || role.equalsIgnoreCase("Admin");
         return true;
     }
 
