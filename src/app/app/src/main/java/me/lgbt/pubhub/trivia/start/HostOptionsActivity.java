@@ -46,7 +46,7 @@ public class HostOptionsActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    public void sendMessagePlay() {
+    private void sendMessagePlay() {
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -55,7 +55,7 @@ public class HostOptionsActivity extends AppCompatActivity implements View.OnCli
         finish();
     }
 
-    public void sendMessageHost() {
+    private void sendMessageHost() {
         Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);

@@ -1,6 +1,5 @@
 package me.lgbt.pubhub.main;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import me.lgbt.pubhub.R;
 
 public class WaitingOpenFragment extends Fragment {
-    private TextView text;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,6 +30,7 @@ public class WaitingOpenFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         FragmentActivity act = getActivity();
-        text = act.findViewById(R.id.waitingOpenText);
+        assert act != null;
+        TextView text = act.findViewById(R.id.waitingOpenText);
     }
 }

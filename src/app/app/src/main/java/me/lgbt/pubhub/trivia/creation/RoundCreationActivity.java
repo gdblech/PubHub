@@ -18,7 +18,7 @@ import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class RoundCreationActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final int PICK_IMAGE = 125;
+    private static final int PICK_IMAGE = 125;
     private String phbToken;
     private Uri pictureUri;
     private EditText title;
@@ -49,7 +49,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         doneButton.setOnClickListener(this);
     }
 
-    void roundSetUp() {
+    private void roundSetUp() {
         if (currentRound == null) {
             currentRound = new TriviaRound();
             picture.setImageResource(R.drawable.add_image_icon);
@@ -102,7 +102,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    public void sendMessage() {
+    private void sendMessage() {
         Intent nextActivity = new Intent(this, QuestionListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
 
@@ -116,7 +116,7 @@ public class RoundCreationActivity extends AppCompatActivity implements View.OnC
         finish();
     }
 
-    public void unPack() {
+    private void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);

@@ -19,7 +19,7 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ApplicationScoped
 @ServerEndpoint("ws://pubhub.me:8082")
-public class WebsocketServer {
+class WebsocketServer {
 
     @OnOpen
     public void openSession(Session session) {

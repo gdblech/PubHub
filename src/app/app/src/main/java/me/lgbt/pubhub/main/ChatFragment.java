@@ -47,6 +47,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         FragmentActivity act = getActivity();
+        assert act != null;
         message = act.findViewById(R.id.chatMessage);
         send = act.findViewById(R.id.sendMessage);
         chatBox = act.findViewById(R.id.chatBox);
