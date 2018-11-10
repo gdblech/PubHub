@@ -4,6 +4,7 @@ const ServerMessages = require('./ServerMessages');
 const Models = require('../../models');
 const ws = require('ws');
 const log4js = require('log4js');
+const ActiveTriviaGame = require('./ActiveTriviaGame');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
@@ -182,31 +183,36 @@ class WebSocketHandler {
 		});
 	}
 
-	async processTriviaHostMessage(message, client) {
-
-		if (message.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.openGame) {
-			let response = {
-				messageType: 'Error',
-				error: `Trivia game with id ${message.payload.gameId} not found.`
-			};
-			client.send(JSON.stringify(response));
-
-			let triviaGame = await Models.TriviaGame.findWithImages(message.payload.id);
-
-			client.send(JSON.stringify(triviaGame))
+	async processTriviaHostMessage(messagep, client) {
+		if (messagep.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.openGame) {
+			// logger.debug(`Message: ${JSON.stringify(message)}`);
+			let triviaGame = await Models.TriviaGame.findWithImages(messagep.payload.gameId);
 
 			if (!triviaGame) {
+				logger.debug('test');
 				let response = {
 					messageType: 'Error',
 					error: `Trivia game with id ${message.payload.gameId} not found.`
 				};
+				logger.error(response);
 				client.send(JSON.stringify(response));
+				return;
 			}
 
+			this.activeTrivia = new ActiveTriviaGame(triviaGame);
+			let gameInfo = this.activeTrivia.gameInfo;
+			logger.debug(`GameInfo: ${gameInfo}`);
+			let payload = {
+				status: "open",
+				game: gameInfo
+			}
 
-
-
+			let message = JSON.stringify(new ServerMessages.ServerPlayerMessage("gameInfo", payload).toServerMessage());
+			this.wss.clients.forEach((sclient) => {
+				sclient.send(message);
+			})
 		}
+		logger.debug(`Message: ${JSON.stringify(message)}`);
 	}
 
 	/**

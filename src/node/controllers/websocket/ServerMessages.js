@@ -42,7 +42,7 @@ class WSServerMessage {
 	toJSON() {
 		return {
 			messageType: this.messageType,
-			payload: this.payload
+			payload: this.payload.toJSON()
 		};
 	}
 }
@@ -85,10 +85,46 @@ class ServerHostMessage {
 }
 
 class ServerPlayerMessage {
+	constructor(messageType, payload) {
+		if (ServerPlayerMessage.MESSAGE_TYPES[messageType]) {
+			this.messageType = messageType;
+		} else {
+			throw "Invalid ServerPlayerMessage message type";
+		}
 
+		this.payload = payload;
+	}
+
+	static get MESSAGE_TYPES() {
+		return {
+			gameInfo: "gameInfo",
+			triviaStart: "triviaStart",
+			roundStart: "roundStart",
+			question: "question",
+			grading: "grading",
+			scores: "scores",
+			winners: "winners"
+		}
+	}
+
+	/**
+	 * toServerMessage
+	 * Returns the message wrapped in a WSServerMessage
+	 */
+	toServerMessage() {
+		return new WSServerMessage(this);
+	}
+
+	toJSON() {
+		return {
+			messageType: this.messageType,
+			payload: this.payload
+		};
+	}
 }
 
 module.exports = {
 	WSServerMessage,
-	ServerClientChatMessage
+	ServerClientChatMessage,
+	ServerPlayerMessage
 }
