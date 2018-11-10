@@ -157,7 +157,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void goToCreateTrivia() {
-        Intent nextActivity = new Intent(this, WaitingForGameActivity.class); //TODO Change back to TriviaGameActivity
+        Intent nextActivity = new Intent(this, WaitingForGameActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         nextActivity.putExtras(extras);
