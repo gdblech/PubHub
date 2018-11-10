@@ -19,7 +19,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -53,10 +52,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //locate button on the activity gui and set its click behavior
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
-        Button createTriviaButton = findViewById(R.id.go_to_create_trivia);
-        createTriviaButton.setOnClickListener(this);
-        Button chatButton = findViewById(R.id.go_to_chat);
-        chatButton.setOnClickListener(this);
 
         //sign in variables
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -70,11 +65,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onStart() {
         super.onStart();
+        
+        Task<GoogleSignInAccount> task = googleSignInClient.silentSignIn();
+        handleSignInResult(task);
 
-        if (!getResources().getBoolean(R.bool.development)) {
-            Task<GoogleSignInAccount> task = googleSignInClient.silentSignIn();
-            handleSignInResult(task);
-        }
+
     }
 
     @Override
@@ -95,12 +90,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.sign_in_button:
                 signIn();
-                break;
-            case R.id.go_to_create_trivia:
-                goToCreateTrivia();
-                break;
-            case R.id.go_to_chat:
-                goToChat();
                 break;
         }
     }
@@ -125,16 +114,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
-//        if(account != null && phbToken != null){
-//            Intent nextActivity = new Intent(this, HostOptionsActivity.class);
-//            Bundle extras = new Bundle();
-//            extras.putString(IntentKeys.PUBHUB, phbToken);
-//            nextActivity.putExtras(extras);
-//            startActivity(nextActivity);
-//            finish();
-//        }else{
-//            System.out.print("Null account or Token");
-//        }
+        if (account != null && phbToken != null) {
+            sendMessage();
+        } else {
+            System.out.print("Null account or Token");
+        }
     }
 
     private void authenticate() {
@@ -158,12 +142,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void goToCreateTrivia() {
+    private void sendMessage() {
         Intent nextActivity;
-        if(isHost()){
+        if (isHost()) {
             nextActivity = new Intent(this, HostOptionsActivity.class);
-        }else{
-                nextActivity = new Intent(this, MainActivity.class);
+        } else {
+            nextActivity = new Intent(this, MainActivity.class);
         }
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -172,14 +156,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         finish();
     }
 
-    private void goToChat() {
-        Intent nextActivity = new Intent(this, MainActivity.class); //TODO Change back to TriviaGameActivity
-        Bundle extras = new Bundle();
-        extras.putString(IntentKeys.PUBHUB, phbToken);
-        nextActivity.putExtras(extras);
-        startActivity(nextActivity);
-        finish();
-    }
 
     private boolean isHost() {
         String roll = getRole();
