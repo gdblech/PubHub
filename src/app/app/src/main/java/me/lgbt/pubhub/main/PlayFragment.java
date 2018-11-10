@@ -20,9 +20,9 @@ import me.lgbt.pubhub.trivia.utils.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
 public class PlayFragment extends Fragment implements View.OnClickListener {
-    public final int NEXT = 1;
-    public final int PREVIOUS = -1;
-    public final int START = 0;
+    private final int NEXT = 1;
+    private final int PREVIOUS = -1;
+    private final int START = 0;
     private TextView title;
     private TextView text;
     private ImageView picture;
@@ -44,6 +44,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         FragmentActivity act = getActivity();
 
+        assert act != null;
         title = act.findViewById(R.id.slideTitlePlay);
         text = act.findViewById(R.id.slidePlayText);
         picture = act.findViewById(R.id.slidePlayPicture);

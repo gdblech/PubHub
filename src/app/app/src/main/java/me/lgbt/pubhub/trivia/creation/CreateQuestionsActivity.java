@@ -24,7 +24,7 @@ import me.lgbt.pubhub.trivia.utils.TriviaRound;
  * @since 10/13/2018
  */
 public class CreateQuestionsActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final int PICK_IMAGE = 125;
+    private static final int PICK_IMAGE = 125;
     private String phbToken;
     private int questionPosition;
     private int roundPosition;
@@ -36,7 +36,6 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
     private EditText text;
     private EditText answer;
     private ImageView picture;
-    private FloatingActionButton doneButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +45,7 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         text = findViewById(R.id.slideCreateText2);
         answer = findViewById(R.id.slideCreateText1);
         picture = findViewById(R.id.slideCreateImage);
-        doneButton = findViewById(R.id.questionDoneButton);
+        FloatingActionButton doneButton = findViewById(R.id.questionDoneButton);
 
         text.setVisibility(View.VISIBLE);
         title.setHint(R.string.question_title);

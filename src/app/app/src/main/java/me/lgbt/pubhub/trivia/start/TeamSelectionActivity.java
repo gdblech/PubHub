@@ -5,16 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 
 public class TeamSelectionActivity extends AppCompatActivity implements View.OnClickListener {
-    final int REQ_CODE = 12359;
-    String phbToken;
-    String teamID;
+    private final int REQ_CODE = 12359;
+    private String phbToken;
+    private String teamID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -26,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
@@ -36,7 +37,7 @@ import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener {
 
     private static final int REQ_CODE = 13374;
     private static final String TAG = "SignInActivity";
@@ -65,11 +66,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onStart() {
         super.onStart();
-        
+
         Task<GoogleSignInAccount> task = googleSignInClient.silentSignIn();
-        handleSignInResult(task);
-
-
+        task.addOnCompleteListener(this);
     }
 
     @Override
@@ -80,7 +79,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         if (requestCode == REQ_CODE) {
             // The Task returned from this call is always completed, no need to attach a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            task.addOnCompleteListener(this);
         }
     }
 
@@ -163,7 +162,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         return true;
     }
 
-    private String getRole(){
+    private String getRole() {
         String role = "customer";
         RestConnection getProfile = new RestConnection(getString(R.string.phb_url), phbToken, RestConnection.FETCHPROFILE);
         getProfile.start();
@@ -180,5 +179,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         return role;
+    }
+
+    @Override
+    public void onComplete(@NonNull Task task) {
+        handleSignInResult(task);
     }
 }

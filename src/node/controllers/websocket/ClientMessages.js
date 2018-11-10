@@ -21,8 +21,14 @@ class WSClientMessage {
 		this.messageType = parsed.messageType;
 		if (this.messageType === WSClientMessage.MESSAGE_TYPES.ClientServerChatMessage) {
 			this.payload = new ClientServerChatMessage(parsed.payload);
+		}
+		if (this.messageType === WSClientMessage.MESSAGE_TYPES.PlayerServerMessage) {
+			this.payload = new PlayerServerMessage(parsed.payload);
+		}
+		if (this.messageType === WSClientMessage.MESSAGE_TYPES.HostServerMessage) {
+			this.payload = new HostServerMessage(parsed.payload);
 		} else {
-			throw 'Invalid message type';
+			throw 'Invalid message WSClientMessage type';
 		}
 	}
 
@@ -32,7 +38,9 @@ class WSClientMessage {
 	 */
 	static get MESSAGE_TYPES() {
 		return {
-			ClientServerChatMessage: 'ClientServerChatMessage'
+			ClientServerChatMessage: 'ClientServerChatMessage',
+			PlayerServerMessage: 'PlayerServerMessage',
+			HostServerMessage: 'HostServerMessage'
 		}
 	}
 
@@ -76,7 +84,74 @@ class ClientServerChatMessage {
 	}
 }
 
+class HostServerMessage {
+	constructor(payload) {
+		this.messageType = payload.messageType;
+		if (!HostServerMessage.MESSAGE_TYPES[this.messageType]) {
+			throw 'Invalid HostServerMessage message type';
+		}
+		this.payload = payload.payload;
+	}
+
+	static get MESSAGE_TYPES() {
+		return {
+			openGame: "openGame",
+			startTrivia: "startTrivia",
+			startRound: "startRound",
+			startQuestion: "startQuestion",
+			answerQuestion: "answerQuestion",
+			finishRound: "finishRound",
+			finalGrade: "finalGrade",
+			roundScore: "roundScore",
+			gameScore: "gameScore"
+		}
+	}
+
+	/**
+	 * toJSON
+	 * Returns a JSON object representation of the HostServerMessage.
+	 */
+	toJSON() {
+		let json = {
+			messageType: this.messageType,
+			payload: this.payload
+		};
+		return json;
+	}
+}
+
+class PlayerServerMessage {
+	constructor(payload) {
+		this.messageType = payload.messageType;
+		if (!PlayerServerMessage.MESSAGE_TYPES[this.messageType]) {
+			throw 'Invalid PlayerServerMessage message type';
+		}
+		this.payload = payload.payload;
+	}
+
+	static get MESSAGE_TYPES() {
+		return {
+			answerQuestion: "answerQuestion",
+			gradeQuestion: "gradeQuestion"
+		}
+	}
+
+	/**
+	 * toJSON
+	 * Returns a JSON object representation of the PlayerServerMessage.
+	 */
+	toJSON() {
+		let json = {
+			messageType: this.messageType,
+			payload: this.payload
+		};
+		return json;
+	}
+}
+
 module.exports = {
 	WSClientMessage,
+	HostServerMessage,
+	PlayerServerMessage,
 	ClientServerChatMessage
 }
