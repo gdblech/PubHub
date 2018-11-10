@@ -21,11 +21,9 @@ class WSClientMessage {
 		this.messageType = parsed.messageType;
 		if (this.messageType === WSClientMessage.MESSAGE_TYPES.ClientServerChatMessage) {
 			this.payload = new ClientServerChatMessage(parsed.payload);
-		}
-		if (this.messageType === WSClientMessage.MESSAGE_TYPES.PlayerServerMessage) {
+		} else if (this.messageType === WSClientMessage.MESSAGE_TYPES.PlayerServerMessage) {
 			this.payload = new PlayerServerMessage(parsed.payload);
-		}
-		if (this.messageType === WSClientMessage.MESSAGE_TYPES.HostServerMessage) {
+		} else if (this.messageType === WSClientMessage.MESSAGE_TYPES.HostServerMessage) {
 			this.payload = new HostServerMessage(parsed.payload);
 		} else {
 			throw 'Invalid message WSClientMessage type';
