@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -46,7 +45,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         newGame.setOnClickListener(this);
     }
 
-    public void fetchGameList() {
+    private void fetchGameList() {
         listOfGames = new ArrayList<>();
 
         RestConnection conn;
@@ -83,7 +82,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         }
     }
 
-    public void sendMessageCreate() {
+    private void sendMessageCreate() {
         Intent nextActivity = new Intent(this, GameSlideCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -92,7 +91,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         finish();
     }
 
-    public void sendMessagePlay(int id) {
+    private void sendMessagePlay(int id) {
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putBoolean(IntentKeys.HOST, true);
@@ -103,7 +102,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         finish();
     }
 
-    public void unPack() {
+    private void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);

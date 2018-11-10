@@ -44,10 +44,7 @@ import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class GameFinishActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //todo add gameDate
-    //todo remove check name
-
-    DialogFragment newFragment;
+    private DialogFragment newFragment;
     private String phbToken;
     private TriviaGame currentGame;
     private String jsonGame;
