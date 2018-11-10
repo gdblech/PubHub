@@ -50,12 +50,7 @@ class WebSocketHandler {
 			try {
 				clientMessage = new ClientMessages.WSClientMessage(data);
 			} catch (err) {
-				logger.error(`Error parsing websocket message: ${err}`);
-				let response = {
-					messageType: 'Error',
-					error: err
-				};
-				client.send(JSON.stringify(response));
+				this.sendError(`Error parsing websocket message: ${err}`, client);
 				return;
 			}
 
@@ -66,11 +61,7 @@ class WebSocketHandler {
 			} else if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.PlayerServerMessage) {
 				this.processChatMessage(clientMessage.payload, client);
 			} else {
-				let response = {
-					messageType: 'Error',
-					error: 'Message type not handled'
-				};
-				client.send(JSON.stringify(response));
+				this.sendError('Message type not handled', client);
 			}
 		});
 
@@ -81,6 +72,7 @@ class WebSocketHandler {
 		// Send chat history to client
 		this.sendAllMessages(client);
 
+		this.sendGameInfo(client);
 		// Setup for tracking if client connection is broken.
 		client.isAlive = true;
 		client.on('pong', this.heartbeat);
@@ -177,39 +169,36 @@ class WebSocketHandler {
 		let outgoingMessage = JSON.stringify(serverChatMessage.toServerMessage());
 
 		this.wss.clients.forEach((sclient) => {
-			// if (client !== sclient) {
 			sclient.send(outgoingMessage);
-			// }
 		});
 	}
 
-	async processTriviaHostMessage(messagep, client) {
-		if (messagep.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.openGame) {
-			// logger.debug(`Message: ${JSON.stringify(message)}`);
-			let triviaGame = await Models.TriviaGame.findWithImages(messagep.payload.gameId);
+	async processTriviaHostMessage(clientMessage, client) {
+		if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.openGame) {
+
+			if (this.activeTrivia) {
+				this.sendError(`There is already an active trivia game.`, client);
+				return;
+			}
+			let triviaGame = await Models.TriviaGame.findWithImages(clientMessage.payload.gameId);
 
 			if (!triviaGame) {
-				let response = {
-					messageType: 'Error',
-					error: `Trivia game with id ${messagep.payload.gameId} not found.`
-				};
-				logger.error(response);
-				client.send(JSON.stringify(response));
+				this.sendError(`Trivia game with id ${clientMessage.payload.gameId} not found.`, client);
 				return;
 			}
 
 			this.activeTrivia = new ActiveTriviaGame(triviaGame);
-			let gameInfo = this.activeTrivia.gameInfo;
-			logger.debug(`GameInfo: ${gameInfo}`);
-			let payload = {
-				status: "open",
-				game: gameInfo
-			}
 
-			let message = JSON.stringify(new ServerMessages.ServerPlayerMessage("gameInfo", payload).toServerMessage());
 			this.wss.clients.forEach((sclient) => {
-				sclient.send(message);
+				this.sendGameInfo(sclient);
 			})
+		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.endGame) {
+			this.activeTrivia = null;
+			this.wss.clients.forEach((sclient) => {
+				this.sendGameInfo(sclient);
+			});
+		} else {
+			this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
 		}
 		logger.debug(`Message: ${JSON.stringify(message)}`);
 	}
@@ -228,16 +217,40 @@ class WebSocketHandler {
 				include: Models.User
 			});
 		} catch (err) {
-			client.send({
-				messageType: 'Error',
-				error: 'Unable to retrieve message history.'
-			})
+			this.sendError(client, 'Unable to retrieve message history.');
 			return;
 		}
 
 		let serverChatMessage = new ServerMessages.ServerClientChatMessage(messages);
 		let outgoingMessage = JSON.stringify(serverChatMessage.toServerMessage());
 		client.send(outgoingMessage);
+	}
+
+	async sendGameInfo(client) {
+		let status;
+		if (this.activeTrivia) {
+			let gameInfo = this.activeTrivia.gameInfo;
+			logger.debug(`GameInfo: ${gameInfo}`);
+			status = {
+				status: "open",
+				game: gameInfo
+			};
+		} else {
+			status = {
+				status: 'closed'
+			};
+		}
+		let serverMessage = new ServerMessages.ServerPlayerMessage("gameInfo", status).toServerMessage();
+		client.send(JSON.stringify(serverMessage));
+	}
+
+	async sendError(errorMessage, client) {
+		let error = {
+			messageType: 'Error',
+			error: errorMessage
+		};
+		logger.error(error);
+		client.send(JSON.stringify(error));
 	}
 }
 
