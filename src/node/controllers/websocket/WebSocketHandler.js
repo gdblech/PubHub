@@ -189,10 +189,9 @@ class WebSocketHandler {
 			let triviaGame = await Models.TriviaGame.findWithImages(messagep.payload.gameId);
 
 			if (!triviaGame) {
-				logger.debug('test');
 				let response = {
 					messageType: 'Error',
-					error: `Trivia game with id ${message.payload.gameId} not found.`
+					error: `Trivia game with id ${messagep.payload.gameId} not found.`
 				};
 				logger.error(response);
 				client.send(JSON.stringify(response));
