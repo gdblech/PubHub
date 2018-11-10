@@ -19,6 +19,8 @@ import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.trivia.utils.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
+import static android.support.constraint.solver.widgets.ConstraintWidget.GONE;
+
 public class PlayFragment extends Fragment implements View.OnClickListener {
     private final int NEXT = 1;
     private final int PREVIOUS = -1;
@@ -37,6 +39,11 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // everyone connected gets game info, including host
+
+
+
+
     }
 
     @Override
@@ -72,8 +79,12 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (host) {
-            answer.setVisibility(View.GONE);
-            launchGame.setVisibility(View.VISIBLE);
+            if (answer != null) {
+                answer.setVisibility(View.GONE);
+            }
+            if (launchGame != null) {
+                launchGame.setVisibility(View.VISIBLE);
+            }
         }
         passer = (PlayListener) context;
     }
