@@ -1,5 +1,4 @@
 package me.lgbt.pubhub;
-//todo make nav bar not move with resize as the pan method.
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,9 +30,9 @@ import okhttp3.WebSocketListener;
 import okio.ByteString;
 
 public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener {
-    public final int NEXT = 1;
-    public final int PREVIOUS = -1;
-    public final int START = 0;
+    private final int NEXT = 1;
+    private final int PREVIOUS = -1;
+    private final int START = 0;
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private TeamFragment teamFrag;
     private BottomNavigationView navBar;
     private Fragment active;
+    private String playAnswer;
     private FragmentManager manager;
     private boolean hosting = false;
     private WaitingOpenFragment waiting;
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             waiting = new WaitingOpenFragment();
             chatFrag = new ChatFragment();
             playFrag = new PlayFragment();
+            playFrag.hostMode();
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
             active = waiting;
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             manager.beginTransaction().add(R.id.fragContainer, playFrag).hide(playFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
-
         }
 
         isHost();
@@ -92,12 +92,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         start();
     }
 
-    public void unPack() {
+    private void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
             gameID = data.getInt(IntentKeys.GAMEID);
-            if(data.getBoolean(IntentKeys.HOST)){
+            if (data.getBoolean(IntentKeys.HOST)) {
                 hosting = true;
             }
         }
@@ -169,20 +169,21 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     //a customer sends in an answer
     @Override
     public void answerClicked(String data) {
-        //todo get answr and send to team/grading
+        playAnswer = data;
+        //todo get answer and send to team/grading
     }
 
     //host navigates either to the next or previous slide
     @Override
     public void slideNavClicked(int button) {
-        switch(button){
-            case START:{
-                 break; //todo
-            }
-            case PREVIOUS:{
+        switch (button) {
+            case START: {
                 break; //todo
             }
-            case NEXT:{
+            case PREVIOUS: {
+                break; //todo
+            }
+            case NEXT: {
                 break; //todo
             }
         }

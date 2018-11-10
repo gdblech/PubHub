@@ -23,9 +23,6 @@ public class RestConnection extends Thread {
     public final static int SENDGAME = 2;
     public final static int GETGAMES = 3;
 
-//todo implement this
-
-    private String prefix = "http://";
     private String url;
     private String token;
     private String response;
@@ -49,7 +46,7 @@ public class RestConnection extends Thread {
         this.body = body;
     }
 
-    public void setMode(int mode) {
+    private void setMode(int mode) {
         this.mode = mode;
     }
 
@@ -196,35 +193,10 @@ public class RestConnection extends Thread {
         }
     }
 
-    private void checkTeam(){
-        HttpURLConnection backend = connection("/api/teams"); //todo update with proper team api location
-        if(backend != null){
-            backend.setRequestProperty("Authorization", "Bearer " + token);
-            try {
-                backend.setRequestMethod("GET");
-                backend.connect();
-                if (backend.getResponseCode() == 200) {
-                    BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
-                    this.response = response.readLine();
-                    response.close();
-                } else {
-                    throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
-                }
-                backend.disconnect();
-
-            } catch (ProtocolException e) {
-                //error wont happen
-            } catch (IOException e) {
-                String message = "Http Url Connection error: " + e.getMessage();
-                Log.e("RestAuthenticate Conn", message);
-            }
-        }
-
-    }
-
     private HttpURLConnection connection(String endPoint){
 
         try {
+            String prefix = "http://";
             URL server = new URL( prefix + url + endPoint);
             return (HttpURLConnection) server.openConnection();
         } catch (MalformedURLException e) {
@@ -236,5 +208,4 @@ public class RestConnection extends Thread {
         }
         return null;
     }
-
 }

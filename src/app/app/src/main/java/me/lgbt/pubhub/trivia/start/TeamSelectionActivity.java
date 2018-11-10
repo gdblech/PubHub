@@ -5,16 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 
 public class TeamSelectionActivity extends AppCompatActivity implements View.OnClickListener {
-    final int REQ_CODE = 12359;
-    String phbToken;
-    String teamID;
+    private final int REQ_CODE = 12359;
+    private String phbToken;
+    private String teamID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +56,6 @@ public class TeamSelectionActivity extends AppCompatActivity implements View.OnC
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK && data != null) {
             teamID = data.getStringExtra(IntentKeys.TEAM);
-            Toast.makeText(this, teamID, Toast.LENGTH_LONG).show();
-            if (teamCheck()) {
-                // user joins an existing team and moves on.
-                // todo join team send, to backend
-            } else {
-                // user creates a team then moves on
-                // todo create team if doesn't exist, send to back end
-            }
         }
     }
 

@@ -1,5 +1,7 @@
 package me.lgbt.pubhub.connect.Websockets;
 
+import android.support.annotation.NonNull;
+
 public class ClientChatMessage {
 
     private String message;
@@ -8,10 +10,10 @@ public class ClientChatMessage {
         message = _message;
     }
 
+    @NonNull
     public String toString(){
       //  {"messageType":"ClientServerChatMessage","payload": {"message":"Chat works"}}
-        String json = "{\"messageType\":\"ClientServerChatMessage\",\"payload\":{\"message\":\"" +
+        return "{\"messageType\":\"ClientServerChatMessage\",\"payload\":{\"message\":\"" +
                 message + "\"}}";
-        return json;
     }
 }
