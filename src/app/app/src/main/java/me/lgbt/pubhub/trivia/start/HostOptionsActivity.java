@@ -12,15 +12,13 @@ import me.lgbt.pubhub.connect.IntentKeys;
 
 public class HostOptionsActivity extends AppCompatActivity implements View.OnClickListener {
     private String phbToken;
-    private Button play;
-    private Button host;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host_options);
-        play = findViewById(R.id.playGameWaiting);
-        host = findViewById(R.id.hostGameWaiting);
+        Button play = findViewById(R.id.playGameWaiting);
+        Button host = findViewById(R.id.hostGameWaiting);
 
         unPack();
         play.setOnClickListener(this);
