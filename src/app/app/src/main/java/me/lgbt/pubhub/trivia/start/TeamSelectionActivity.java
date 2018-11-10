@@ -57,14 +57,6 @@ public class TeamSelectionActivity extends AppCompatActivity implements View.OnC
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK && data != null) {
             teamID = data.getStringExtra(IntentKeys.TEAM);
-            Toast.makeText(this, teamID, Toast.LENGTH_LONG).show();
-            if (teamCheck()) {
-                // user joins an existing team and moves on.
-                // todo join team send, to backend
-            } else {
-                // user creates a team then moves on
-                // todo create team if doesn't exist, send to back end
-            }
         }
     }
 
