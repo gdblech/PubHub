@@ -29,9 +29,12 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
-import me.lgbt.pubhub.trivia.start.WaitingForGameActivity;
+import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
@@ -124,7 +127,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
 //        if(account != null && phbToken != null){
-//            Intent nextActivity = new Intent(this, WaitingForGameActivity.class);
+//            Intent nextActivity = new Intent(this, HostOptionsActivity.class);
 //            Bundle extras = new Bundle();
 //            extras.putString(IntentKeys.PUBHUB, phbToken);
 //            nextActivity.putExtras(extras);
@@ -157,7 +160,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void goToCreateTrivia() {
-        Intent nextActivity = new Intent(this, WaitingForGameActivity.class); //TODO Change back to TriviaGameActivity
+        Intent nextActivity;
+        if(isHost()){
+            nextActivity = new Intent(this, HostOptionsActivity.class);
+        }else{
+                nextActivity = new Intent(this, MainActivity.class);
+        }
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         nextActivity.putExtras(extras);
@@ -172,5 +180,31 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();
+    }
+
+
+    private boolean isHost() {
+        String roll = getRoll();
+        //return roll.equalsIgnoreCase("Host") || roll.equalsIgnoreCase("Admin");
+        return true;
+    }
+
+    private String getRoll(){
+        String roll = "customer";
+        RestConnection getProfile = new RestConnection(getString(R.string.phb_url), phbToken, RestConnection.FETCHPROFILE);
+        getProfile.start();
+        try {
+            getProfile.join();
+        } catch (InterruptedException e) {
+            //do nothing roll will be set to default
+        }
+
+        try {
+            roll = new JSONObject(getProfile.getResponse()).getString("role");
+        } catch (JSONException e) {
+            //do nothing roll will be set to default
+        }
+
+        return roll;
     }
 }
