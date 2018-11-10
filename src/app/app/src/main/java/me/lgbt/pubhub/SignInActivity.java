@@ -158,27 +158,27 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private boolean isHost() {
-        String roll = getRoll();
+        String roll = getRole();
         //return roll.equalsIgnoreCase("Host") || roll.equalsIgnoreCase("Admin");
         return true;
     }
 
-    private String getRoll() {
-        String roll = "customer";
+    private String getRole(){
+        String role = "customer";
         RestConnection getProfile = new RestConnection(getString(R.string.phb_url), phbToken, RestConnection.FETCHPROFILE);
         getProfile.start();
         try {
             getProfile.join();
         } catch (InterruptedException e) {
-            //do nothing roll will be set to default
+            //do nothing role will be set to default
         }
 
         try {
-            roll = new JSONObject(getProfile.getResponse()).getString("role");
+            role = new JSONObject(getProfile.getResponse()).getString("role");
         } catch (JSONException e) {
-            //do nothing roll will be set to default
+            //do nothing role will be set to default
         }
 
-        return roll;
+        return role;
     }
 }
