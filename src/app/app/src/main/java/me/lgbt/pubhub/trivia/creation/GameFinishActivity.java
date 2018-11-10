@@ -44,7 +44,7 @@ import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class GameFinishActivity extends AppCompatActivity implements View.OnClickListener {
 
-    DialogFragment newFragment;
+    private DialogFragment newFragment;
     private String phbToken;
     private TriviaGame currentGame;
     private String jsonGame;

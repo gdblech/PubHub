@@ -17,7 +17,7 @@ import me.lgbt.pubhub.trivia.utils.TriviaGame;
 
 public class GameSlideCreationActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final int PICK_IMAGE = 125;
+    private static final int PICK_IMAGE = 125;
     private String phbToken;
     private Uri pictureUri;
     private TriviaGame currentGame;
@@ -55,7 +55,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
         }
     }
 
-    void setUpGame() {
+    private void setUpGame() {
 
         if (currentGame == null) {
             currentGame = new TriviaGame();
@@ -99,7 +99,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
         }
     }
 
-    public void sendMessage() {
+    private void sendMessage() {
         Intent nextActivity = new Intent(this, RoundListActivity.class); // add the activity class you're going to, also uncomment duh.
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -109,7 +109,7 @@ public class GameSlideCreationActivity extends AppCompatActivity implements View
         finish();
     }
 
-    public void unPack() {
+    private void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);

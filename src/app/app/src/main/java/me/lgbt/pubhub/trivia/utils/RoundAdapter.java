@@ -52,9 +52,9 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView title;
-        public ImageButton editButton;
-        public ImageButton deleteButton;
+        TextView title;
+        ImageButton editButton;
+        ImageButton deleteButton;
         private WeakReference<ClickListener> listenerRef;
 
 

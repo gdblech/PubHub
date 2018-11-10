@@ -30,9 +30,9 @@ import okhttp3.WebSocketListener;
 import okio.ByteString;
 
 public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener {
-    public final int NEXT = 1;
-    public final int PREVIOUS = -1;
-    public final int START = 0;
+    private final int NEXT = 1;
+    private final int PREVIOUS = -1;
+    private final int START = 0;
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         start();
     }
 
-    public void unPack() {
+    private void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
