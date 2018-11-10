@@ -16,8 +16,8 @@
     <string name="enter_game_name">Enter Game Name</string>
     <string name="upload">Upload</string>
     <string name="enter_host_name">Enter Host Name</string>
-    <string name="host">Host</string>
-    <string name="play">Play</string>
+    <string name="host">Host Trivia</string>
+    <string name="play">Play Trivia</string>
     <string name="waiting_text">Waiting For the Host to Launch the Game</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="menu_trivia">Trivia</string>
@@ -27,6 +27,7 @@
     <string name="playingDefault">Title Missing</string>
     <string name="launch_game">Launch Game</string>
     <string name="waitingtxt">No Games Have Started,   Please Check Back Later</string>
+    <string name="welcomehost">Welcome, Do You want to:</string>
 
 
     >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00

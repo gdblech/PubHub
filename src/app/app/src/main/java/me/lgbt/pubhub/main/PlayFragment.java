@@ -63,19 +63,21 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    public void startGame(){
+    public void startGame() {
         fade.setVisibility(View.GONE);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (host) {
+            answer.setVisibility(View.GONE);
+            launchGame.setVisibility(View.VISIBLE);
+        }
         passer = (PlayListener) context;
     }
 
     public void hostMode() {
-//        answer.setVisibility(View.GONE);
- //       launchGame.setVisibility(View.VISIBLE);
         host = true;
     }
 
@@ -89,7 +91,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
         picture.setImageURI(msg.getPicture());
-        if(Question){
+        if (Question) {
             doneOrNext.show();
             answer.setVisibility(View.VISIBLE);
         }
@@ -108,7 +110,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     passer.answerClicked(answer.getText().toString());
                 }
             }
-            case R.id.launch_game:{
+            case R.id.launch_game: {
                 fade.setVisibility(View.GONE);
                 back.show();
                 launchGame.setVisibility(View.VISIBLE);

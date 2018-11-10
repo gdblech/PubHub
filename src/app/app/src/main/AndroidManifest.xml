@@ -38,7 +38,7 @@
         <activity android:name=".trivia.creation.GameFinishActivity" />
         <activity android:name=".trivia.start.TeamSelectionActivity" />
         <activity android:name=".trivia.start.QRCodeScanner" />
-        <activity android:name=".trivia.start.WaitingForGameActivity" />
+        <activity android:name=".trivia.start.HostOptionsActivity" />
         <activity
             android:windowSoftInputMode="adjustPan"
             android:name=".MainActivity"

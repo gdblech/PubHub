@@ -32,6 +32,6 @@ public class WaitingOpenFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         FragmentActivity act = getActivity();
-        text = act.findViewById(R.id.waitingText);
+        text = act.findViewById(R.id.waitingOpenText);
     }
 }
