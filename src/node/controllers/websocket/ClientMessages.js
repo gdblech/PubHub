@@ -94,6 +94,7 @@ class HostServerMessage {
 	static get MESSAGE_TYPES() {
 		return {
 			openGame: "openGame",
+			endGame: "endGame",
 			startTrivia: "startTrivia",
 			startRound: "startRound",
 			startQuestion: "startQuestion",

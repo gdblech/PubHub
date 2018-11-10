@@ -34,20 +34,43 @@ module.exports = {
 			provider: 'google',
 			createdAt: '2018-09-21',
 			updatedAt: '2018-09-21'
-		})
+		});
 
-		let user = await User.create({
+		let user1 = await User.create({
 			userId: '118380142220317436302',
 			userName: 'tlcox3',
 			email: 'tlcox3@uncg.edu',
-			roleId: 1,
-			authTypeId: 1,
+			profilePicPath: 'https://lh6.googleusercontent.com/-c3RQ0oSk7e4/AAAAAAAAAAI/AAAAAAAAAXQ/AUEePV-pDT8/s96-c/photo.jpg',
 			createdAt: '2018-09-21',
 			updatedAt: '2018-09-21'
-		})
+		});
 
-		await user.setRole(admin);
-		await user.setAuthType(google);
+		await user1.setRole(admin);
+		await user1.setAuthType(google);
+
+		let user2 = await User.create({
+			userId: '111590387447879681811',
+			userName: 'tcox3799',
+			email: 'tcox3799@gmail.com',
+			profilePicPath: 'https://lh3.googleusercontent.com/-eq3I1UzfXw0/AAAAAAAAAAI/AAAAAAAAAAA/AAN31DU5WM3_WIVWRbJPHXDcll21fVQQ3A/s96-c/photo.jpg',
+			createdAt: '2018-09-21',
+			updatedAt: '2018-09-21'
+		});
+
+		await user2.setRole(host);
+		await user2.setAuthType(google);
+
+		let user3 = await User.create({
+			userId: '104463408769641250676',
+			userName: 'keshek',
+			email: 'keshek@gmail.com',
+			profilePicPath: 'https://lh6.googleusercontent.com/-3f9mQvb4mSc/AAAAAAAAAAI/AAAAAAAAAAA/2wwXfl8lcgA/s96-c/photo.jpg',
+			createdAt: '2018-09-21',
+			updatedAt: '2018-09-21'
+		});
+
+		await user3.setRole(customer);
+		await user3.setAuthType(google);
 	},
 
 	down: (queryInterface, Sequelize) => {
