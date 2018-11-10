@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private TeamFragment teamFrag;
     private BottomNavigationView navBar;
     private Fragment active;
+    private String playAnswer;
     private FragmentManager manager;
     private boolean hosting = false;
     private WaitingOpenFragment waiting;
@@ -168,7 +169,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     //a customer sends in an answer
     @Override
     public void answerClicked(String data) {
-        //todo get answr and send to team/grading
+        playAnswer = data;
+        //todo get answer and send to team/grading
     }
 
     //host navigates either to the next or previous slide
