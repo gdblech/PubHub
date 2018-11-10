@@ -12,5 +12,16 @@ module.exports = (sequelize, DataTypes) => {
 		TriviaQuestion.hasMany(models.TeamAnswer);
 		TriviaQuestion.belongsTo(models.TriviaRound);
 	};
+
+	TriviaQuestion.prototype.toJSON = function () {
+		let json = {};
+		json.id = this.id;
+		json.questionNumber = this.roundNumber;
+		json.title = this.title;
+		json.text = this.text;
+		json.image = this.image;
+		return json;
+	};
+
 	return TriviaQuestion;
 };

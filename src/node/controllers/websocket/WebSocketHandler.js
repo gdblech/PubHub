@@ -4,6 +4,7 @@ const ServerMessages = require('./ServerMessages');
 const Models = require('../../models');
 const ws = require('ws');
 const log4js = require('log4js');
+const ActiveTriviaGame = require('./ActiveTriviaGame');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
@@ -28,7 +29,7 @@ class WebSocketHandler {
 
 		// bind is used to keep the class (this) in the scope of the connectHandler
 		this.wss.on('connection', this.connectHandler.bind(this));
-
+		this.activeTrivia = null;
 		this.interval = setInterval(this.ping.bind(this), 300000);
 	}
 
@@ -59,7 +60,11 @@ class WebSocketHandler {
 			}
 
 			if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.ClientServerChatMessage) {
-				this.chatHandler(clientMessage.payload, client);
+				this.processChatMessage(clientMessage.payload, client);
+			} else if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.HostServerMessage) {
+				this.processTriviaHostMessage(clientMessage.payload, client);
+			} else if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.PlayerServerMessage) {
+				this.processChatMessage(clientMessage.payload, client);
 			} else {
 				let response = {
 					messageType: 'Error',
@@ -151,14 +156,14 @@ class WebSocketHandler {
 	}
 
 	/**
-	 * chatHandler
+	 * processChatMessage
 	 * Event handler for chat messages. Receives a message and sends it to all
 	 * users.
 	 * @param {*} message: JSON string with the WSClientMessage containing a
 	 * 		ClientServerChatMessage.
 	 * @param {*} client: the client object of the sender.
 	 */
-	async chatHandler(message, client) {
+	async processChatMessage(message, client) {
 		var utc = new Date().toJSON();
 		let chatMessage = await Models.ChatMessage.create({
 			message: message.message,
@@ -176,6 +181,38 @@ class WebSocketHandler {
 			sclient.send(outgoingMessage);
 			// }
 		});
+	}
+
+	async processTriviaHostMessage(messagep, client) {
+		if (messagep.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.openGame) {
+			// logger.debug(`Message: ${JSON.stringify(message)}`);
+			let triviaGame = await Models.TriviaGame.findWithImages(messagep.payload.gameId);
+
+			if (!triviaGame) {
+				logger.debug('test');
+				let response = {
+					messageType: 'Error',
+					error: `Trivia game with id ${message.payload.gameId} not found.`
+				};
+				logger.error(response);
+				client.send(JSON.stringify(response));
+				return;
+			}
+
+			this.activeTrivia = new ActiveTriviaGame(triviaGame);
+			let gameInfo = this.activeTrivia.gameInfo;
+			logger.debug(`GameInfo: ${gameInfo}`);
+			let payload = {
+				status: "open",
+				game: gameInfo
+			}
+
+			let message = JSON.stringify(new ServerMessages.ServerPlayerMessage("gameInfo", payload).toServerMessage());
+			this.wss.clients.forEach((sclient) => {
+				sclient.send(message);
+			})
+		}
+		logger.debug(`Message: ${JSON.stringify(message)}`);
 	}
 
 	/**

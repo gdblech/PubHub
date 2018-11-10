@@ -23,7 +23,6 @@ public class RestConnection extends Thread {
     public final static int SENDGAME = 2;
     public final static int GETGAMES = 3;
 
-    private String prefix = "http://";
     private String url;
     private String token;
     private String response;
@@ -47,7 +46,7 @@ public class RestConnection extends Thread {
         this.body = body;
     }
 
-    public void setMode(int mode) {
+    private void setMode(int mode) {
         this.mode = mode;
     }
 
@@ -197,6 +196,7 @@ public class RestConnection extends Thread {
     private HttpURLConnection connection(String endPoint){
 
         try {
+            String prefix = "http://";
             URL server = new URL( prefix + url + endPoint);
             return (HttpURLConnection) server.openConnection();
         } catch (MalformedURLException e) {

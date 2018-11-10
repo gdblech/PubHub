@@ -34,7 +34,7 @@ let put = async (data, binary) => {
 	try {
 		await s3Bucket.putObject(params).promise();
 	} catch (err) {
-		logger.error(`[imageStore.get] ${err}`);
+		logger.error(`[imageStore.put] ${JSON.stringify(err)}`);
 		throw err;
 	}
 
