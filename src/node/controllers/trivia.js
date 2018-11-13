@@ -71,6 +71,7 @@ let add = async (req, res) => {
 	console.log('below');
 
 	let triviaObj = req.body;
+	triviaObj.completed = false;
 	//replacing the images with an id
 	try {
 		if (triviaObj.image) {
