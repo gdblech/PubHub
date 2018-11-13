@@ -137,6 +137,8 @@ module.exports = {
 			]
 		};
 
+
+
 		let trivia = await Models.TriviaGame.create(triviaGame, {
 			include: [{
 				model: Models.TriviaRound,
@@ -147,6 +149,8 @@ module.exports = {
 				}]
 			}]
 		});
+
+		trivia.setHost(user2);
 	},
 
 	down: (queryInterface, Sequelize) => {
