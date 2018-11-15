@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
+import me.lgbt.pubhub.trivia.start.TeamSelectionActivity;
 
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener {

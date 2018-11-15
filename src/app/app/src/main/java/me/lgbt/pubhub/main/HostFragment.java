@@ -10,28 +10,31 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.trivia.utils.HostListener;
 import me.lgbt.pubhub.trivia.utils.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
-public class PlayFragment extends Fragment implements View.OnClickListener {
+public class HostFragment extends Fragment implements View.OnClickListener {
+    public static final int NEXT = 1;
+    public static final int PREVIOUS = -1;
+    public static final int START = 0;
     private TextView title;
     private TextView text;
     private ImageView picture;
-    private FloatingActionButton submitAnswer;
-    private EditText answer;
-    private PlayListener passer;
+    private FloatingActionButton next;
+    private FloatingActionButton back;
+    private HostListener passer;
     private View fade;
-
+    private Button launchGame;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // everyone connected gets game info, including host
     }
 
     @Override
@@ -43,15 +46,18 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         title = act.findViewById(R.id.slideTitlePlay);
         text = act.findViewById(R.id.slidePlayText);
         picture = act.findViewById(R.id.slidePlayPicture);
-        submitAnswer = act.findViewById(R.id.doneSlideButton);
-        answer = act.findViewById(R.id.slidePlayAnswer);
+        next = act.findViewById(R.id.hostNextButton);
+        back = act.findViewById(R.id.hostPrevButton);
         fade = act.findViewById(R.id.fadeBackground);
+        launchGame = act.findViewById(R.id.launchGameHost);
 
         fade.setVisibility(View.VISIBLE);
         fade.bringToFront();
-        submitAnswer.setOnClickListener(this);
-        answer.setVisibility(View.GONE);
-        submitAnswer.hide();
+        back.setOnClickListener(this);
+        next.setOnClickListener(this);
+        next.hide();
+        back.hide();
+        launchGame.setOnClickListener(this);
 
     }
 
@@ -62,31 +68,40 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        passer = (PlayListener) context;
+        passer = (HostListener) context;
     }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_playing, container, false);
+        return inflater.inflate(R.layout.fragment_hosting, container, false);
     }
 
-    public void setSlide(TriviaMessage msg, boolean Question) {
+    public void setSlide(TriviaMessage msg) {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
         picture.setImageURI(msg.getPicture());
-        if (Question) {
-            submitAnswer.show();
-            answer.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.doneSlideButton: {
-                passer.answerClicked(answer.getText().toString());
+            case R.id.hostPrevButton: {
+                passer.slideNavClicked(PREVIOUS);
+            }
+            case R.id.hostNextButton: {
+                passer.slideNavClicked(NEXT);
+            }
+            case R.id.launchGameHost: {
+                fade.setVisibility(View.GONE);
+                back.show();
+                next.show();
+                launchGame.setVisibility(View.GONE);
+                passer.slideNavClicked(START);
             }
         }
     }
+
+
 }
