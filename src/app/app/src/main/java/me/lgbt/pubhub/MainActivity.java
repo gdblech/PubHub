@@ -24,6 +24,7 @@ import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.utils.HostListener;
 import me.lgbt.pubhub.trivia.utils.PlayListener;
+import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -189,6 +190,16 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
+    //update the info on the current slide
+    private  void updateUI(TriviaMessage msg){
+        if(hosting){
+            ((HostFragment)triviaFrag).setSlide(msg);
+        }else{
+            ((PlayFragment)triviaFrag).setSlide(msg);
+        }
+    }
+
+    
     //being the game
     private void startGame() {
         if (hosting) {

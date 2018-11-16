@@ -8,6 +8,7 @@ public class TriviaMessage extends Message {
     private String title;
     private String text;
     private Uri picture;
+    private boolean isQuestion = false;
 
     public String getTitle() {
         return title;
@@ -33,5 +34,11 @@ public class TriviaMessage extends Message {
         this.text = text;
     }
 
+    public boolean isQuestion() {
+        return isQuestion;
+    }
 
+    public void setQuestion(boolean question) {
+        isQuestion = question;
+    }
 }
