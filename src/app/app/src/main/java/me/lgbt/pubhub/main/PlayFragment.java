@@ -40,10 +40,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // everyone connected gets game info, including host
-
-
-
-
+        
     }
 
     @Override
