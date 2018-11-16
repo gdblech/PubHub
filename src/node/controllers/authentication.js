@@ -35,11 +35,12 @@ let auth = async (req, res) => {
 		return;
 	}
 
-	const payload = ticket.getPayload();
-	const userId = payload['sub'];
-	const email = payload['email'];
-	const userName = payload['email'];
-	const profilePicPath = payload['picture'];
+	let payload = ticket.getPayload();
+	let userId = payload['sub'];
+	let email = payload['email'];
+	let userName = payload['email'];
+	userName = userName.substring(0, userName.indexOf('@'));
+	let profilePicPath = payload['picture'];
 
 	let defaults = {
 		userId,

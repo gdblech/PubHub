@@ -17,10 +17,12 @@ import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
 import me.lgbt.pubhub.main.ChatFragment;
+import me.lgbt.pubhub.main.HostFragment;
 import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
+import me.lgbt.pubhub.trivia.utils.HostListener;
 import me.lgbt.pubhub.trivia.utils.PlayListener;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,16 +31,13 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener {
-    private final int NEXT = 1;
-    private final int PREVIOUS = -1;
-    private final int START = 0;
+public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener {
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
     private String textFromFragment;
     private ChatFragment chatFrag;
-    private PlayFragment playFrag;
+    private Fragment triviaFrag;
     private ScoreFragment scoreFrag;
     private TeamFragment teamFrag;
     private BottomNavigationView navBar;
@@ -74,20 +73,23 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             }
             waiting = new WaitingOpenFragment();
             chatFrag = new ChatFragment();
-            playFrag = new PlayFragment();
-            playFrag.hostMode();
+            if (hosting) {
+                triviaFrag = new HostFragment();
+            } else {
+                triviaFrag = new PlayFragment();
+            }
+
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
             active = waiting;
 
             manager.beginTransaction().add(R.id.fragContainer, waiting).commit(); //change me to fragment you want to test
             manager.beginTransaction().add(R.id.fragContainer, chatFrag).hide(chatFrag).commit();
-            manager.beginTransaction().add(R.id.fragContainer, playFrag).hide(playFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer, triviaFrag).hide(triviaFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
         }
 
-        isHost();
         client = new OkHttpClient();
         start();
         openGame();
@@ -98,9 +100,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
             gameID = data.getInt(IntentKeys.GAMEID);
-            if (data.getBoolean(IntentKeys.HOST)) {
-                hosting = true;
-            }
+            hosting = data.getBoolean(IntentKeys.HOST);
         }
     }
 
@@ -155,8 +155,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 return true;
             }
             case R.id.navigation_trivia: {
-                manager.beginTransaction().hide(active).show(playFrag).commit();
-                active = playFrag;
+                manager.beginTransaction().hide(active).show(triviaFrag).commit();
+                active = triviaFrag;
                 return true;
             }
         }
@@ -177,28 +177,25 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     @Override
     public void slideNavClicked(int button) {
         switch (button) {
-            case START: {
+            case HostFragment.START: {
                 break; //todo
             }
-            case PREVIOUS: {
+            case HostFragment.PREVIOUS: {
                 break; //todo
             }
-            case NEXT: {
+            case HostFragment.NEXT: {
                 break; //todo
             }
-        }
-    }
-
-    //if the user if a host, change the play fragment to host mode
-    private void isHost() {
-        if (hosting) {
-            playFrag.hostMode();
         }
     }
 
     //being the game
     private void startGame() {
-        playFrag.startGame();
+        if (hosting) {
+            ((HostFragment) triviaFrag).startGame();
+        } else {
+            ((PlayFragment) triviaFrag).startGame();
+        }
     }
     /*
      * End Playing Fragment Control Code
@@ -210,12 +207,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      * Game ID is from the TriviaGameListActivity.sendMessagePlay(int id) method.
      */
     private void openGame() {
-        Bundle extras = getIntent().getExtras();
-        gameID = extras.getInt(IntentKeys.GAMEID);
         System.out.println("Game ID on openGame(): " + gameID);
         System.out.println(gameID + " has started.");
 
-        String startGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"openGame\",\"payload\":{\"gameId\":" + gameID + "}}}";
+        String startGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"OpenGame\",\"payload\":{\"gameId\":" + gameID + "}}}";
 
         // send to server
         System.out.println("openGame JSON: " + startGameJSON);
@@ -225,10 +220,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     /* Tells server that game has ended. */
 
     private void closeGame() {
-        Bundle extras = getIntent().getExtras();
-        gameID = extras.getInt(IntentKeys.GAMEID);
-
-        String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"endGame\"}}";
+        String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"EndGame\"}}";
 
         // send to server
         System.out.println("endGame JSON: " + endGameJSON);

@@ -6,7 +6,7 @@
 class WSServerMessage {
 	/**
 	 * MESSAGE_TYPES
-	 * "Enum" for supported message types
+	 * 'Enum' for supported message types
 	 */
 	static get MESSAGE_TYPES() {
 		return {
@@ -89,7 +89,7 @@ class ServerPlayerMessage {
 		if (ServerPlayerMessage.MESSAGE_TYPES[messageType]) {
 			this.messageType = messageType;
 		} else {
-			throw "Invalid ServerPlayerMessage message type";
+			throw 'Invalid ServerPlayerMessage message type';
 		}
 
 		this.payload = payload;
@@ -97,13 +97,16 @@ class ServerPlayerMessage {
 
 	static get MESSAGE_TYPES() {
 		return {
-			gameInfo: "gameInfo",
-			triviaStart: "triviaStart",
-			roundStart: "roundStart",
-			question: "question",
-			grading: "grading",
-			scores: "scores",
-			winners: "winners"
+			GameInfo: 'GameInfo',
+			TableStatusResponse: 'TableStatusResponse',
+			CreateTeamResponse: 'CreateTeamResponse',
+			JoinTeamResponse: 'JoinTeamResponse',
+			TriviaStart: 'TriviaStart',
+			RoundStart: 'RoundStart',
+			Question: 'Question',
+			Grading: 'Grading',
+			Scores: 'Scores',
+			Winners: 'Winners'
 		}
 	}
 

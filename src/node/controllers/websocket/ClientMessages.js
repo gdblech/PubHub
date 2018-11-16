@@ -32,7 +32,7 @@ class WSClientMessage {
 
 	/** 
 	 * MESSAGE_TYPES
-	 * "Enum" for accepted message types.
+	 * 'Enum' for accepted message types.
 	 */
 	static get MESSAGE_TYPES() {
 		return {
@@ -93,16 +93,16 @@ class HostServerMessage {
 
 	static get MESSAGE_TYPES() {
 		return {
-			openGame: "openGame",
-			endGame: "endGame",
-			startTrivia: "startTrivia",
-			startRound: "startRound",
-			startQuestion: "startQuestion",
-			answerQuestion: "answerQuestion",
-			finishRound: "finishRound",
-			finalGrade: "finalGrade",
-			roundScore: "roundScore",
-			gameScore: "gameScore"
+			OpenGame: 'OpenGame',
+			EndGame: 'EndGame',
+			StartTrivia: 'StartTrivia',
+			StartRound: 'StartRound',
+			StartQuestion: 'StartQuestion',
+			AnswerQuestion: 'AnswerQuestion',
+			FinishRound: 'FinishRound',
+			FinalGrade: 'FinalGrade',
+			RoundScore: 'RoundScore',
+			GameScore: 'GameScore'
 		}
 	}
 
@@ -130,8 +130,11 @@ class PlayerServerMessage {
 
 	static get MESSAGE_TYPES() {
 		return {
-			answerQuestion: "answerQuestion",
-			gradeQuestion: "gradeQuestion"
+			TableStatusRequest: 'TableStatusRequest',
+			CreateTeam: 'CreateTeam',
+			JoinTeam: 'JoinTeam',
+			AnswerQuestion: 'AnswerQuestion',
+			GradeQuestion: 'GradeQuestion'
 		}
 	}
 
