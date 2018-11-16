@@ -59,7 +59,7 @@ class WebSocketHandler {
 			} else if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.HostServerMessage) {
 				this.processTriviaHostMessage(clientMessage.payload, client);
 			} else if (clientMessage.messageType === ClientMessages.WSClientMessage.MESSAGE_TYPES.PlayerServerMessage) {
-				this.processChatMessage(clientMessage.payload, client);
+				this.processPlayerMessage(clientMessage.payload, client);
 			} else {
 				this.sendError('Message type not handled', client);
 			}
@@ -174,7 +174,7 @@ class WebSocketHandler {
 	}
 
 	async processTriviaHostMessage(clientMessage, client) {
-		if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.openGame) {
+		if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.OpenGame) {
 
 			if (this.activeTrivia) {
 				this.sendError(`There is already an active trivia game.`, client);
@@ -192,7 +192,7 @@ class WebSocketHandler {
 			this.wss.clients.forEach((sclient) => {
 				this.sendGameInfo(sclient);
 			})
-		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.endGame) {
+		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.EndGame) {
 			this.activeTrivia = null;
 			this.wss.clients.forEach((sclient) => {
 				this.sendGameInfo(sclient);
@@ -200,7 +200,70 @@ class WebSocketHandler {
 		} else {
 			this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
 		}
-		logger.debug(`Message: ${JSON.stringify(message)}`);
+	}
+
+	async processPlayerMessage(clientMessage, client) {
+		if (!this.activeTrivia) {
+			this.sendError('No active game of trivia.', client);
+			return;
+		}
+		if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.TableStatusRequest) {
+			for (let i = 0; i < this.activeTrivia.teams.length; i++) {
+				// TODO: check active teams
+			}
+
+			let table = await Models.Table.find({
+				where: {
+					qrCode: clientMessage.payload.QRCode
+				}
+			});
+
+			if (table) {
+				let response = new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TableStatusResponse, {
+						QRCode: clientMessage.payload.QRCode,
+						status: 'no team'
+					});
+				client.send(JSON.stringify(response.toServerMessage()));
+			} else {
+				this.sendError(`Table with QR Code: ${clientMessage.payload.QRCode} not found.`, client);
+			}
+		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.CreateTeam) {
+			for (let i = 0; i < this.activeTrivia.teams.length; i++) {
+				// TODO: handle duplicate team
+				// TODO: check not on another team
+			}
+
+			let table = await Models.Table.find({
+				where: {
+					qrCode: clientMessage.payload.QRCode
+				}
+			});
+
+			if (table) {
+				let team = await Models.Team.create({
+					teamName: clientMessage.payload.teamName
+				});
+				await team.setTeamLeader(client.user);
+				await team.addUser(client.user);
+				await team.setTable(table);
+				await team.setTriviaGame(this.activeTrivia.triviaGame);
+				let response = new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.CreateTeamResponse, {
+						QRCode: clientMessage.payload.QRCode,
+						success: true,
+						teamName: clientMessage.payload.teamName
+					});
+				client.send(JSON.stringify(response.toServerMessage()));
+
+			} else {
+				// TODO: replace error with fail response
+				this.sendError(`Table with QR Code: ${clientMessage.payload.QRCode} not found.`, client);
+			}
+
+		} else {
+			this.sendError(`Player message type: ${clientMessage.messageType} not handled.`, client);
+		}
 	}
 
 	/**
@@ -240,7 +303,8 @@ class WebSocketHandler {
 				status: 'closed'
 			};
 		}
-		let serverMessage = new ServerMessages.ServerPlayerMessage("gameInfo", status).toServerMessage();
+		let serverMessage = new ServerMessages.ServerPlayerMessage(
+			ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.GameInfo, status).toServerMessage();
 		client.send(JSON.stringify(serverMessage));
 	}
 

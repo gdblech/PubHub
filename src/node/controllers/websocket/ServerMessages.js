@@ -97,16 +97,16 @@ class ServerPlayerMessage {
 
 	static get MESSAGE_TYPES() {
 		return {
-			gameInfo: 'GameInfo',
-			tableStatusResponse: 'TableStatusResponse',
-			createTeamResponse: 'CreateTeamResponse',
-			joinTeamResponse: 'JoinTeamResponse',
-			triviaStart: 'TriviaStart',
-			roundStart: 'RoundStart',
-			question: 'Question',
-			grading: 'Grading',
-			scores: 'Scores',
-			winners: 'Winners'
+			GameInfo: 'GameInfo',
+			TableStatusResponse: 'TableStatusResponse',
+			CreateTeamResponse: 'CreateTeamResponse',
+			JoinTeamResponse: 'JoinTeamResponse',
+			TriviaStart: 'TriviaStart',
+			RoundStart: 'RoundStart',
+			Question: 'Question',
+			Grading: 'Grading',
+			Scores: 'Scores',
+			Winners: 'Winners'
 		}
 	}
 
