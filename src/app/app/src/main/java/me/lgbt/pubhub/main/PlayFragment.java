@@ -71,11 +71,11 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         return inflater.inflate(R.layout.fragment_playing, container, false);
     }
 
-    public void setSlide(TriviaMessage msg, boolean Question) {
+    public void setSlide(TriviaMessage msg) {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
         picture.setImageURI(msg.getPicture());
-        if (Question) {
+        if (msg.isQuestion()) {
             submitAnswer.show();
             answer.setVisibility(View.VISIBLE);
         }
