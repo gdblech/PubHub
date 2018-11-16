@@ -1,6 +1,5 @@
 package me.lgbt.pubhub;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -37,12 +36,14 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private String phbToken;
     private WebSocket ws;
     private String textFromFragment;
+
     private ChatFragment chatFrag;
     private Fragment triviaFrag;
     private ScoreFragment scoreFrag;
     private TeamFragment teamFrag;
-    private BottomNavigationView navBar;
     private Fragment active;
+    private Fragment currentTriv;
+    private BottomNavigationView navBar;
     private String playAnswer;
     private FragmentManager manager;
     private boolean hosting = false;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 triviaFrag = new PlayFragment();
             }
 
+
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
             active = waiting;
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
 
         client = new OkHttpClient();
-        start();
+        websocketConnectionOpen();
         openGame();
     }
 
@@ -105,14 +107,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
-    private void start() {
-        Intent nextActivity = new Intent(this, MainActivity.class);
-        Bundle extras = new Bundle();
-        extras.putString(IntentKeys.PUBHUB, phbToken);
-
+    private void websocketConnectionOpen() {
         String authHeader = "Bearer " + phbToken;
-        System.out.println("Auth token: " + authHeader);
-
         Request request = new Request.Builder().url("ws://pubhub.me:8082").addHeader("Authorization", authHeader).build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         ws = client.newWebSocket(request, listener);
@@ -199,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
-    
+
     //being the game
     private void startGame() {
         if (hosting) {

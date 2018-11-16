@@ -92,7 +92,6 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
     }
 
     private void sendMessagePlay(int id) {
-        System.out.println("sendMessagePlay has id of: " + id);
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putBoolean(IntentKeys.HOST, true);

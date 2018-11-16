@@ -145,7 +145,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void sendMessage() {
         Intent nextActivity;
         if (isHost()) {
-            nextActivity = new Intent(this, HostOptionsActivity.class); //TODO redirect to HostOptionsActivity
+            nextActivity = new Intent(this, HostOptionsActivity.class);
         } else {
             nextActivity = new Intent(this, MainActivity.class);
         }
