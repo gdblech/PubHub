@@ -22,7 +22,7 @@ import me.lgbt.pubhub.trivia.start.QRCodeScanner;
 
 
 public class WaitingOpenFragment extends Fragment implements View.OnClickListener {
-    EditText message;
+    TextView message;
     private String welcomeMesg;
     private Button btnToChat;
     private Button btnToQR;
@@ -37,9 +37,10 @@ public class WaitingOpenFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_waiting_open, container, false);
-        btnToQR = (Button) v.findViewById(R.id.btnToQR);
-        btnToChat = (Button) v.findViewById(R.id.btnToChat);
-        message = (EditText) v.findViewById(R.id.waitingOpenText);
+        btnToQR =  v.findViewById(R.id.btnToQR);
+        btnToChat =  v.findViewById(R.id.btnToChat);
+        message = v.findViewById(R.id.waitingOpenText);
+        welcomeMesg = getString(R.string.waitingtxt);
 
         //if there is game scan QR_code to join a table
         isGame = isGameAvail();
