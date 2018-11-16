@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private Fragment active;
     private String playAnswer;
     private FragmentManager manager;
-    private boolean hosting = false;
+    private boolean hosting = true;
     private WaitingOpenFragment waiting;
     private int gameID;
 
