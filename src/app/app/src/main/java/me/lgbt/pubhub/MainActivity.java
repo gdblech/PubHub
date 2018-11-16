@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         System.out.println("Game ID on openGame(): " + gameID);
         System.out.println(gameID + " has started.");
 
-        String startGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"openGame\",\"payload\":{\"gameId\":" + gameID + "}}}";
+        String startGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"OpenGame\",\"payload\":{\"gameId\":" + gameID + "}}}";
 
         // send to server
         System.out.println("openGame JSON: " + startGameJSON);
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     /* Tells server that game has ended. */
 
     private void closeGame() {
-        String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"endGame\"}}";
+        String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"EndGame\"}}";
 
         // send to server
         System.out.println("endGame JSON: " + endGameJSON);
