@@ -9,10 +9,14 @@ module.exports = (sequelize, DataTypes) => {
 		Team.belongsToMany(models.User, {
 			through: 'TeamToUser'
 		});
+		Team.belongsTo(models.User, {
+			as: 'teamLeader'
+		});
 		Team.hasMany(models.TeamAnswer);
 		Team.hasMany(models.AnswerGrade, {
 			as: 'gradingTeam'
 		});
+		Team.belongsTo(models.TriviaGame);
 	};
 	return Team;
 };

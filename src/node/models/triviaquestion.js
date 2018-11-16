@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
 		json.title = this.title;
 		json.text = this.text;
 		json.image = this.image;
+		json.answer = this.answer;
 		return json;
 	};
 
