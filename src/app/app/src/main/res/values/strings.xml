@@ -26,11 +26,19 @@
     <string name="menu_scores">Score</string>
     <string name="playingDefault">Title Missing</string>
     <string name="launch_game">Launch Game</string>
-    <string name="waitingtxt">No Games Have Started,   Please Check Back Later</string>
+    <string name="waitingtxt">No Games Available, Please Check Back Later</string>
     <string name="welcomehost">Welcome, Do You want to:</string>
     <string name="pubhub">PUBHUB</string>
     <string name="chat">Chat</string>
     <string name="create_trivia">create trivia</string>
+    <string name="scan_qr_code">scan qr_code</string>
+    <string name="join_team">Join Team</string>
+    <string name="join_team_button">Join team button</string>
+    <string name="create_team_button">Create team button</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="go_to_chat">Go to chat</string>
 
 
     >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
