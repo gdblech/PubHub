@@ -28,6 +28,9 @@ module.exports = (sequelize, DataTypes) => {
 		User.belongsToMany(models.Team, {
 			through: 'TeamToUser'
 		});
+		User.hasMany(models.Team, {
+			as: 'teamLeader'
+		});
 	};
 
 	/**

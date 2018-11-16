@@ -93,16 +93,16 @@ class HostServerMessage {
 
 	static get MESSAGE_TYPES() {
 		return {
-			openGame: 'OpenGame',
-			endGame: 'EndGame',
-			startTrivia: 'StartTrivia',
-			startRound: 'StartRound',
-			startQuestion: 'StartQuestion',
-			answerQuestion: 'AnswerQuestion',
-			finishRound: 'FinishRound',
-			finalGrade: 'FinalGrade',
-			roundScore: 'RoundScore',
-			gameScore: 'GameScore'
+			OpenGame: 'OpenGame',
+			EndGame: 'EndGame',
+			StartTrivia: 'StartTrivia',
+			StartRound: 'StartRound',
+			StartQuestion: 'StartQuestion',
+			AnswerQuestion: 'AnswerQuestion',
+			FinishRound: 'FinishRound',
+			FinalGrade: 'FinalGrade',
+			RoundScore: 'RoundScore',
+			GameScore: 'GameScore'
 		}
 	}
 
@@ -130,11 +130,11 @@ class PlayerServerMessage {
 
 	static get MESSAGE_TYPES() {
 		return {
-			tableStatusRequest: 'TableStatusRequest',
-			createTeam: 'CreateTeam',
-			joinTeam: 'JoinTeam',
-			answerQuestion: 'AnswerQuestion',
-			gradeQuestion: 'GradeQuestion'
+			TableStatusRequest: 'TableStatusRequest',
+			CreateTeam: 'CreateTeam',
+			JoinTeam: 'JoinTeam',
+			AnswerQuestion: 'AnswerQuestion',
+			GradeQuestion: 'GradeQuestion'
 		}
 	}
 
