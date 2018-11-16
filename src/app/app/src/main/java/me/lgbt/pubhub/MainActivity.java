@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         ws.send(startGameJSON);
     }
 
-/* Tells server that game has ended. */
+    /* Tells server that game has ended. */
 
     private void closeGame() {
         Bundle extras = getIntent().getExtras();
