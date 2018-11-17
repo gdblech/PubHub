@@ -94,7 +94,6 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
     /* This is what takes you to the next activity from the play button. */
 
     private void sendMessagePlay(int id) {
-        System.out.println("sendMessagePlay has id of: " + id);
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putBoolean(IntentKeys.HOST, true);
