@@ -2,6 +2,9 @@
 
 package me.lgbt.pubhub.connect.Websockets;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -9,6 +12,9 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+
+import me.lgbt.pubhub.chat.UserMessage;
+import okhttp3.WebSocket;
 
 /*
  * RESOURCES

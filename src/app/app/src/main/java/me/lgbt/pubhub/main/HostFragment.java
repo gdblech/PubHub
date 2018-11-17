@@ -82,7 +82,6 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         passer = (HostListener) context;
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
