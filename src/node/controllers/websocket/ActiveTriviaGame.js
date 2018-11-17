@@ -26,6 +26,10 @@ class ActiveTriviaGame {
 		}
 		return info;
 	}
+
+	addTeam(team) {
+		this.teams.push(team);
+	}
 }
 
 module.exports = ActiveTriviaGame;
