@@ -25,6 +25,7 @@ import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.utils.HostListener;
 import me.lgbt.pubhub.trivia.utils.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
+import me.lgbt.pubhub.connect.Websockets.HostServerMessage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         client = new OkHttpClient();
         start();
-        openGame();
+        HostServerMessage.openGame();
     }
 
     private void unPack() {
@@ -191,15 +192,15 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     }
 
     //update the info on the current slide
-    private  void updateUI(TriviaMessage msg){
-        if(hosting){
-            ((HostFragment)triviaFrag).setSlide(msg);
-        }else{
-            ((PlayFragment)triviaFrag).setSlide(msg);
+    private void updateUI(TriviaMessage msg) {
+        if (hosting) {
+            ((HostFragment) triviaFrag).setSlide(msg);
+        } else {
+            ((PlayFragment) triviaFrag).setSlide(msg);
         }
     }
 
-    
+
     //being the game
     private void startGame() {
         if (hosting) {
@@ -247,17 +248,20 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             System.out.println("MessageToServer: " + "test successful");
-//            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success <3\"}}");
+//            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success\"}}");
         }
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             System.out.println("MessageFromServer: " + text);
+
             try {
                 JSONObject messageObject = new JSONObject(text);
                 String messageType = messageObject.getString("messageType");
                 if (messageType.equals("ServerClientChatMessage")) {
+
                     JSONArray messages = messageObject.getJSONObject("payload").getJSONArray("messages");
+
                     for (int i = 0; i < messages.length(); i++) {
                         JSONObject message = messages.getJSONObject(i);
                         String user = message.getString("user");
@@ -268,27 +272,35 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         // String displayMessage = user + ": " + messageString;
                         // output(displayMessage);
                     }
+                } else if (messageType.equals("ServerHostMessage")) {
+                    //todo enter message handling here
+                    if (payload.messageType.equals("gameInfo")) {
+
+                    }
+                } else if (messageType.equals("ServerPlayerMessage")) {
+                    //todo enter message handling here
+                    break;
                 }
-            } catch (org.json.JSONException e) {
-                System.out.println(e.getMessage());
+            } catch(org.json.JSONException e){
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onMessage (WebSocket webSocket, ByteString bytes){
+                output("Receiving bytes : " + bytes.hex());
+            }
+
+            @Override
+            public void onClosing (WebSocket webSocket,int code, String reason){
+                webSocket.close(NORMAL_CLOSURE_STATUS, null);
+                output("Closing : " + code + " / " + reason);
+            }
+
+            @Override
+            public void onFailure (WebSocket webSocket, Throwable t, Response response){
+                output("Error : " + t.getMessage());
             }
         }
 
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            output("Receiving bytes : " + bytes.hex());
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(NORMAL_CLOSURE_STATUS, null);
-            output("Closing : " + code + " / " + reason);
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            output("Error : " + t.getMessage());
-        }
     }
-
-}

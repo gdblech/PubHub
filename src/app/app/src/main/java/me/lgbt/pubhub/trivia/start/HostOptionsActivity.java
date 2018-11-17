@@ -19,7 +19,6 @@ public class HostOptionsActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_host_options);
         Button play = findViewById(R.id.playGameWaiting);
         Button host = findViewById(R.id.hostGameWaiting);
-
         unPack();
         play.setOnClickListener(this);
         host.setOnClickListener(this);
@@ -38,6 +37,9 @@ public class HostOptionsActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    public void onGamePlay() {
+
+    }
 
     private void unPack() {
         Bundle data = getIntent().getExtras();
