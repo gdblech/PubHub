@@ -40,19 +40,21 @@ public class WaitingOpenFragment extends Fragment implements View.OnClickListene
         btnToQR =  v.findViewById(R.id.btnToQR);
         btnToChat =  v.findViewById(R.id.btnToChat);
         message = v.findViewById(R.id.waitingOpenText);
-        welcomeMesg = getString(R.string.waitingtxt);
+        welcomeMesg = welcomeMeg();
+        System.out.println(welcomeMesg);
 
         //if there is game scan QR_code to join a table
         isGame = isGameAvail();
         if(isGame){
-            btnToChat.setVisibility(View.VISIBLE);
-            btnToQR.setVisibility(View.GONE);
-            message.setText(welcomeMesg);
-
-
-        } else {
+            System.out.println(welcomeMesg);
             btnToChat.setVisibility(View.GONE);
             btnToQR.setVisibility(View.VISIBLE);
+            message.setText(welcomeMesg);
+
+        } else {
+            System.out.println(welcomeMesg);
+            btnToChat.setVisibility(View.VISIBLE);
+            btnToQR.setVisibility(View.GONE);
             message.setText(welcomeMesg);
         }
 
@@ -89,14 +91,15 @@ public class WaitingOpenFragment extends Fragment implements View.OnClickListene
     }
 
     public String welcomeMeg(){
-        if (isGame = !true){
-            welcomeMesg = " No game vailable!";
+        if (isGameAvail()){
+            welcomeMesg = " welcome back";
             }
             else{
-            welcomeMesg = " welcome back";
+            welcomeMesg = " No game available!";
         }
         return welcomeMesg;
     }
+
 
 
 }
