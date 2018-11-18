@@ -38,7 +38,7 @@ import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 import me.lgbt.pubhub.trivia.start.TeamSelectionActivity;
 
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener {
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<GoogleSignInAccount> {
 
     private static final int REQ_CODE = 13374;
     private static final String TAG = "SignInActivity";
@@ -100,14 +100,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
+        GoogleSignInAccount account;
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            account = completedTask.getResult(ApiException.class);
+
             if (account != null) {
                 googleToken = account.getIdToken();
                 authenticate();
             }
             updateUI(account);
         } catch (ApiException e) {
+            if(e.getStatusCode() == 4){
+                signIn();
+            }
             Log.w(TAG, "signInResult:failed code = " + e.getStatusCode(), e);
             updateUI(null);
         }
@@ -159,8 +164,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private boolean isHost() {
         String role = getRole();
-        //return role.equalsIgnoreCase("Host") || role.equalsIgnoreCase("Admin");
-        return true;
+        return role.equalsIgnoreCase("Host") || role.equalsIgnoreCase("Admin");
+//        return true;
     }
 
     private String getRole() {
@@ -183,7 +188,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onComplete(@NonNull Task task) {
+    public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
         handleSignInResult(task);
     }
 }

@@ -13,10 +13,10 @@ Note: Messages will be minified, whitespace is for readability only
 <td>
 <pre>
 {
-	"messageType":"ClientServerChatMessage",
-	"payload": {
-		"message":"eat my shorts"
-	}
+  "messageType":"ClientServerChatMessage",
+  "payload": {
+    "message":"eat my shorts"
+  }
 }
 </pre>
 </td>
@@ -27,13 +27,13 @@ Note: Messages will be minified, whitespace is for readability only
 <td>
 <pre>
 {
-	"messageType": "HostServerMessage",
-	"payload": {
-		"messageType": "OpenGame",
-		"payload": {
-			"gameId": 1
-		}
-	}
+  "messageType": "HostServerMessage",
+  "payload": {
+    "messageType": "OpenGame",
+    "payload": {
+      "gameId": 1
+    }
+  }
 }
 </pre>
 </td>
@@ -44,10 +44,10 @@ Note: Messages will be minified, whitespace is for readability only
 <td>
 <pre>
 {
-	"messageType": "HostServerMessage",
-	"payload": {
-		"messageType": "EndGame"
-	}
+  "messageType": "HostServerMessage",
+  "payload": {
+    "messageType": "EndGame"
+  }
 }
 </pre>
 </td>
@@ -58,10 +58,10 @@ Note: Messages will be minified, whitespace is for readability only
 <td>
 <pre>
 {
-	"messageType": "HostServerMessage",
-	"payload": {
-		"messageType": "StartTrivia"
-	}
+  "messageType": "HostServerMessage",
+  "payload": {
+    "messageType": "StartTrivia"
+  }
 }
 </pre>
 </td>
@@ -72,10 +72,10 @@ Note: Messages will be minified, whitespace is for readability only
 <td>
 <pre>
 {
-	"messageType": "HostServerMessage",
-	"payload": {
-		"messageType": "Next"
-	}
+  "messageType": "HostServerMessage",
+  "payload": {
+    "messageType": "Next"
+  }
 }
 </pre>
 </td>
@@ -87,13 +87,13 @@ Note: Messages will be minified, whitespace is for readability only
 <td>
 <pre>
 {
-	"messageType": "PlayerServerMessage",
-	"payload": {
-		"messageType": "TableStatusRequest",
-		"payload": {
-			"QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd1"
-		}
-	}
+  "messageType": "PlayerServerMessage",
+  "payload": {
+    "messageType": "TableStatusRequest",
+    "payload": {
+      "QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd1"
+    }
+  }
 }
 </pre>
 </td>
@@ -107,14 +107,14 @@ Server responds with TableStatusResponse message
 <td>
 <pre>
 {
-	"messageType": "PlayerServerMessage",
-	"payload": {
-		"messageType": "CreateTeam",
-		"payload": {
-			"QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd",
-			"teamName": "This is a team name"
-		}
-	}
+  "messageType": "PlayerServerMessage",
+  "payload": {
+    "messageType": "CreateTeam",
+    "payload": {
+      "QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd",
+      "teamName": "This is a team name"
+    }
+  }
 }
 </pre>
 </td>
@@ -128,18 +128,62 @@ Server responds with CreateTeamResponse message
 <td>
 <pre>
 {
-	"messageType": "PlayerServerMessage",
-	"payload": {
-		"messageType": "JoinTeam",
-		"payload": {
-			"QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd"
-		}
-	}
+  "messageType": "PlayerServerMessage",
+  "payload": {
+    "messageType": "JoinTeam",
+    "payload": {
+      "QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd"
+    }
+  }
 }
 </pre>
 </td>
 <td>
 Server responds with JoinTeamResponse message
+</td>
+</tr>
+<tr>
+<td>PlayerServerMessage</td>
+<td>AnswerQuestion</td>
+<td>
+<pre>
+{
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "AnswerSubmission",
+    "payload": {
+      "roundNumber": 1,
+      "questionNumber": 1,
+      "answer": "question answer"
+    }
+  }
+}
+</pre>
+</td>
+<td>
+Answers submitted will be sent to team leader for review.
+</td>
+</tr>
+<tr>
+<td>PlayerServerMessage</td>
+<td>FinalAnswer</td>
+<td>
+<pre>
+{
+  "messageType": "PlayerServerMessage",
+  "payload": {
+    "messageType": "FinalAnswer",
+    "payload": {
+      "roundNumber": 1,
+      "questionNumber": 2,
+      "answer": "question answer"
+    }
+  }
+}
+</pre>
+</td>
+<td>
+Only the team leader can submit a FinalAnswer.
 </td>
 </tr>
 </table>
@@ -161,18 +205,18 @@ Server responds with JoinTeamResponse message
 {
   "messageType": "ServerClientChatMessage",
   "payload": {
-	"messages": [
-	  {
-		"message": "eat my shorts",
-		"timestamp": "2018-10-14T16:36:35.000Z",
-		"user": "tcox3799"
-	  },
-	  {
-		"message": "heyo",
-		"timestamp": "2018-10-14T16:38:22.000Z",
-		"user": "keshek"
-	  }
-	]
+  "messages": [
+    {
+    "message": "eat my shorts",
+    "timestamp": "2018-10-14T16:36:35.000Z",
+    "user": "tcox3799"
+    },
+    {
+    "message": "heyo",
+    "timestamp": "2018-10-14T16:38:22.000Z",
+    "user": "keshek"
+    }
+  ]
   }
 }
 </pre>
@@ -237,6 +281,7 @@ When user connects they receive an array of all messages. Receive array with sin
     "messageType": "Question",
     "payload": {
       "id": 3,
+	  "roundNumber": 0,
       "questionNumber": 1,
       "title": "Smells Like Nirvana",
       "text": "Released 1992",
@@ -258,11 +303,32 @@ When user connects they receive an array of all messages. Receive array with sin
     "messageType": "Grading",
     "payload": {
       "id": 3,
+	  "roundNumber": 0,
       "questionNumber": 1,
       "title": "Smells Like Nirvana",
       "text": "Released 1992",
       "image": "base64 webp image data",
       "answer": "Smells Like Teen Spirit"
+    }
+  }
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>ServerHostMessage</td>
+<td>AnswerStatus</td>
+<td>
+<pre>
+{
+  "messageType": "ServerHostMessage",
+  "payload": {
+    "messageType": "AnswerStatus",
+    "payload": {
+	  "roundNumber": 0,
+      "questionNumber": 1,
+      "numTeams": 3,
+	  "answersSubmitted": 2
     }
   }
 }
@@ -277,17 +343,17 @@ When user connects they receive an array of all messages. Receive array with sin
 {
   "messageType": "ServerPlayerMessage",
   "payload": {
-	"messageType": "GameInfo",
-	"payload": {
-	  "status": "closed | open | active",
-	  "game": {
-		"title": "Really cool trivia",
-		"text": "This is a trivia",
-		"image": "ajfhldjfdhfljkadhfjkahd",
-		"started": false,
-		"grading": false
-	  }
-	}
+  "messageType": "GameInfo",
+  "payload": {
+    "status": "closed | open | active",
+    "game": {
+    "title": "Really cool trivia",
+    "text": "This is a trivia",
+    "image": "ajfhldjfdhfljkadhfjkahd",
+    "started": false,
+    "grading": false
+    }
+  }
   }
 }
 </pre>
@@ -302,18 +368,18 @@ When user connects they receive an array of all messages. Receive array with sin
 <td>
 <pre>
 {
-	"messageType": "ServerPlayerMessage",
-	"payload": {
-		"messageType": "TableStatusResponse",
-		"payload": {
-			"QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd",
-			"status": "no team | team open | team full",
-			"team": {
-				"teamName": "This is a team Name",
-				"teamLeader": "keshek"
-			}
-		}
-	}
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "TableStatusResponse",
+    "payload": {
+      "QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd",
+      "status": "no team | team open | team full",
+      "team": {
+        "teamName": "This is a team Name",
+        "teamLeader": "keshek"
+      }
+    }
+  }
 }
 </pre>
 </td>
@@ -327,16 +393,16 @@ When user connects they receive an array of all messages. Receive array with sin
 <td>
 <pre>
 {
-	"messageType": "ServerPlayerMessage",
-	"payload": {
-		"messageType": "CreateTeamResponse",
-		"payload": {
-			"success": true | false,
-			"QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd",
-			"teamName": "This is a team name",
-			"reason": "Team already exists for table" | "User already belongs to a team"  // omitted if successful
-		}
-	}
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "CreateTeamResponse",
+    "payload": {
+      "success": true | false,
+      "QRCode": "1539ccd0-e391-11e8-9f32-f2801f1b9fd",
+      "teamName": "This is a team name",
+      "reason": "Team already exists for table" | "User already belongs to a team"  // omitted if successful
+    }
+  }
 }
 </pre>
 </td>
@@ -350,16 +416,16 @@ When user connects they receive an array of all messages. Receive array with sin
 <td>
 <pre>
 {
-	"messageType": "ServerPlayerMessage",
-	"payload": {
-		"messageType": "JoinTeamResponse",
-		"payload": {
-			"QRCode": "1539c834-e391-11e8-9f32-f2801f1b9fd1",
-			"teamName": "Team Awesome",
-			"success": true | false,
-			"reason": "User already belongs to a team" | "No matching team found for table" // omitted if successful
-		}
-	}
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "JoinTeamResponse",
+    "payload": {
+      "QRCode": "1539c834-e391-11e8-9f32-f2801f1b9fd1",
+      "teamName": "Team Awesome",
+      "success": true | false,
+      "reason": "User already belongs to a team" | "No matching team found for table" // omitted if successful
+    }
+  }
 }
 </pre>
 </td>
@@ -431,6 +497,52 @@ When user connects they receive an array of all messages. Receive array with sin
   }
 }
 </pre>
+</td>
+</tr>
+<tr>
+<td>ServerPlayerMessage</td>
+<td>AnswerSubmission</td>
+<td>
+<pre>
+{
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "AnswerSubmission",
+    "payload": {
+      "roundNumber": 1,
+      "questionNumber": 2,
+      "answer": "question answer",
+    }
+  }
+}
+</pre>
+</td>
+<td>
+Sent to team leader whenever a team member (including the team leader) submits an answer.
+</td>
+</tr>
+<tr>
+<td>ServerPlayerMessage</td>
+<td>FinalAnswerResponse</td>
+<td>
+<pre>
+{
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "FinalAnswerResponse",
+    "payload": {
+      "roundNumber": 1,
+      "questionNumber": 2,
+      "answer": "question answer",
+      "success": true | false,
+      "reason": "Submitter, not team leader" | "Team already answered"
+    }
+  }
+}
+</pre>
+</td>
+<td>
+If success is false, message is sent to only submitter and reason is included. If success is true, message is sent to all team members and reason is not included.
 </td>
 </tr>
 <tr>

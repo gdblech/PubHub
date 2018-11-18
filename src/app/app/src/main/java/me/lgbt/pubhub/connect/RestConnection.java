@@ -22,6 +22,7 @@ public class RestConnection extends Thread {
     public final static int AUTHENTICATE = 1;
     public final static int SENDGAME = 2;
     public final static int GETGAMES = 3;
+    public final static int GETGAME = 4;
 
     private String url;
     private String token;
@@ -76,6 +77,10 @@ public class RestConnection extends Thread {
                 }else {
                     sendGame();
                 }
+                break;
+            }
+            case GETGAME:{
+                getGame();
                 break;
             }
             default:{
@@ -140,6 +145,9 @@ public class RestConnection extends Thread {
             }
             backend.disconnect();
         }
+    }
+
+    private void getGame(){
     }
 
     private void getGameList(){

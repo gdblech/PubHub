@@ -80,7 +80,7 @@ public class TriviaRound extends Slide implements Parcelable {
         }
     }
 
-    public boolean getCreantionMode() {
+    public boolean getCreationMode() {
         return creationMode;
     }
 
