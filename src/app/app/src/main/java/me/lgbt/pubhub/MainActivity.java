@@ -25,6 +25,7 @@ import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.utils.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.interfaces.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
+import me.lgbt.pubhub.trivia.utils.interfaces.TeamAnswerListener;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -32,7 +33,8 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener {
+public class MainActivity extends AppCompatActivity implements ChatClickListener,
+        BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener, TeamAnswerListener {
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
@@ -234,6 +236,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         System.out.println("endGame JSON: " + endGameJSON);
         ws.send(endGameJSON);
         System.out.println("Game " + gameID + "has ended.");
+    }
+
+    @Override
+    public void teamAnswerChosen(String answer) {
+       //todo send team's answer to backend
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
