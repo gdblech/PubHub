@@ -96,6 +96,7 @@ class ServerHostMessage {
 			TriviaStart: 'TriviaStart',
 			RoundStart: 'RoundStart',
 			Question: 'Question',
+			AnswerStatus: "AnswerStatus",
 			Grading: 'Grading',
 			Scores: 'Scores',
 			Winners: 'Winners'
@@ -138,7 +139,8 @@ class ServerPlayerMessage {
 			TriviaStart: 'TriviaStart',
 			RoundStart: 'RoundStart',
 			Question: 'Question',
-			AnswerResponse: 'AnswerResponse',
+			AnswerSubmission: 'AnswerSubmission',
+			FinalAnswerResponse: 'FinalAnswerResponse',
 			Grading: 'Grading',
 			Scores: 'Scores',
 			Winners: 'Winners'

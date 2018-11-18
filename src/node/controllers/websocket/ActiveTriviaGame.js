@@ -58,6 +58,7 @@ class ActiveTriviaGame {
 		if (this.currentQuestion === -1) {
 			this.currentQuestion = 0;
 			let question = this.triviaGame.triviaRounds[this.currentRound].triviaQuestions[this.currentQuestion].toJSON();
+			question.roundNumber = this.currentRound;
 			if (this.grading) {
 				this.teamsAnswered = 0;
 				return {
@@ -110,6 +111,7 @@ class ActiveTriviaGame {
 
 		this.currentQuestion += 1;
 		let question = this.triviaGame.triviaRounds[this.currentRound].triviaQuestions[this.currentQuestion].toJSON();
+		question.roundNumber = this.currentRound;
 		if (this.grading) {
 			this.teamsAnswered = 0;
 			return {
