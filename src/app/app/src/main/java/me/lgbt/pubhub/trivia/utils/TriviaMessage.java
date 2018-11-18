@@ -16,8 +16,6 @@ public class TriviaMessage extends Message {
         this.picture = picture;
     }
 
-
-
     public String getTitle() {
         return title;
     }

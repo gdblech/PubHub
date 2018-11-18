@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -277,33 +278,37 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                     JSONObject payload = messageObject.getJSONObject("payload");
                     String subMessageType = payload.getString("messageType");
 
+                    String qtext;
+                    String qrcode;
+                    String teamName;
+
                     switch (subMessageType) {
                         case "GameInfo":
                             String title = messageObject.getString("title");
-                            String text = messageObject.getString("text");
-                            String picture = messageObject.getString("picture");
-
+                            qtext = messageObject.getString("text");
+                            String qpicture = messageObject.getString("picture");
+                            Uri picture = Uri.parse(qpicture);
                             TriviaMessage triviaMessage = new TriviaMessage(title, text, picture);
                             break;
 
                         case "TableStatusResponse":
-                            String QRcode = messageObject.getString("QRCode");
+                            qrcode = messageObject.getString("QRCode");
                             String status = messageObject.getString("status");
-                            String teamName = messageObject.getString("teamName");
+                            teamName = messageObject.getString("teamName");
                             String teamLeader = messageObject.getString("teamLeader");
                             break;
                         case "CreateTeamResponse":
                             String isTeamCreated = messageObject.getString("success");
-                            String QRcode = messageObject.getString("QRCode");
-                            String teamName = messageObject.getString("teamName");
+                            qrcode = messageObject.getString("QRCode");
+                            teamName = messageObject.getString("teamName");
                             if (messageObject.getString("reason") != null) {
                                 String reason = messageObject.getString("reason");
                             }
                             break;
                         case "JoinTeamResponse":
                             String joinedTeam = messageObject.getString("success");
-                            String QRcode = messageObject.getString("QRCode");
-                            String teamName = messageObject.getString("teamName");
+                            qrcode = messageObject.getString("QRCode");
+                            teamName = messageObject.getString("teamName");
                             if (messageObject.getString("reason") != null) {
                                 String reason = messageObject.getString("reason");
                             }
