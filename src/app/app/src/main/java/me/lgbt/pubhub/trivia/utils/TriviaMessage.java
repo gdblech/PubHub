@@ -38,6 +38,7 @@ public class TriviaMessage extends Message {
     private void convertPicture(String pictureString) {
         byte[] decodedImage = Base64.decode(pictureString, Base64.DEFAULT);
         Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
+        image = decodedBitmap;
     }
 
     public String getText() {

@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,9 +21,9 @@ import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
+import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 import me.lgbt.pubhub.trivia.utils.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.interfaces.PlayListener;
-import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 import me.lgbt.pubhub.trivia.utils.interfaces.TeamAnswerListener;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -186,9 +185,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 break;
             }
             case HostFragment.NEXT: {
-            String nextJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"Next\"}}";
-            ws.send(nextJSON);
-            break; //todo
+                String nextJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"Next\"}}";
+                ws.send(nextJSON);
+                break; //todo
             }
         }
     }
@@ -221,29 +220,19 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      * Game ID is from the TriviaGameListActivity.sendMessagePlay(int id) method.
      */
     private void openGame() {
-        System.out.println("Game ID on openGame(): " + gameID);
-        System.out.println(gameID + " has started.");
-
         String startGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"OpenGame\",\"payload\":{\"gameId\":" + gameID + "}}}";
-
-        // send to server
-        System.out.println("openGame JSON: " + startGameJSON);
         ws.send(startGameJSON);
     }
 
     /* Tells server that game has ended. */
     private void closeGame() {
         String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"EndGame\"}}";
-
-        // send to server
-        System.out.println("endGame JSON: " + endGameJSON);
         ws.send(endGameJSON);
-        System.out.println("Game " + gameID + "has ended.");
     }
 
     @Override
     public void teamAnswerChosen(String answer) {
-       //todo send team's answer to backend
+        //todo send team's answer to backend
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
@@ -257,10 +246,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            System.out.println("MessageFromServer: " + text);
 
             try {
                 JSONObject messageObject = new JSONObject(text);
+                JSONObject payloadJSON = messageObject.getJSONObject("payload");
+
+                System.out.println("[DEBUG] " + messageObject.toString());
                 String messageType = messageObject.getString("messageType");
 
                 if (messageType.equals("ServerClientChatMessage")) {
@@ -277,79 +268,80 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
                         output(mes);
                     }
-                } else if (messageType.equals("ServerHostMessage")) {
-                    JSONObject payload = messageObject.getJSONObject("payload");
-                    String subMessageType = payload.getString("messageType");
+                } else {
+                    String subMessageType = payloadJSON.getString("messageType");
+                    JSONObject subPayloadJSON = payloadJSON.getJSONObject("payload");
 
-                    String qtitle;
-                    String qtext;
-                    String qimage;
+                    if (messageType.equals("ServerHostMessage")) {
+                        String qtitle;
+                        String qtext;
+                        String qimage;
+                        TriviaMessage triviaMessage;
 
-                    TriviaMessage triviaMessage;
+                        switch (subMessageType) {
+                            case "TriviaStart":
+                                qtitle = subPayloadJSON.getString("title");
+                                qtext = subPayloadJSON.getString("text");
+                                qimage = subPayloadJSON.getString("image");
+                                triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
+                                System.out.println(messageType + subMessageType + qtitle + qtext + qimage);
+                                updateUI(triviaMessage);
+                                break;
 
-                    switch (subMessageType) {
-                        case "TriviaStart":
-                            qtitle = messageObject.getString("title");
-                            qtext = messageObject.getString("text");
-                            qimage = messageObject.getString("image");
-                            triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
-                            updateUI(triviaMessage);
-                            break;
+                            case "RoundStart":
+                                String roundNumber = subPayloadJSON.getString("id");
+                                qtitle = subPayloadJSON.getString("title");
+                                qtext = subPayloadJSON.getString("text");
+                                qimage = subPayloadJSON.getString("image");
+                                triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
+                                updateUI(triviaMessage);
+                                break;
 
-                        case "RoundStart":
-                            String roundNumber = messageObject.getString("id");
-                            qtitle = messageObject.getString("title");
-                            qtext = messageObject.getString("text");
-                            qimage = messageObject.getString("image");
+                            case "Question":
+                                qtitle = subPayloadJSON.getString("title");
+                                qtext = subPayloadJSON.getString("text");
+                                qimage = subPayloadJSON.getString("image");
+                                triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
+                                updateUI(triviaMessage);
+                                break;
 
-                            triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
-                            updateUI(triviaMessage);
-                            break;
+                            case "Grading":
+                                break;
+                        }
+                    } else if (messageType.equals("ServerPlayerMessage")) {
+                        String title;
+                        String qtext;
+                        String qrcode;
+                        String qimage;
+                        String teamName;
+                        TriviaMessage triviaMessage;
 
-                        case "Question":
-                            break;
+                        switch (subMessageType) {
+                            case "GameInfo":
+                                JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
+                                title = gameJSON.getString("title");
+                                qtext = gameJSON.getString("text");
+                                qimage = gameJSON.getString("picture");
+                                triviaMessage = new TriviaMessage(title, qtext, qimage);
+                                updateUI(triviaMessage);
+                                break;
 
-                        case "Grading":
-                            break;
-                    }
-                } else if (messageType.equals("ServerPlayerMessage")) {
-                    JSONObject payload = messageObject.getJSONObject("payload");
-                    String subMessageType = payload.getString("messageType");
-
-                    String qtext;
-                    String qrcode;
-                    String teamName;
-
-                    switch (subMessageType) {
-                        case "GameInfo":
-                            String title = messageObject.getString("title");
-                            qtext = messageObject.getString("text");
-                            String qimage = messageObject.getString("picture");
-                            TriviaMessage triviaMessage = new TriviaMessage(title, qtext, qimage);
-                            break;
-
-                        case "TableStatusResponse":
-                            qrcode = messageObject.getString("QRCode");
-                            String status = messageObject.getString("status");
-                            teamName = messageObject.getString("teamName");
-                            String teamLeader = messageObject.getString("teamLeader");
-                            break;
-                        case "CreateTeamResponse":
-                            String isTeamCreated = messageObject.getString("success");
-                            qrcode = messageObject.getString("QRCode");
-                            teamName = messageObject.getString("teamName");
-                            if (messageObject.getString("reason") != null) {
-                                String reason = messageObject.getString("reason");
-                            }
-                            break;
-                        case "JoinTeamResponse":
-                            String joinedTeam = messageObject.getString("success");
-                            qrcode = messageObject.getString("QRCode");
-                            teamName = messageObject.getString("teamName");
-                            if (messageObject.getString("reason") != null) {
-                                String reason = messageObject.getString("reason");
-                            }
-                            break;
+                            case "TableStatusResponse":
+                                break;
+                            case "CreateTeamResponse":
+//                                String isTeamCreated = messageObject.getString("success");
+//                                qrcode = messageObject.getString("QRCode");
+//                                teamName = messageObject.getString("teamName");
+//                                if (messageObject.getString("reason") != null) {
+//                                    String reason = messageObject.getString("reason");
+//                                }
+                                break;
+                            case "JoinTeamResponse":
+                               qrcode = subPayloadJSON.getString("QRCode");
+                               teamName = subPayloadJSON.getString("teamName");
+                               String success = subPayloadJSON.getString("success");
+                               break;
+                        }
                     }
                 }
             } catch (org.json.JSONException e) {
