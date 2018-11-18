@@ -11,6 +11,7 @@ class ActiveTriviaGame {
 		this.currentQuestion = -1;
 		this.teams = [];
 		this.gradesAwaiting = 0;
+		this.teamsAnswered = 0;
 	}
 
 	get gameInfo() {
@@ -58,6 +59,7 @@ class ActiveTriviaGame {
 			this.currentQuestion = 0;
 			let question = this.triviaGame.triviaRounds[this.currentRound].triviaQuestions[this.currentQuestion].toJSON();
 			if (this.grading) {
+				this.teamsAnswered = 0;
 				return {
 					type: 'grading',
 					question
@@ -109,6 +111,7 @@ class ActiveTriviaGame {
 		this.currentQuestion += 1;
 		let question = this.triviaGame.triviaRounds[this.currentRound].triviaQuestions[this.currentQuestion].toJSON();
 		if (this.grading) {
+			this.teamsAnswered = 0;
 			return {
 				type: 'grading',
 				question

@@ -138,6 +138,7 @@ class ServerPlayerMessage {
 			TriviaStart: 'TriviaStart',
 			RoundStart: 'RoundStart',
 			Question: 'Question',
+			AnswerResponse: 'AnswerResponse',
 			Grading: 'Grading',
 			Scores: 'Scores',
 			Winners: 'Winners'
