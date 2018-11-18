@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.utils.HostListener;
+import me.lgbt.pubhub.trivia.utils.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
 /*
@@ -59,7 +59,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         picture = act.findViewById(R.id.slidePlayPicture);
         next = act.findViewById(R.id.hostNextButton);
         back = act.findViewById(R.id.hostPrevButton);
-        fade = act.findViewById(R.id.fadeBackground);
+        fade = act.findViewById(R.id.fadeBackgroundHost);
         launchGame = act.findViewById(R.id.launchGameHost);
 
         fade.setVisibility(View.VISIBLE);

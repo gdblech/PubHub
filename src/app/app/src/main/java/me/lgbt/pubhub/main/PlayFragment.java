@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.utils.PlayListener;
+import me.lgbt.pubhub.trivia.utils.interfaces.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
 public class PlayFragment extends Fragment implements View.OnClickListener {

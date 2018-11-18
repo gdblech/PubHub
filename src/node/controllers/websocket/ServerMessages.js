@@ -81,15 +81,11 @@ class ServerClientChatMessage {
 }
 
 class ServerHostMessage {
-
-}
-
-class ServerPlayerMessage {
 	constructor(messageType, payload) {
-		if (ServerPlayerMessage.MESSAGE_TYPES[messageType]) {
+		if (ServerHostMessage.MESSAGE_TYPES[messageType]) {
 			this.messageType = messageType;
 		} else {
-			throw 'Invalid ServerPlayerMessage message type';
+			throw 'Invalid ServerHostMessage message type';
 		}
 
 		this.payload = payload;
@@ -97,10 +93,6 @@ class ServerPlayerMessage {
 
 	static get MESSAGE_TYPES() {
 		return {
-			GameInfo: 'GameInfo',
-			TableStatusResponse: 'TableStatusResponse',
-			CreateTeamResponse: 'CreateTeamResponse',
-			JoinTeamResponse: 'JoinTeamResponse',
 			TriviaStart: 'TriviaStart',
 			RoundStart: 'RoundStart',
 			Question: 'Question',
@@ -126,8 +118,52 @@ class ServerPlayerMessage {
 	}
 }
 
+class ServerPlayerMessage {
+	constructor(messageType, payload) {
+		if (ServerPlayerMessage.MESSAGE_TYPES[messageType]) {
+			this.messageType = messageType;
+		} else {
+			throw 'Invalid ServerPlayerMessage message type';
+		}
+
+		this.payload = payload;
+	}
+
+	static get MESSAGE_TYPES() {
+		return {
+			GameInfo: 'GameInfo',
+			TableStatusResponse: 'TableStatusResponse',
+			CreateTeamResponse: 'CreateTeamResponse',
+			JoinTeamResponse: 'JoinTeamResponse',
+			TriviaStart: 'TriviaStart',
+			RoundStart: 'RoundStart',
+			Question: 'Question',
+			AnswerResponse: 'AnswerResponse',
+			Grading: 'Grading',
+			Scores: 'Scores',
+			Winners: 'Winners'
+		}
+	}
+
+	/**
+	 * toServerMessage
+	 * Returns the message wrapped in a WSServerMessage
+	 */
+	toServerMessage() {
+		return new WSServerMessage(this);
+	}
+
+	toJSON() {
+		return {
+			messageType: this.messageType,
+			payload: this.payload
+		};
+	}
+}
+
 module.exports = {
 	WSServerMessage,
 	ServerClientChatMessage,
-	ServerPlayerMessage
+	ServerPlayerMessage,
+	ServerHostMessage
 }
