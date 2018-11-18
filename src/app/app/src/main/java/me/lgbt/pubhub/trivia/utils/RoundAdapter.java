@@ -13,6 +13,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.trivia.utils.interfaces.ClickListener;
 
 public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> {
 

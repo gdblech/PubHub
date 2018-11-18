@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.utils.PlayListener;
+import me.lgbt.pubhub.trivia.utils.interfaces.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
 public class PlayFragment extends Fragment implements View.OnClickListener {
@@ -74,7 +74,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     public void setSlide(TriviaMessage msg) {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
-        picture.setImageURI(msg.getPicture());
+        picture.setImageBitmap(msg.getImage());
         if (msg.isQuestion()) {
             submitAnswer.show();
             answer.setVisibility(View.VISIBLE);

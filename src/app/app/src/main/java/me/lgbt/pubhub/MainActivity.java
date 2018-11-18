@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,9 +21,10 @@ import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
-import me.lgbt.pubhub.trivia.utils.HostListener;
-import me.lgbt.pubhub.trivia.utils.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
+import me.lgbt.pubhub.trivia.utils.interfaces.HostListener;
+import me.lgbt.pubhub.trivia.utils.interfaces.PlayListener;
+import me.lgbt.pubhub.trivia.utils.interfaces.TeamAnswerListener;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -32,12 +32,12 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-public class MainActivity extends AppCompatActivity implements ChatClickListener, BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener {
+public class MainActivity extends AppCompatActivity implements ChatClickListener,
+        BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener, TeamAnswerListener {
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
     private String textFromFragment;
-
     private ChatFragment chatFrag;
     private Fragment triviaFrag;
     private ScoreFragment scoreFrag;
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("MainActivity onCreate successful");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         navBar = findViewById(R.id.navigation);
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             } else {
                 triviaFrag = new PlayFragment();
             }
-
 
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
@@ -176,12 +174,19 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     public void slideNavClicked(int button) {
         switch (button) {
             case HostFragment.START: {
+                String startTriviaJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"StartTrivia\"}}";
+                // send to server
+                System.out.println("Start Trivia JSON: " + startTriviaJSON);
+                ws.send(startTriviaJSON);
                 break; //todo
             }
             case HostFragment.PREVIOUS: {
-                break; //todo
+
+                break;
             }
             case HostFragment.NEXT: {
+                String nextJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"Next\"}}";
+                ws.send(nextJSON);
                 break; //todo
             }
         }
@@ -215,44 +220,38 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      * Game ID is from the TriviaGameListActivity.sendMessagePlay(int id) method.
      */
     private void openGame() {
-        System.out.println("Game ID on openGame(): " + gameID);
-        System.out.println(gameID + " has started.");
-
         String startGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"OpenGame\",\"payload\":{\"gameId\":" + gameID + "}}}";
-
-        // send to server
-        System.out.println("openGame JSON: " + startGameJSON);
         ws.send(startGameJSON);
     }
 
     /* Tells server that game has ended. */
-
     private void closeGame() {
         String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"EndGame\"}}";
-
-        // send to server
-        System.out.println("endGame JSON: " + endGameJSON);
         ws.send(endGameJSON);
-        System.out.println("Game " + gameID + "has ended.");
+    }
+
+    @Override
+    public void teamAnswerChosen(String answer) {
+        //todo send team's answer to backend
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
-
 
         private static final int NORMAL_CLOSURE_STATUS = 1000;
 
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            System.out.println("MessageToServer: " + "test successful");
-//            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success\"}}");
+            System.out.println("Websocket Connection Success");
         }
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            System.out.println("MessageFromServer: " + text);
 
             try {
                 JSONObject messageObject = new JSONObject(text);
+                JSONObject payloadJSON = messageObject.getJSONObject("payload");
+
+                System.out.println("[DEBUG] " + messageObject.toString());
                 String messageType = messageObject.getString("messageType");
 
                 if (messageType.equals("ServerClientChatMessage")) {
@@ -269,50 +268,80 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
                         output(mes);
                     }
-                } else if (messageType.equals("ServerHostMessage")) {
-                    JSONObject payload = messageObject.getJSONObject("payload");
-                    String subMessageType = payload.getString("messageType");
-                    //TODO finish code or omit and implement REST API
+                } else {
+                    String subMessageType = payloadJSON.getString("messageType");
+                    JSONObject subPayloadJSON = payloadJSON.getJSONObject("payload");
 
-                } else if (messageType.equals("ServerPlayerMessage")) {
-                    JSONObject payload = messageObject.getJSONObject("payload");
-                    String subMessageType = payload.getString("messageType");
+                    if (messageType.equals("ServerHostMessage")) {
+                        String qtitle;
+                        String qtext;
+                        String qimage;
+                        TriviaMessage triviaMessage;
 
-                    String qtext;
-                    String qrcode;
-                    String teamName;
+                        switch (subMessageType) {
+                            case "TriviaStart":
+                                qtitle = subPayloadJSON.getString("title");
+                                qtext = subPayloadJSON.getString("text");
+                                qimage = subPayloadJSON.getString("image");
+                                triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
+                                System.out.println(messageType + subMessageType + qtitle + qtext + qimage);
+                                updateUI(triviaMessage);
+                                break;
 
-                    switch (subMessageType) {
-                        case "GameInfo":
-                            String title = messageObject.getString("title");
-                            qtext = messageObject.getString("text");
-                            String qpicture = messageObject.getString("picture");
-                            Uri picture = Uri.parse(qpicture);
-                            TriviaMessage triviaMessage = new TriviaMessage(title, text, picture);
-                            break;
+                            case "RoundStart":
+                                String roundNumber = subPayloadJSON.getString("id");
+                                qtitle = subPayloadJSON.getString("title");
+                                qtext = subPayloadJSON.getString("text");
+                                qimage = subPayloadJSON.getString("image");
+                                triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
+                                updateUI(triviaMessage);
+                                break;
 
-                        case "TableStatusResponse":
-                            qrcode = messageObject.getString("QRCode");
-                            String status = messageObject.getString("status");
-                            teamName = messageObject.getString("teamName");
-                            String teamLeader = messageObject.getString("teamLeader");
-                            break;
-                        case "CreateTeamResponse":
-                            String isTeamCreated = messageObject.getString("success");
-                            qrcode = messageObject.getString("QRCode");
-                            teamName = messageObject.getString("teamName");
-                            if (messageObject.getString("reason") != null) {
-                                String reason = messageObject.getString("reason");
-                            }
-                            break;
-                        case "JoinTeamResponse":
-                            String joinedTeam = messageObject.getString("success");
-                            qrcode = messageObject.getString("QRCode");
-                            teamName = messageObject.getString("teamName");
-                            if (messageObject.getString("reason") != null) {
-                                String reason = messageObject.getString("reason");
-                            }
-                            break;
+                            case "Question":
+                                qtitle = subPayloadJSON.getString("title");
+                                qtext = subPayloadJSON.getString("text");
+                                qimage = subPayloadJSON.getString("image");
+                                triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
+                                updateUI(triviaMessage);
+                                break;
+
+                            case "Grading":
+                                break;
+                        }
+                    } else if (messageType.equals("ServerPlayerMessage")) {
+                        String title;
+                        String qtext;
+                        String qrcode;
+                        String qimage;
+                        String teamName;
+                        TriviaMessage triviaMessage;
+
+                        switch (subMessageType) {
+                            case "GameInfo":
+                                JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
+                                title = gameJSON.getString("title");
+                                qtext = gameJSON.getString("text");
+                                qimage = gameJSON.getString("picture");
+                                triviaMessage = new TriviaMessage(title, qtext, qimage);
+                                updateUI(triviaMessage);
+                                break;
+
+                            case "TableStatusResponse":
+                                break;
+                            case "CreateTeamResponse":
+//                                String isTeamCreated = messageObject.getString("success");
+//                                qrcode = messageObject.getString("QRCode");
+//                                teamName = messageObject.getString("teamName");
+//                                if (messageObject.getString("reason") != null) {
+//                                    String reason = messageObject.getString("reason");
+//                                }
+                                break;
+                            case "JoinTeamResponse":
+                               qrcode = subPayloadJSON.getString("QRCode");
+                               teamName = subPayloadJSON.getString("teamName");
+                               String success = subPayloadJSON.getString("success");
+                               break;
+                        }
                     }
                 }
             } catch (org.json.JSONException e) {

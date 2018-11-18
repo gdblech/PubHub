@@ -138,7 +138,6 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
                 break;
         }
-
     }
 
     @Override

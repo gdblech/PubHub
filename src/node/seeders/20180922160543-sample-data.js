@@ -66,8 +66,32 @@ module.exports = {
 			updatedAt: '2018-09-21'
 		});
 
-		await user3.setRole(customer);
+		await user3.setRole(host);
 		await user3.setAuthType(google);
+
+		let user4 = await Models.User.create({
+			userId: '109084439467698012892',
+			userName: 'bdcgentry',
+			email: 'bdcgentry@gmail.com',
+			profilePicPath: 'https://lh4.googleusercontent.com/-jeNik0-hHrM/AAAAAAAAAAI/AAAAAAAAVcs/7Tck2kxCLBo/s96-c/photo.jpg',
+			createdAt: '2018-09-21',
+			updatedAt: '2018-09-21'
+		});
+
+		await user4.setRole(host);
+		await user4.setAuthType(google);
+
+		let user5 = await Models.User.create({
+			userId: '115559780616311829319',
+			userName: 'gdblech',
+			email: 'gdblech@uncg.edu',
+			profilePicPath: 'https://lh5.googleusercontent.com/-HfXTe3rqyBs/AAAAAAAAAAI/AAAAAAAAAAA/AGDgw-id9qNf-add4-ZOBzcogiIjmhMA9g/s96-c/photo.jpg',
+			createdAt: '2018-09-21',
+			updatedAt: '2018-09-21'
+		});
+
+		await user5.setRole(host);
+		await user5.setAuthType(google);
 
 
 		// Tables
@@ -97,19 +121,19 @@ module.exports = {
 			"image": "45f1d4e0-e6f6-11e8-aca3-ffe90892d3f6",
 			"completed": false,
 			"triviaRounds": [{
-					"roundNumber": 2,
+					"roundNumber": 1,
 					"title": "Movies",
 					"text": "Name the movie in the image",
 					"image": "471c9940-e6f6-11e8-aca3-ffe90892d3f6",
 					"triviaQuestions": [{
-							"questionNumber": 2,
+							"questionNumber": 1,
 							"title": "Sci-Fi",
 							"text": "Released 1996",
 							"image": "4775dcd0-e6f6-11e8-aca3-ffe90892d3f6",
 							"answer": "Independence Day"
 						},
 						{
-							"questionNumber": 1,
+							"questionNumber": 0,
 							"title": "Drama",
 							"text": "Released 2014",
 							"image": "47a8d3b0-e6f6-11e8-aca3-ffe90892d3f6",
@@ -118,19 +142,19 @@ module.exports = {
 					]
 				},
 				{
-					"roundNumber": 1,
+					"roundNumber": 0,
 					"title": "Weird Al",
 					"text": "Name the original song that Weird Al Parodied",
 					"image": "47f93da0-e6f6-11e8-aca3-ffe90892d3f6",
 					"triviaQuestions": [{
-							"questionNumber": 1,
+							"questionNumber": 0,
 							"title": "Smells Like Nirvana",
 							"text": "Released 1992",
 							"image": "4905a490-e6f6-11e8-aca3-ffe90892d3f6",
 							"answer": "Smells Like Teen Spirit"
 						},
 						{
-							"questionNumber": 2,
+							"questionNumber": 1,
 							"title": "Amish Paradise",
 							"text": "Released 1996",
 							"image": "498a16d0-e6f6-11e8-aca3-ffe90892d3f6",

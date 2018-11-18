@@ -20,7 +20,7 @@ import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
-import me.lgbt.pubhub.trivia.utils.ClickListener;
+import me.lgbt.pubhub.trivia.utils.interfaces.ClickListener;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
 import me.lgbt.pubhub.trivia.utils.GameDisplay;
 
@@ -72,7 +72,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
                     String name = obj.getString("gameName");
                     GameDisplay game = new GameDisplay(name, obj.getString("hostName"),
                             obj.getString("date"), obj.getInt("id"));
-                    if(!name.equals("") && !name.equalsIgnoreCase("null")){
+                    if (!name.equals("") && !name.equalsIgnoreCase("null")) {
                         listOfGames.add(game);
                     }
                 }
@@ -92,7 +92,6 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
     }
 
     /* This is what takes you to the next activity from the play button. */
-
     private void sendMessagePlay(int id) {
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
@@ -112,10 +111,9 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
     }
 
 
-
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.newGame){
+        if (view.getId() == R.id.newGame) {
             sendMessageCreate();
         }
     }
@@ -124,15 +122,16 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onPositionClicked(int position, int button) {
-        switch (button){
-            case R.id.editButton:{
+        switch (button) {
+            case R.id.editButton: {
                 break; //todo add edit functionality
             }
-            case R.id.deleteButton:{
+            case R.id.deleteButton: {
                 break; //todo add delete functionality
             }
-            case R.id.playButton:{
+            case R.id.playButton: {
                 sendMessagePlay(listOfGames.get(position).getId());
+// sendMessagePlay(listOfGames.get(position).getId());
             }
         }
     }
