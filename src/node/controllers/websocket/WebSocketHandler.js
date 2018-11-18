@@ -174,6 +174,10 @@ class WebSocketHandler {
 	}
 
 	async processTriviaHostMessage(clientMessage, client) {
+		if (client.user.Role.roleName !== 'Host') {
+			this.sendError('User is not a host', client);
+			return;
+		}
 		if (!ClientMessages.HostServerMessage.MESSAGE_TYPES[clientMessage.messageType]) {
 			this.sendError(`Invalid HostServerMessageType: ${clientMessage.messageType}`, client);
 			return;
@@ -197,53 +201,59 @@ class WebSocketHandler {
 			this.wss.clients.forEach((sclient) => {
 				this.sendGameInfo(sclient);
 			})
-		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.EndGame) {
-			this.activeTrivia = null;
-			this.wss.clients.forEach((sclient) => {
-				this.sendGameInfo(sclient);
-			});
-		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.StartTrivia) {
-			let game = this.activeTrivia.startGame();
-			let response = new ServerMessages.ServerHostMessage(
-				ServerMessages.ServerHostMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage();
-			this.activeTrivia.host.client.send(JSON.stringify(response));
-
-			response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-				ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage());
-			this.sendToPlayers(response);
-		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.Next) {
-			let next = this.activeTrivia.next();
-			if (next.type === 'round') {
-				let response = new ServerMessages.ServerHostMessage(
-					ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
-				this.activeTrivia.host.client.send(JSON.stringify(response));
-
-				response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage());
-				this.sendToPlayers(response);
-			} else if (next.type === 'question') {
-				let response = new ServerMessages.ServerHostMessage(
-					ServerMessages.ServerHostMessage.MESSAGE_TYPES.Question, next.question).toServerMessage();
-				this.activeTrivia.host.client.send(JSON.stringify(response));
-
-				response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
-				this.sendToPlayers(response);
-			} else if (next.type === 'grading') {
-				let response = new ServerMessages.ServerHostMessage(
-					ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
-				this.activeTrivia.host.client.send(JSON.stringify(response));
-
-				response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage());
-				this.sendToPlayers(response);
-			} else if (next.type === 'end') {
-				logger.debug('end game');
-			} else if (next.type === 'scoreboard') {
-				logger.debug('scoreboard');
-			}
 		} else {
-			this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
+			if (client.user.id !== this.activeTrivia.host.id) {
+				this.sendError('Another host is controlling this game', client);
+				return;
+			}
+			if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.EndGame) {
+				this.activeTrivia = null;
+				this.wss.clients.forEach((sclient) => {
+					this.sendGameInfo(sclient);
+				});
+			} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.StartTrivia) {
+				let game = this.activeTrivia.startGame();
+				let response = new ServerMessages.ServerHostMessage(
+					ServerMessages.ServerHostMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage();
+				this.activeTrivia.host.client.send(JSON.stringify(response));
+
+				response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage());
+				this.sendToPlayers(response);
+			} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.Next) {
+				let next = this.activeTrivia.next();
+				if (next.type === 'round') {
+					let response = new ServerMessages.ServerHostMessage(
+						ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
+					this.activeTrivia.host.client.send(JSON.stringify(response));
+
+					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage());
+					this.sendToPlayers(response);
+				} else if (next.type === 'question') {
+					let response = new ServerMessages.ServerHostMessage(
+						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Question, next.question).toServerMessage();
+					this.activeTrivia.host.client.send(JSON.stringify(response));
+
+					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
+					this.sendToPlayers(response);
+				} else if (next.type === 'grading') {
+					let response = new ServerMessages.ServerHostMessage(
+						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
+					this.activeTrivia.host.client.send(JSON.stringify(response));
+
+					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage());
+					this.sendToPlayers(response);
+				} else if (next.type === 'end') {
+					logger.debug('end game');
+				} else if (next.type === 'scoreboard') {
+					logger.debug('scoreboard');
+				}
+			} else {
+				this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
+			}
 		}
 	}
 
