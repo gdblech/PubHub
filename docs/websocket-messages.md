@@ -142,6 +142,50 @@ Server responds with CreateTeamResponse message
 Server responds with JoinTeamResponse message
 </td>
 </tr>
+<tr>
+<td>PlayerServerMessage</td>
+<td>AnswerQuestion</td>
+<td>
+<pre>
+{
+	"messageType": "PlayerServerMessage",
+	"payload": {
+		"messageType": "AnswerQuestion",
+		"payload": {
+			"roundNumber: 1,
+			"questionNumber: 2,
+			"answer": "question answer"
+		}
+	}
+}
+</pre>
+</td>
+<td>
+Answers submitted will be sent to team leader for review.
+</td>
+</tr>
+<tr>
+<td>PlayerServerMessage</td>
+<td>FinalAnswer</td>
+<td>
+<pre>
+{
+	"messageType": "PlayerServerMessage",
+	"payload": {
+		"messageType": "FinalAnswer",
+		"payload": {
+			"roundNumber: 1,
+			"questionNumber: 2,
+			"answer": "question answer"
+		}
+	}
+}
+</pre>
+</td>
+<td>
+Only the team leader can submit a FinalAnswer.
+</td>
+</tr>
 </table>
 
 ## Server Messages
@@ -431,6 +475,52 @@ When user connects they receive an array of all messages. Receive array with sin
   }
 }
 </pre>
+</td>
+</tr>
+<tr>
+<td>ServerPlayerMessage</td>
+<td>AnswerSubmission</td>
+<td>
+<pre>
+{
+	"messageType": "ServerPlayerMessage",
+	"payload": {
+		"messageType": "AnswerSubmission",
+		"payload": {
+			"roundNumber: 1,
+			"questionNumber: 2,
+			"answer": "question answer",
+		}
+	}
+}
+</pre>
+</td>
+<td>
+Sent to team leader whenever a team member (including the team leader) submits an answer.
+</td>
+</tr>
+<tr>
+<td>ServerPlayerMessage</td>
+<td>AnswerResponse</td>
+<td>
+<pre>
+{
+	"messageType": "ServerPlayerMessage",
+	"payload": {
+		"messageType": "FinalAnswerResponse",
+		"payload": {
+			"roundNumber: 1,
+			"questionNumber: 2,
+			"answer": "question answer",
+			"success": true | false,
+			"reason": "Submitter, not team leader" | "Team already answered"
+		}
+	}
+}
+</pre>
+</td>
+<td>
+If success is false, message is sent to only submitter and reason is included. If success is true, message is sent to all team members and reason is not included.
 </td>
 </tr>
 <tr>

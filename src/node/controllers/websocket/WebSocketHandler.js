@@ -469,6 +469,8 @@ class WebSocketHandler {
 					});
 				client.send(JSON.stringify(response.toServerMessage()));
 			}
+		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.AnswerQuestion) {
+
 		} else {
 			this.sendError(`Player message type: ${clientMessage.messageType} not handled.`, client);
 		}
