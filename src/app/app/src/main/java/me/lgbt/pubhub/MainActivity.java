@@ -24,7 +24,6 @@ import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.utils.HostListener;
 import me.lgbt.pubhub.trivia.utils.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
-import me.lgbt.pubhub.connect.Websockets.HostServerMessage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -254,49 +253,83 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             try {
                 JSONObject messageObject = new JSONObject(text);
                 String messageType = messageObject.getString("messageType");
-                if (messageType.equals("ServerClientChatMessage")) {
 
+                if (messageType.equals("ServerClientChatMessage")) {
                     JSONArray messages = messageObject.getJSONObject("payload").getJSONArray("messages");
 
                     for (int i = 0; i < messages.length(); i++) {
                         JSONObject message = messages.getJSONObject(i);
+
                         String user = message.getString("user");
                         String messageString = message.getString("message");
                         String timeStamp = message.getString("timestamp");
+
                         UserMessage mes = new UserMessage(messageString, user, timeStamp);
+
                         output(mes);
-                        // String displayMessage = user + ": " + messageString;
-                        // output(displayMessage);
                     }
                 } else if (messageType.equals("ServerHostMessage")) {
-                    //todo enter message handling here
-                    if (payload.messageType.equals("gameInfo")) {
+                    JSONObject payload = messageObject.getJSONObject("payload");
+                    String subMessageType = payload.getString("messageType");
+                    //TODO finish code or omit and implement REST API
 
-                    }
                 } else if (messageType.equals("ServerPlayerMessage")) {
-                    //todo enter message handling here
-                    break;
+                    JSONObject payload = messageObject.getJSONObject("payload");
+                    String subMessageType = payload.getString("messageType");
+
+                    switch (subMessageType) {
+                        case "GameInfo":
+                            String title = messageObject.getString("title");
+                            String text = messageObject.getString("text");
+                            String picture = messageObject.getString("picture");
+
+                            TriviaMessage triviaMessage = new TriviaMessage(title, text, picture);
+                            break;
+
+                        case "TableStatusResponse":
+                            String QRcode = messageObject.getString("QRCode");
+                            String status = messageObject.getString("status");
+                            String teamName = messageObject.getString("teamName");
+                            String teamLeader = messageObject.getString("teamLeader");
+                            break;
+                        case "CreateTeamResponse":
+                            String isTeamCreated = messageObject.getString("success");
+                            String QRcode = messageObject.getString("QRCode");
+                            String teamName = messageObject.getString("teamName");
+                            if (messageObject.getString("reason") != null) {
+                                String reason = messageObject.getString("reason");
+                            }
+                            break;
+                        case "JoinTeamResponse":
+                            String joinedTeam = messageObject.getString("success");
+                            String QRcode = messageObject.getString("QRCode");
+                            String teamName = messageObject.getString("teamName");
+                            if (messageObject.getString("reason") != null) {
+                                String reason = messageObject.getString("reason");
+                            }
+                            break;
+                    }
                 }
-            } catch(org.json.JSONException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-
-            @Override
-            public void onMessage (WebSocket webSocket, ByteString bytes){
-                output("Receiving bytes : " + bytes.hex());
-            }
-
-            @Override
-            public void onClosing (WebSocket webSocket,int code, String reason){
-                webSocket.close(NORMAL_CLOSURE_STATUS, null);
-                output("Closing : " + code + " / " + reason);
-            }
-
-            @Override
-            public void onFailure (WebSocket webSocket, Throwable t, Response response){
-                output("Error : " + t.getMessage());
+            } catch (org.json.JSONException e) {
+                System.out.println(e.getMessage());
             }
         }
 
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes) {
+            output("Receiving bytes : " + bytes.hex());
+        }
+
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+            output("Closing : " + code + " / " + reason);
+        }
+
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            output("Error : " + t.getMessage());
+        }
     }
+
+}
