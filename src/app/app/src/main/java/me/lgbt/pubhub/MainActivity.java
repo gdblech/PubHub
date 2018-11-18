@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("MainActivity onCreate successful");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         navBar = findViewById(R.id.navigation);
@@ -226,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     }
 
     /* Tells server that game has ended. */
-
     private void closeGame() {
         String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"EndGame\"}}";
 
@@ -238,13 +236,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     private final class EchoWebSocketListener extends WebSocketListener {
 
-
         private static final int NORMAL_CLOSURE_STATUS = 1000;
 
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            System.out.println("MessageToServer: " + "test successful");
-//            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success\"}}");
+            System.out.println("Websocket Connection Success");
         }
 
         @Override
