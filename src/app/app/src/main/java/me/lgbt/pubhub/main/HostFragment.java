@@ -91,7 +91,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
     public void setSlide(TriviaMessage msg) {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
-        picture.setImageURI(msg.getPicture());
+        picture.setImageBitmap(msg.getPicture());
     }
 
     @Override
