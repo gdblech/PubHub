@@ -1,6 +1,6 @@
 package me.lgbt.pubhub.main;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,23 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
-
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.start.QRCodeScanner;
+import me.lgbt.pubhub.connect.IntentKeys;
+
+import static android.content.Intent.getIntent;
 
 
 public class WaitingOpenFragment extends Fragment implements View.OnClickListener {
+    private final int REQ_CODE = 12359;
+    private String phbToken;
     TextView message;
     private String welcomeMesg;
-    private Button btnToChat;
-    private Button btnToQR;
+    private Button btnToJoinTeam;
     private boolean isGame;
-
+    private boolean isInTeam;
 
     public WaitingOpenFragment(){
         //Empty constructor
@@ -37,27 +35,34 @@ public class WaitingOpenFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_waiting_open, container, false);
-        btnToQR =  v.findViewById(R.id.btnToQR);
-        btnToChat =  v.findViewById(R.id.btnToChat);
+        btnToJoinTeam =  v.findViewById(R.id.btnToJointeam);
         message = v.findViewById(R.id.waitingOpenText);
         welcomeMesg = welcomeMeg();
         System.out.println(welcomeMesg);
 
         //if there is game scan QR_code to join a table
         isGame = isGameAvail();
-        if(isGame){
-            System.out.println(welcomeMesg);
-            btnToChat.setVisibility(View.GONE);
-            btnToQR.setVisibility(View.VISIBLE);
-            message.setText(welcomeMesg);
+        isInTeam = isInTeam();
+
+        if(isGame){//if game is available
+            if(isInTeam) { //and is in a team
+                try {
+                    waitStartGame(); //go to wait for start
+                } catch (Exception e) {
+                    //catch what
+                }
+            } else{
+                System.out.println(welcomeMesg);
+                message.setText(welcomeMesg);
+                btnToJoinTeam.setVisibility(View.VISIBLE);
+                btnToJoinTeam.setOnClickListener(this);
+            }
 
         } else {
             System.out.println(welcomeMesg);
-            btnToChat.setVisibility(View.VISIBLE);
-            btnToQR.setVisibility(View.GONE);
             message.setText(welcomeMesg);
+            btnToJoinTeam.setVisibility(View.GONE);
         }
-
         return v;
     }
 
@@ -69,34 +74,58 @@ public class WaitingOpenFragment extends Fragment implements View.OnClickListene
         TextView text = act.findViewById(R.id.waitingOpenText);
     }
 
+    @Override
     public void onClick(View view){
-
+        switch (view.getId()){
+            case R.id.btnToJointeam:
+                try {
+                    toTeamJoin();
+                }
+                catch (Exception e){
+                    //catch what
+                }
+                break;
+        }
     }
-
-    //open qr_code activity
-    public void openQR(){
-        Intent i = new Intent(getActivity(), QRCodeScanner.class);
-        startActivity(i);
-    }
-
 
     //if game available
     //if comes from the messages from the server
     public boolean isGameAvail(){
         isGame = true;
+        //todo add code to set isGame
         return isGame;
     }
 
     public String welcomeMeg(){
         if (isGameAvail()){
-            welcomeMesg = " welcome back";
+            welcomeMesg = "welcome to PubHub!";
             }
             else{
-            welcomeMesg = " No game available!";
+            welcomeMesg = " No game available! Please check Back later";
         }
         return welcomeMesg;
     }
 
+    public boolean isInTeam(){
+        isInTeam = false;
+        //todo add code to set isInteam;
+        return isInTeam;
+    }
 
+    public void waitStartGame(){
+        //go to wait for start game
+        Intent waitStartGame = new Intent(getActivity(), WaitForStart.class);
+        startActivity(waitStartGame);
+
+    }
+
+    public void toTeamJoin(){
+        System.out.println("Trying to join Team");
+        Intent toTeamJoin = new Intent(getActivity(), JoinTeam.class);
+        Bundle extras = new Bundle();
+        //extras.putString(IntentKeys.PUBHUB, phbToken);
+        //toTeamJoin.putExtras(extras);
+        startActivity(toTeamJoin);
+    }
 
 }
