@@ -83,10 +83,7 @@ public class WaitingOpenFragment extends Fragment implements View.OnClickListene
     //if game available
     //if comes from the messages from the server
     public boolean isGameAvail(){
-        isGame = false;
-        if ( true ){ // TODO: 11/16/2018 : handle this later. True is only for testing //>
-            isGame = true;
-        }
+        isGame = true;
         return isGame;
     }
 

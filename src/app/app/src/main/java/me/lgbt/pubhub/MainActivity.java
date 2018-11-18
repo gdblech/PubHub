@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private BottomNavigationView navBar;
     private String playAnswer;
     private FragmentManager manager;
-    private boolean hosting = false;
+    private boolean hosting = true;
     private WaitingOpenFragment waiting;
     private int gameID;
 
@@ -187,11 +188,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     }
 
     //update the info on the current slide
-    private  void updateUI(TriviaMessage msg){
-        if(hosting){
-            ((HostFragment)triviaFrag).setSlide(msg);
-        }else{
-            ((PlayFragment)triviaFrag).setSlide(msg);
+    private void updateUI(TriviaMessage msg) {
+        if (hosting) {
+            ((HostFragment) triviaFrag).setSlide(msg);
+        } else {
+            ((PlayFragment) triviaFrag).setSlide(msg);
         }
     }
 
@@ -243,26 +244,75 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             System.out.println("MessageToServer: " + "test successful");
-//            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success <3\"}}");
+//            webSocket.send("{\"messageType\":\"ClientServerChatMessage\",\"payload\": {\"message\":\"chat connection success\"}}");
         }
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             System.out.println("MessageFromServer: " + text);
+
             try {
                 JSONObject messageObject = new JSONObject(text);
                 String messageType = messageObject.getString("messageType");
+
                 if (messageType.equals("ServerClientChatMessage")) {
                     JSONArray messages = messageObject.getJSONObject("payload").getJSONArray("messages");
+
                     for (int i = 0; i < messages.length(); i++) {
                         JSONObject message = messages.getJSONObject(i);
+
                         String user = message.getString("user");
                         String messageString = message.getString("message");
                         String timeStamp = message.getString("timestamp");
+
                         UserMessage mes = new UserMessage(messageString, user, timeStamp);
+
                         output(mes);
-                        // String displayMessage = user + ": " + messageString;
-                        // output(displayMessage);
+                    }
+                } else if (messageType.equals("ServerHostMessage")) {
+                    JSONObject payload = messageObject.getJSONObject("payload");
+                    String subMessageType = payload.getString("messageType");
+                    //TODO finish code or omit and implement REST API
+
+                } else if (messageType.equals("ServerPlayerMessage")) {
+                    JSONObject payload = messageObject.getJSONObject("payload");
+                    String subMessageType = payload.getString("messageType");
+
+                    String qtext;
+                    String qrcode;
+                    String teamName;
+
+                    switch (subMessageType) {
+                        case "GameInfo":
+                            String title = messageObject.getString("title");
+                            qtext = messageObject.getString("text");
+                            String qpicture = messageObject.getString("picture");
+                            Uri picture = Uri.parse(qpicture);
+                            TriviaMessage triviaMessage = new TriviaMessage(title, text, picture);
+                            break;
+
+                        case "TableStatusResponse":
+                            qrcode = messageObject.getString("QRCode");
+                            String status = messageObject.getString("status");
+                            teamName = messageObject.getString("teamName");
+                            String teamLeader = messageObject.getString("teamLeader");
+                            break;
+                        case "CreateTeamResponse":
+                            String isTeamCreated = messageObject.getString("success");
+                            qrcode = messageObject.getString("QRCode");
+                            teamName = messageObject.getString("teamName");
+                            if (messageObject.getString("reason") != null) {
+                                String reason = messageObject.getString("reason");
+                            }
+                            break;
+                        case "JoinTeamResponse":
+                            String joinedTeam = messageObject.getString("success");
+                            qrcode = messageObject.getString("QRCode");
+                            teamName = messageObject.getString("teamName");
+                            if (messageObject.getString("reason") != null) {
+                                String reason = messageObject.getString("reason");
+                            }
+                            break;
                     }
                 }
             } catch (org.json.JSONException e) {

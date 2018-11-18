@@ -91,6 +91,8 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         finish();
     }
 
+    /* This is what takes you to the next activity from the play button. */
+
     private void sendMessagePlay(int id) {
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
@@ -109,12 +111,16 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         }
     }
 
+
+
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.newGame){
             sendMessageCreate();
         }
     }
+
+    /* Button handling for edit, delete, and play. Play calls  */
 
     @Override
     public void onPositionClicked(int position, int button) {

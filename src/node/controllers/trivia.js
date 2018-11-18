@@ -1,6 +1,7 @@
 const Models = require('../models');
 const imageStore = require('../utils/imageStore.js');
 const log4js = require('log4js');
+const sequelize = require('sequelize');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
@@ -34,6 +35,21 @@ let getById = async (req, res) => {
 	try {
 		let triviagame = await Models.TriviaGame
 			.findById(req.params.id, {
+				order: [
+					[{
+						model: Models.TriviaRound,
+						as: 'triviaRounds'
+					}, 'roundNumber', 'ASC'],
+					[{
+							model: Models.TriviaRound,
+							as: 'triviaRounds'
+						},
+						{
+							model: Models.TriviaQuestion,
+							as: 'triviaQuestions'
+						}, 'questionNumber', 'ASC'
+					]
+				],
 				include: [{
 					model: Models.TriviaRound,
 					as: 'triviaRounds',
