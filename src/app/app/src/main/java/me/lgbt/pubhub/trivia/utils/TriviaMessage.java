@@ -10,6 +10,12 @@ public class TriviaMessage extends Message {
     private Uri picture;
     private boolean isQuestion = false;
 
+    public TriviaMessage(String title, String text, Uri picture) {
+        this.title = title;
+        this.text = text;
+        this.picture = picture;
+    }
+
     public String getTitle() {
         return title;
     }
