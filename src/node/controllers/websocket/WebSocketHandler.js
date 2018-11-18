@@ -470,6 +470,111 @@ class WebSocketHandler {
 				client.send(JSON.stringify(response.toServerMessage()));
 			}
 		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.AnswerQuestion) {
+			// find team that player belongs to
+			let team = -1;
+			for (let i = 0; i < this.activeTrivia.teams.length && team === -1; i++) {
+				for (let j = 0; j < this.activeTrivia.teams[i].Users.length && team === -1; j++) {
+					if (this.activeTrivia.teams[i].Users[j].id === client.user.id) {
+						team = i;
+					}
+				}
+			}
+			if (team === -1) {
+				this.sendError('Player does not belong to a team', client);
+				return;
+			}
+			if (clientMessage.payload.roundNumber === this.activeTrivia.currentRound &&
+				clientMessage.payload.questionNumber === this.activeTrivia.currentQuestion) {
+				let message = new ServerMessages.ServerPlayerMessage(ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.AnswerSubmission, clientMessage.payload).toServerMessage();
+				let leader = this.activeTrivia.teams[team].teamLeader;
+				this.sendToUser(JSON.stringify(message), leader);
+			} else {
+				this.sendError('Invalid question number', client);
+			}
+		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.FinalAnswer) {
+			// find team that player belongs to
+			let teamIndex = -1;
+			for (let i = 0; i < this.activeTrivia.teams.length && teamIndex === -1; i++) {
+				if (this.activeTrivia.teams[i].teamLeader.id === client.user.id) {
+					teamIndex = i;
+				}
+			}
+
+			if (teamIndex === -1) {
+				let response = new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.FinalAnswerResponse, {
+						roundNumber: this.activeTrivia.currentRound,
+						questionNumber: this.activeTrivia.currentQuestion,
+						answer: clientMessage.payload.answer,
+						success: false,
+						reason: 'Submitter, not team leader'
+					}
+				).toServerMessage();
+				client.send(JSON.stringify(response));
+				return;
+			}
+			if (clientMessage.payload.roundNumber === this.activeTrivia.currentRound &&
+				clientMessage.payload.questionNumber === this.activeTrivia.currentQuestion) {
+
+				let question = this.activeTrivia.triviaGame.triviaRounds[this.activeTrivia.currentRound].triviaQuestions[this.activeTrivia.currentQuestion];
+				let team = this.activeTrivia.teams[teamIndex];
+				let previousAnswer = await Models.TeamAnswer.find({
+					where: {
+						teamId: team.id,
+						triviaQuestionId: question.id
+					}
+				});
+
+				if (previousAnswer) {
+					let response = new ServerMessages.ServerPlayerMessage(
+						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.FinalAnswerResponse, {
+							roundNumber: this.activeTrivia.currentRound,
+							questionNumber: this.activeTrivia.currentQuestion,
+							answer: clientMessage.payload.answer,
+							success: false,
+							reason: 'Team already answered'
+						}
+					).toServerMessage();
+					client.send(JSON.stringify(response));
+					return;
+				}
+
+				let answer = await Models.TeamAnswer.create({
+					answer: clientMessage.payload.answer
+				});
+				await answer.setTriviaQuestion(question);
+				await answer.setTeam(team);
+
+				this.activeTrivia.teamsAnswered++;
+				let hostMessage = new ServerMessages.ServerHostMessage(
+					ServerMessages.ServerHostMessage.MESSAGE_TYPES.AnswerStatus, {
+						roundNumber: this.activeTrivia.currentRound,
+						questionNumber: this.activeTrivia.currentQuestion,
+						numTeams: this.activeTrivia.teams.length,
+						answersSubmitted: this.activeTrivia.teamsAnswered
+					}
+				).toServerMessage();
+
+				this.sendToUser(JSON.stringify(hostMessage), this.activeTrivia.host);
+
+
+				let teamMessage = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.FinalAnswerResponse, {
+						roundNumber: this.activeTrivia.currentRound,
+						questionNumber: this.activeTrivia.currentQuestion,
+						answer: clientMessage.payload.answer,
+						success: true
+					}
+				).toServerMessage());
+
+				for (let i = 0; i < team.Users.length; i++) {
+					this.sendToUser(teamMessage, team.Users[i]);
+				}
+
+
+			} else {
+				this.sendError('Invalid question number', client);
+			}
 
 		} else {
 			this.sendError(`Player message type: ${clientMessage.messageType} not handled.`, client);
@@ -531,6 +636,14 @@ class WebSocketHandler {
 		let hostId = this.activeTrivia.host.id;
 		this.wss.clients.forEach((sclient) => {
 			if (sclient.user.id !== hostId) {
+				sclient.send(message);
+			}
+		});
+	}
+
+	sendToUser(message, user) {
+		this.wss.clients.forEach((sclient) => {
+			if (sclient.user.id === user.id) {
 				sclient.send(message);
 			}
 		});

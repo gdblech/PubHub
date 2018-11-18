@@ -135,6 +135,7 @@ class PlayerServerMessage {
 			CreateTeam: 'CreateTeam',
 			JoinTeam: 'JoinTeam',
 			AnswerQuestion: 'AnswerQuestion',
+			FinalAnswer: 'FinalAnswer',
 			GradeQuestion: 'GradeQuestion'
 		}
 	}
