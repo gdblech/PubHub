@@ -1,7 +1,8 @@
 package me.lgbt.pubhub.trivia.utils;
 
 import android.graphics.Bitmap;
-
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import me.lgbt.pubhub.chat.Message;
 
 public class TriviaMessage extends Message {
@@ -14,7 +15,7 @@ public class TriviaMessage extends Message {
     public TriviaMessage(String title, String text, String pictureString) {
         this.title = title;
         this.text = text;
-        this.image = convertPicture(pictureString);
+        convertPicture(pictureString);
     }
 
     public String getTitle() {
@@ -29,12 +30,12 @@ public class TriviaMessage extends Message {
         return image;
     }
 
-    public void setPicture(Bitmap picture) {
-        this.picture = picture;
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 
     /* Takes in a string of base64 and outputs an image. */
-    private Bitmap convertPicture(String pictureString) {
+    private void convertPicture(String pictureString) {
         byte[] decodedImage = Base64.decode(pictureString, Base64.DEFAULT);
         Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
     }

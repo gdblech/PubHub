@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             qtitle = messageObject.getString("title");
                             qtext = messageObject.getString("text");
                             qimage = messageObject.getString("image");
+
                             triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
                             updateUI(triviaMessage);
                             break;
@@ -323,9 +324,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         case "GameInfo":
                             String title = messageObject.getString("title");
                             qtext = messageObject.getString("text");
-                            String qpicture = messageObject.getString("picture");
-                            Uri picture = Uri.parse(qpicture);
-                            TriviaMessage triviaMessage = new TriviaMessage(title, qtext, picture);
+                            String qimage = messageObject.getString("picture");
+                            TriviaMessage triviaMessage = new TriviaMessage(title, qtext, qimage);
                             break;
 
                         case "TableStatusResponse":
