@@ -110,9 +110,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             }
             updateUI(account);
         } catch (ApiException e) {
-            signIn();
-//            Log.w(TAG, "signInResult:failed code = " + e.getStatusCode(), e);
-//            updateUI(null);
+            if(e.getStatusCode() == 4){
+                signIn();
+            }
+            Log.w(TAG, "signInResult:failed code = " + e.getStatusCode(), e);
+            updateUI(null);
         }
     }
 
