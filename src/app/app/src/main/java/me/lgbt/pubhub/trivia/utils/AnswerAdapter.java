@@ -2,11 +2,11 @@ package me.lgbt.pubhub.trivia.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -15,60 +15,51 @@ import java.util.ArrayList;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.trivia.utils.interfaces.ClickListener;
 
-public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHolder> {
-
+public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder> {
     private final ClickListener listener;
-    private ArrayList<TriviaQuestion> questionList;
+    private ArrayList<String> answerList;
 
-
-    public QuestionAdapter(ArrayList<TriviaQuestion> questionList, ClickListener listener) {
-        this.questionList = questionList;
+    public AnswerAdapter(ArrayList<String> answerList, ClickListener listener) {
+        this.answerList = answerList;
         this.listener = listener;
     }
 
     @NonNull
     @Override
-    public QuestionAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AnswerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View roundView = inflater.inflate(R.layout.recycler_object, parent, false);
+        View gameView = inflater.inflate(R.layout.object_answer, parent, false);
 
-        return new ViewHolder(roundView, listener);
+        return new AnswerAdapter.ViewHolder(gameView, listener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull QuestionAdapter.ViewHolder viewHolder, int position) {
-        TriviaQuestion question = questionList.get(position);
+    public void onBindViewHolder(@NonNull AnswerAdapter.ViewHolder viewHolder, int position) {
+        String answer = answerList.get(position);
 
         TextView textView = viewHolder.title;
-        ImageButton editButton = viewHolder.editButton;
-        ImageButton deleteButton = viewHolder.deleteButton;
+        FloatingActionButton select = viewHolder.select;
 
-        textView.setText(question.getTitle());
+        textView.setText(answer);
     }
 
     @Override
     public int getItemCount() {
-        return questionList.size();
+        return answerList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
-        ImageButton editButton;
-        ImageButton deleteButton;
+        FloatingActionButton select;
         private WeakReference<ClickListener> listenerRef;
-
 
         ViewHolder(View itemView, ClickListener listener) {
             super(itemView);
             listenerRef = new WeakReference<>(listener);
-            title = itemView.findViewById(R.id.roundListTitle);
-            editButton = itemView.findViewById(R.id.editButton);
-            deleteButton = itemView.findViewById(R.id.deleteButton);
-
-            editButton.setOnClickListener(this);
-            deleteButton.setOnClickListener(this);
+            title = itemView.findViewById(R.id.teamAnswerText);
+            select = itemView.findViewById(R.id.teamAnswerButton);
         }
 
         @Override

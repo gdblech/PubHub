@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.trivia.utils;
+package me.lgbt.pubhub.trivia.utils.interfaces;
 
 public interface HostListener {
     void slideNavClicked(int button);
