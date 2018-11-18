@@ -53,25 +53,6 @@ public class HostOptionsActivity extends AppCompatActivity implements View.OnCli
 
     // sends you to MainActivity
     private void sendMessagePlay() {
-
-//        RestConnection conn;
-//        Resources res = getResources();
-//        if (res.getBoolean(R.bool.backend)) {
-//            conn = new RestConnection(getString(R.string.testingBackend), googleToken);
-//        } else {
-//            conn = new RestConnection(getString(R.string.phb_url), googleToken);
-//        }
-//
-//        conn.start(RestConnection.GETGAME);
-//
-//        try {
-//            conn.join();
-//            phbToken = conn.getResponse();
-//        } catch (InterruptedException e) {
-//            String message = "Thread Error: " + e.getMessage();
-//            Log.e("Host Options Activity Game: ", message);
-//        }
-//    }
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);

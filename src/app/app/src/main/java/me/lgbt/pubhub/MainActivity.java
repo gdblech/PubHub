@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private String phbToken;
     private WebSocket ws;
     private String textFromFragment;
-
     private ChatFragment chatFrag;
     private Fragment triviaFrag;
     private ScoreFragment scoreFrag;
@@ -80,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             } else {
                 triviaFrag = new PlayFragment();
             }
-
 
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
@@ -175,13 +173,20 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     public void slideNavClicked(int button) {
         switch (button) {
             case HostFragment.START: {
+                String startTriviaJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"StartTrivia\"}}";
+                // send to server
+                System.out.println("Start Trivia JSON: " + startTriviaJSON);
+                ws.send(startTriviaJSON);
                 break; //todo
             }
             case HostFragment.PREVIOUS: {
-                break; //todo
+
+                break;
             }
             case HostFragment.NEXT: {
-                break; //todo
+            String nextJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"Next\"}}";
+            ws.send(nextJSON);
+            break; //todo
             }
         }
     }
@@ -268,8 +273,39 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 } else if (messageType.equals("ServerHostMessage")) {
                     JSONObject payload = messageObject.getJSONObject("payload");
                     String subMessageType = payload.getString("messageType");
-                    //TODO finish code or omit and implement REST API
 
+                    String title;
+                    String qtext;
+                    String qpicture;
+                    Uri picture;
+                    TriviaMessage triviaMessage;
+
+                    switch (subMessageType) {
+                        case "TriviaStart":
+                            title = messageObject.getString("title");
+                            qtext = messageObject.getString("text");
+                            qpicture = messageObject.getString("image");
+                            picture = Uri.parse(qpicture);
+                            triviaMessage = new TriviaMessage(title, qtext, picture);
+                            updateUI(triviaMessage);
+                            break;
+
+                        case "RoundStart":
+                            String roundNumber = messageObject.getString("id");
+                            title = messageObject.getString("title");
+                            qtext = messageObject.getString("text");
+                            qpicture = messageObject.getString("image");
+                            picture = Uri.parse(qpicture);
+                            triviaMessage = new TriviaMessage(title, qtext, picture);
+                            updateUI(triviaMessage);
+                            break;
+
+                        case "Question":
+                            break;
+
+                        case "Grading":
+                            break;
+                    }
                 } else if (messageType.equals("ServerPlayerMessage")) {
                     JSONObject payload = messageObject.getJSONObject("payload");
                     String subMessageType = payload.getString("messageType");
@@ -284,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             qtext = messageObject.getString("text");
                             String qpicture = messageObject.getString("picture");
                             Uri picture = Uri.parse(qpicture);
-                            TriviaMessage triviaMessage = new TriviaMessage(title, text, picture);
+                            TriviaMessage triviaMessage = new TriviaMessage(title, qtext, picture);
                             break;
 
                         case "TableStatusResponse":

@@ -130,8 +130,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
                 break; //todo add delete functionality
             }
             case R.id.playButton: {
-
-                sendMessagePlay();
+                sendMessagePlay(listOfGames.get(position).getId());
 // sendMessagePlay(listOfGames.get(position).getId());
             }
         }

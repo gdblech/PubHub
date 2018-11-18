@@ -148,29 +148,6 @@ public class RestConnection extends Thread {
     }
 
     private void getGame(){
-        HttpURLConnection backend = connection("/api/trivia");
-        if(backend != null) {
-            backend.setRequestProperty("Authorization", "Bearer " + token);
-            try {
-                backend.setRequestMethod("GET");
-                backend.connect();
-                if (backend.getResponseCode() == 200) {
-                    BufferedReader response = new BufferedReader(new InputStreamReader(backend.getInputStream()));
-                    this.response = response.readLine();
-                    response.close();
-                } else {
-                    throw new IOException("Http Code: " + backend.getResponseCode() + ", " + backend.getResponseMessage());
-                }
-                backend.disconnect();
-
-            } catch (ProtocolException e) {
-                //error wont happen
-            } catch (IOException e) {
-                String message = "Http Url Connection error: " + e.getMessage();
-                Log.e("RestAuthenticate Conn", message);
-            }
-            backend.disconnect();
-        }
     }
 
     private void getGameList(){
