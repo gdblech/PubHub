@@ -1,6 +1,5 @@
 package me.lgbt.pubhub.trivia.utils;
 
-import android.net.Uri;
 import android.graphics.Bitmap;
 
 import me.lgbt.pubhub.chat.Message;
@@ -26,8 +25,8 @@ public class TriviaMessage extends Message {
         this.title = title;
     }
 
-    public Bitmap getPicture() {
-        return picture;
+    public Bitmap getImage() {
+        return image;
     }
 
     public void setPicture(Bitmap picture) {

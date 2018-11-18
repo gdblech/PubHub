@@ -36,7 +36,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
     public static final int START = 0;
     private TextView title;
     private TextView text;
-    private ImageView picture;
+    private ImageView image;
     private FloatingActionButton next;
     private FloatingActionButton back;
     private HostListener passer;
@@ -56,7 +56,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         assert act != null;
         title = act.findViewById(R.id.slideTitlePlay);
         text = act.findViewById(R.id.slidePlayText);
-        picture = act.findViewById(R.id.slidePlayPicture);
+        image = act.findViewById(R.id.slidePlayPicture);
         next = act.findViewById(R.id.hostNextButton);
         back = act.findViewById(R.id.hostPrevButton);
         fade = act.findViewById(R.id.fadeBackgroundHost);
@@ -91,7 +91,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
     public void setSlide(TriviaMessage msg) {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
-        picture.setImageBitmap(msg.getPicture());
+        image.setImageBitmap(msg.getImage());
     }
 
     @Override

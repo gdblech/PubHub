@@ -74,7 +74,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     public void setSlide(TriviaMessage msg) {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
-        picture.setImageBitmap(msg.getPicture());
+        picture.setImageBitmap(msg.getImage());
         if (msg.isQuestion()) {
             submitAnswer.show();
             answer.setVisibility(View.VISIBLE);

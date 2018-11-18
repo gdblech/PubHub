@@ -281,29 +281,27 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                     JSONObject payload = messageObject.getJSONObject("payload");
                     String subMessageType = payload.getString("messageType");
 
-                    String title;
+                    String qtitle;
                     String qtext;
-                    String qpicture;
-                    Uri picture;
+                    String qimage;
+
                     TriviaMessage triviaMessage;
 
                     switch (subMessageType) {
                         case "TriviaStart":
-                            title = messageObject.getString("title");
+                            qtitle = messageObject.getString("title");
                             qtext = messageObject.getString("text");
-                            qpicture = messageObject.getString("image");
-                            picture = Uri.parse(qpicture);
-                            triviaMessage = new TriviaMessage(title, qtext, picture);
+                            qimage = messageObject.getString("image");
+                            triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
                             updateUI(triviaMessage);
                             break;
 
                         case "RoundStart":
                             String roundNumber = messageObject.getString("id");
-                            title = messageObject.getString("title");
+                            qtitle = messageObject.getString("title");
                             qtext = messageObject.getString("text");
-                            qpicture = messageObject.getString("image");
-                            picture = Uri.parse(qpicture);
-                            triviaMessage = new TriviaMessage(title, qtext, picture);
+                            qimage = messageObject.getString("image");
+                            triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
                             updateUI(triviaMessage);
                             break;
 
