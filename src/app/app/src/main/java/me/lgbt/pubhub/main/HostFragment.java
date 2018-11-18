@@ -16,8 +16,19 @@ import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.trivia.utils.HostListener;
-import me.lgbt.pubhub.trivia.utils.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
+
+/*
+ * ```{
+    "messageType": "HostServerMessage",
+    "payload": {
+        "messageType": "openGame",
+        "payload": {
+            "gameId": <id>
+        }
+    }
+}```
+ */
 
 public class HostFragment extends Fragment implements View.OnClickListener {
     public static final int NEXT = 1;
@@ -70,7 +81,6 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         super.onAttach(context);
         passer = (HostListener) context;
     }
-
 
     @Nullable
     @Override

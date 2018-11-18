@@ -174,6 +174,14 @@ class WebSocketHandler {
 	}
 
 	async processTriviaHostMessage(clientMessage, client) {
+		if (client.user.Role.roleName !== 'Host') {
+			this.sendError('User is not a host', client);
+			return;
+		}
+		if (!ClientMessages.HostServerMessage.MESSAGE_TYPES[clientMessage.messageType]) {
+			this.sendError(`Invalid HostServerMessageType: ${clientMessage.messageType}`, client);
+			return;
+		}
 		if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.OpenGame) {
 
 			if (this.activeTrivia) {
@@ -186,19 +194,66 @@ class WebSocketHandler {
 				this.sendError(`Trivia game with id ${clientMessage.payload.gameId} not found.`, client);
 				return;
 			}
-
-			this.activeTrivia = new ActiveTriviaGame(triviaGame);
+			let host = client.user;
+			host.client = client;
+			this.activeTrivia = new ActiveTriviaGame(triviaGame, host);
 
 			this.wss.clients.forEach((sclient) => {
 				this.sendGameInfo(sclient);
 			})
-		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.EndGame) {
-			this.activeTrivia = null;
-			this.wss.clients.forEach((sclient) => {
-				this.sendGameInfo(sclient);
-			});
 		} else {
-			this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
+			if (client.user.id !== this.activeTrivia.host.id) {
+				this.sendError('Another host is controlling this game', client);
+				return;
+			}
+			if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.EndGame) {
+				this.activeTrivia = null;
+				this.wss.clients.forEach((sclient) => {
+					this.sendGameInfo(sclient);
+				});
+			} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.StartTrivia) {
+				let game = this.activeTrivia.startGame();
+				let response = new ServerMessages.ServerHostMessage(
+					ServerMessages.ServerHostMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage();
+				this.activeTrivia.host.client.send(JSON.stringify(response));
+
+				response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage());
+				this.sendToPlayers(response);
+			} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.Next) {
+				let next = this.activeTrivia.next();
+				if (next.type === 'round') {
+					let response = new ServerMessages.ServerHostMessage(
+						ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
+					this.activeTrivia.host.client.send(JSON.stringify(response));
+
+					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage());
+					this.sendToPlayers(response);
+				} else if (next.type === 'question') {
+					let response = new ServerMessages.ServerHostMessage(
+						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Question, next.question).toServerMessage();
+					this.activeTrivia.host.client.send(JSON.stringify(response));
+
+					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
+					this.sendToPlayers(response);
+				} else if (next.type === 'grading') {
+					let response = new ServerMessages.ServerHostMessage(
+						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
+					this.activeTrivia.host.client.send(JSON.stringify(response));
+
+					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage());
+					this.sendToPlayers(response);
+				} else if (next.type === 'end') {
+					logger.debug('end game');
+				} else if (next.type === 'scoreboard') {
+					logger.debug('scoreboard');
+				}
+			} else {
+				this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
+			}
 		}
 	}
 
@@ -208,20 +263,42 @@ class WebSocketHandler {
 			return;
 		}
 		if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.TableStatusRequest) {
-			for (let i = 0; i < this.activeTrivia.teams.length; i++) {
-				// TODO: check active teams
-			}
-
+			let qrCode = clientMessage.payload.QRCode;
 			let table = await Models.Table.find({
 				where: {
-					qrCode: clientMessage.payload.QRCode
+					qrCode: qrCode
 				}
 			});
 
 			if (table) {
+				for (let i = 0; i < this.activeTrivia.teams.length; i++) {
+					if (this.activeTrivia.teams[i].Table.qrCode === qrCode) {
+						let response;
+						if (this.activeTrivia.teams[i].Users.length >= 6) {
+							response = new ServerMessages.ServerPlayerMessage(
+								ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TableStatusResponse, {
+									QRCode: qrCode,
+									status: 'team full'
+								});
+						} else {
+							response = new ServerMessages.ServerPlayerMessage(
+								ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TableStatusResponse, {
+									QRCode: qrCode,
+									status: 'team open',
+									team: {
+										teamLeader: this.activeTrivia.teams[i].teamLeader,
+										teamName: this.activeTrivia.teams[i].teamName
+									}
+								});
+						}
+						client.send(JSON.stringify(response.toServerMessage()));
+						return;
+					}
+				}
+
 				let response = new ServerMessages.ServerPlayerMessage(
 					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TableStatusResponse, {
-						QRCode: clientMessage.payload.QRCode,
+						QRCode: qrCode,
 						status: 'no team'
 					});
 				client.send(JSON.stringify(response.toServerMessage()));
@@ -229,18 +306,44 @@ class WebSocketHandler {
 				this.sendError(`Table with QR Code: ${clientMessage.payload.QRCode} not found.`, client);
 			}
 		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.CreateTeam) {
-			for (let i = 0; i < this.activeTrivia.teams.length; i++) {
-				// TODO: handle duplicate team
-				// TODO: check not on another team
-			}
-
+			let qrCode = clientMessage.payload.QRCode;
 			let table = await Models.Table.find({
 				where: {
-					qrCode: clientMessage.payload.QRCode
+					qrCode: qrCode
 				}
 			});
 
 			if (table) {
+				for (let i = 0; i < this.activeTrivia.teams.length; i++) {
+					// Check that a team doesn't exist for this table
+					if (this.activeTrivia.teams[i].Table.qrCode === qrCode) {
+						let response = new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.CreateTeamResponse, {
+								QRCode: qrCode,
+								teamName: clientMessage.payload.teamName,
+								success: false,
+								reason: 'Team already exists for table'
+							});
+						client.send(JSON.stringify(response.toServerMessage()));
+						return;
+					}
+
+					// check that the user isn't on another team
+					for (let j = 0; j < this.activeTrivia.teams[i].Users.length; j++) {
+						if (client.user.id === this.activeTrivia.teams[i].Users[j].id) {
+							let response = new ServerMessages.ServerPlayerMessage(
+								ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.CreateTeamResponse, {
+									QRCode: qrCode,
+									teamName: clientMessage.payload.teamName,
+									success: false,
+									reason: 'User already belongs to a team'
+								});
+							client.send(JSON.stringify(response.toServerMessage()));
+							return;
+						}
+					}
+				}
+
 				let team = await Models.Team.create({
 					teamName: clientMessage.payload.teamName
 				});
@@ -248,6 +351,23 @@ class WebSocketHandler {
 				await team.addUser(client.user);
 				await team.setTable(table);
 				await team.setTriviaGame(this.activeTrivia.triviaGame);
+				// reload with associations since they are not added to object
+				team = await Models.Team.findById(team.id, {
+					include: [{
+							model: Models.User,
+							as: 'Users',
+							through: 'TeamToUser'
+						},
+						{
+							model: Models.User,
+							as: 'teamLeader',
+							foreignKey: 'teamLeaderId'
+						},
+						Models.Table
+
+					]
+				});
+				this.activeTrivia.addTeam(team);
 				let response = new ServerMessages.ServerPlayerMessage(
 					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.CreateTeamResponse, {
 						QRCode: clientMessage.payload.QRCode,
@@ -257,10 +377,98 @@ class WebSocketHandler {
 				client.send(JSON.stringify(response.toServerMessage()));
 
 			} else {
-				// TODO: replace error with fail response
-				this.sendError(`Table with QR Code: ${clientMessage.payload.QRCode} not found.`, client);
+				let response = new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.CreateTeamResponse, {
+						QRCode: qrCode,
+						teamName: clientMessage.payload.teamName,
+						success: false,
+						reason: `No table with qrCode ${qrCode} found.`
+					});
+				client.send(JSON.stringify(response.toServerMessage()));
 			}
 
+		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.JoinTeam) {
+			let qrCode = clientMessage.payload.QRCode;
+			let table = await Models.Table.find({
+				where: {
+					qrCode: qrCode
+				}
+			});
+
+			if (table) {
+				let teamNum;
+				for (let i = 0; i < this.activeTrivia.teams.length; i++) {
+					// Check that a team doesn't exist for this table
+					if (this.activeTrivia.teams[i].Table.qrCode === qrCode) {
+						teamNum = i;
+					}
+
+					// check that the user isn't already on team
+					for (let j = 0; j < this.activeTrivia.teams[i].Users.length; j++) {
+						if (client.user.id === this.activeTrivia.teams[i].Users[j].id) {
+							let response = new ServerMessages.ServerPlayerMessage(
+								ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.JoinTeamResponse, {
+									QRCode: qrCode,
+									success: false,
+									reason: 'User already belongs to a team'
+								});
+							client.send(JSON.stringify(response.toServerMessage()));
+							return;
+						}
+					}
+				}
+
+				// If no team found, then return failure
+				if (teamNum === undefined) {
+					let response = new ServerMessages.ServerPlayerMessage(
+						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.JoinTeamResponse, {
+							QRCode: qrCode,
+							success: false,
+							reason: 'No matching team found for table'
+						});
+					client.send(JSON.stringify(response.toServerMessage()));
+					return;
+				}
+
+				let team = this.activeTrivia.teams[teamNum];
+				await team.addUser(client.user);
+
+				// reload with associations since they are not added to object
+				team = await Models.Team.findById(team.id, {
+					include: [{
+							model: Models.User,
+							as: 'Users',
+							through: 'TeamToUser'
+						},
+						{
+							model: Models.User,
+							as: 'teamLeader',
+							foreignKey: 'teamLeaderId'
+						},
+						Models.Table
+
+					]
+				});
+				this.activeTrivia.teams[teamNum] = team;
+
+				let response = new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.JoinTeamResponse, {
+						QRCode: qrCode,
+						teamName: team.teamName,
+						success: true
+					});
+				client.send(JSON.stringify(response.toServerMessage()));
+
+			} else {
+				let response = new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.JoinTeamResponse, {
+						QRCode: qrCode,
+						teamName: clientMessage.payload.teamName,
+						success: false,
+						reason: `No table with qrCode ${qrCode} found.`
+					});
+				client.send(JSON.stringify(response.toServerMessage()));
+			}
 		} else {
 			this.sendError(`Player message type: ${clientMessage.messageType} not handled.`, client);
 		}
@@ -289,7 +497,7 @@ class WebSocketHandler {
 		client.send(outgoingMessage);
 	}
 
-	async sendGameInfo(client) {
+	sendGameInfo(client) {
 		let status;
 		if (this.activeTrivia) {
 			let gameInfo = this.activeTrivia.gameInfo;
@@ -308,13 +516,22 @@ class WebSocketHandler {
 		client.send(JSON.stringify(serverMessage));
 	}
 
-	async sendError(errorMessage, client) {
+	sendError(errorMessage, client) {
 		let error = {
 			messageType: 'Error',
 			error: errorMessage
 		};
 		logger.error(error);
 		client.send(JSON.stringify(error));
+	}
+
+	sendToPlayers(message) {
+		let hostId = this.activeTrivia.host.id;
+		this.wss.clients.forEach((sclient) => {
+			if (sclient.user.id !== hostId) {
+				sclient.send(message);
+			}
+		});
 	}
 }
 
