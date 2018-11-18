@@ -45,8 +45,23 @@ module.exports = (sequelize, DataTypes) => {
 	TriviaGame.findWithImages = async function (id) {
 		const Models = require('./');
 		const imageStore = require('../utils/imageStore');
-		let triviaGame = await TriviaGame
+		let triviaGame = await Models.TriviaGame
 			.findById(id, {
+				order: [
+					[{
+						model: Models.TriviaRound,
+						as: 'triviaRounds'
+					}, 'roundNumber', 'ASC'],
+					[{
+							model: Models.TriviaRound,
+							as: 'triviaRounds'
+						},
+						{
+							model: Models.TriviaQuestion,
+							as: 'triviaQuestions'
+						}, 'questionNumber', 'ASC'
+					]
+				],
 				include: [{
 					model: Models.TriviaRound,
 					as: 'triviaRounds',

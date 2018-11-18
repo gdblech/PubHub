@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 	TriviaQuestion.prototype.toJSON = function () {
 		let json = {};
 		json.id = this.id;
-		json.questionNumber = this.roundNumber;
+		json.questionNumber = this.questionNumber;
 		json.title = this.title;
 		json.text = this.text;
 		json.image = this.image;

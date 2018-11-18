@@ -174,6 +174,10 @@ class WebSocketHandler {
 	}
 
 	async processTriviaHostMessage(clientMessage, client) {
+		if (!ClientMessages.HostServerMessage.MESSAGE_TYPES[clientMessage.messageType]) {
+			this.sendError(`Invalid HostServerMessageType: ${clientMessage.messageType}`, client);
+			return;
+		}
 		if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.OpenGame) {
 
 			if (this.activeTrivia) {
@@ -186,8 +190,9 @@ class WebSocketHandler {
 				this.sendError(`Trivia game with id ${clientMessage.payload.gameId} not found.`, client);
 				return;
 			}
-
-			this.activeTrivia = new ActiveTriviaGame(triviaGame);
+			let host = client.user;
+			host.client = client;
+			this.activeTrivia = new ActiveTriviaGame(triviaGame, host);
 
 			this.wss.clients.forEach((sclient) => {
 				this.sendGameInfo(sclient);
@@ -197,6 +202,46 @@ class WebSocketHandler {
 			this.wss.clients.forEach((sclient) => {
 				this.sendGameInfo(sclient);
 			});
+		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.StartTrivia) {
+			let game = this.activeTrivia.startGame();
+			let response = new ServerMessages.ServerHostMessage(
+				ServerMessages.ServerHostMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage();
+			this.activeTrivia.host.client.send(JSON.stringify(response));
+
+			response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+				ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage());
+			this.sendToPlayers(response);
+		} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.Next) {
+			let next = this.activeTrivia.next();
+			if (next.type === 'round') {
+				let response = new ServerMessages.ServerHostMessage(
+					ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
+				this.activeTrivia.host.client.send(JSON.stringify(response));
+
+				response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage());
+				this.sendToPlayers(response);
+			} else if (next.type === 'question') {
+				let response = new ServerMessages.ServerHostMessage(
+					ServerMessages.ServerHostMessage.MESSAGE_TYPES.Question, next.question).toServerMessage();
+				this.activeTrivia.host.client.send(JSON.stringify(response));
+
+				response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
+				this.sendToPlayers(response);
+			} else if (next.type === 'grading') {
+				let response = new ServerMessages.ServerHostMessage(
+					ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
+				this.activeTrivia.host.client.send(JSON.stringify(response));
+
+				response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage());
+				this.sendToPlayers(response);
+			} else if (next.type === 'end') {
+				logger.debug('end game');
+			} else if (next.type === 'scoreboard') {
+				logger.debug('scoreboard');
+			}
 		} else {
 			this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
 		}
@@ -375,7 +420,6 @@ class WebSocketHandler {
 					return;
 				}
 
-
 				let team = this.activeTrivia.teams[teamNum];
 				await team.addUser(client.user);
 
@@ -443,7 +487,7 @@ class WebSocketHandler {
 		client.send(outgoingMessage);
 	}
 
-	async sendGameInfo(client) {
+	sendGameInfo(client) {
 		let status;
 		if (this.activeTrivia) {
 			let gameInfo = this.activeTrivia.gameInfo;
@@ -462,13 +506,22 @@ class WebSocketHandler {
 		client.send(JSON.stringify(serverMessage));
 	}
 
-	async sendError(errorMessage, client) {
+	sendError(errorMessage, client) {
 		let error = {
 			messageType: 'Error',
 			error: errorMessage
 		};
 		logger.error(error);
 		client.send(JSON.stringify(error));
+	}
+
+	sendToPlayers(message) {
+		let hostId = this.activeTrivia.host.id;
+		this.wss.clients.forEach((sclient) => {
+			if (sclient.user.id !== hostId) {
+				sclient.send(message);
+			}
+		});
 	}
 }
 
