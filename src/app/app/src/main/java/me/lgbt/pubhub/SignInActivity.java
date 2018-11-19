@@ -156,6 +156,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putInt(IntentKeys.GAMEID, -1);
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();
