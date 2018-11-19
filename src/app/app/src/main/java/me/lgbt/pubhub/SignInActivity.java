@@ -45,6 +45,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private String googleToken;
     private String phbToken;
     private GoogleSignInClient googleSignInClient;
+    private SignInButton signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_signin);
 
         //locate button on the activity gui and set its click behavior
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
 
         //sign in variables
@@ -62,6 +63,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 .build();
 
         googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
+        unpack();
     }
 
     @Override
@@ -89,6 +91,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //switch set up for future redundancy, eg. we may have a sign in anonymously button later
         switch (view.getId()) {
             case R.id.sign_in_button:
+                view.setVisibility(View.GONE);
                 signIn();
                 break;
         }
@@ -123,6 +126,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             sendMessage();
         } else {
             System.out.print("Null account or Token");
+            signInButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -160,6 +164,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();
+    }
+
+    private void unpack(){
+        Bundle bundle =  getIntent().getExtras();
+        if(bundle != null){
+            if(bundle.getBoolean(IntentKeys.SIGNOUT)){
+                googleSignInClient.signOut();
+            }
+        }
     }
 
 

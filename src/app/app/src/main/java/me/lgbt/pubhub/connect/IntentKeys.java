@@ -16,6 +16,7 @@ public class IntentKeys {
     public static final String RPOSITION = "007";
     public static final String HOST = "008";
     public static final String GAMEID = "009";
+    public static final String SIGNOUT = "010";
 
 
     public static final String CHAT = "100";

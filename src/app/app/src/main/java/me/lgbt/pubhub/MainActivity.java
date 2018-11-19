@@ -1,5 +1,6 @@
 package me.lgbt.pubhub;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -21,6 +22,7 @@ import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
+import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 import me.lgbt.pubhub.trivia.utils.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.interfaces.PlayListener;
@@ -369,4 +371,17 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if(hosting){
+            closeGame();
+            Intent nextActivity = new Intent(this, HostOptionsActivity.class);
+            Bundle extras = new Bundle();
+            extras.putString(IntentKeys.PUBHUB, phbToken);
+            extras.putInt(IntentKeys.GAMEID, -1);
+            nextActivity.putExtras(extras);
+            startActivity(nextActivity);
+            finish();
+        }
+    }
 }
