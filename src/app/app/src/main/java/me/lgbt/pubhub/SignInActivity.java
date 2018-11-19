@@ -35,7 +35,6 @@ import org.json.JSONObject;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
-import me.lgbt.pubhub.trivia.start.TeamSelectionActivity;
 
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<GoogleSignInAccount> {
@@ -135,7 +134,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         RestConnection conn;
         Resources res = getResources();
         if (res.getBoolean(R.bool.backend)) {
-            conn = new RestConnection(getString(R.string.testingBackend), googleToken);
+            conn = new RestConnection(getString(R.string.testingBackendHTTP), googleToken);
         } else {
             conn = new RestConnection(getString(R.string.phb_url), googleToken);
         }
