@@ -56,6 +56,7 @@ public class HostOptionsActivity extends AppCompatActivity implements View.OnCli
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putInt(IntentKeys.GAMEID, -1);
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();

@@ -52,7 +52,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         submitAnswer.setOnClickListener(this);
         answer.setVisibility(View.GONE);
         submitAnswer.hide();
-
     }
 
     public void startGame() {
@@ -78,6 +77,9 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         if (msg.isQuestion()) {
             submitAnswer.show();
             answer.setVisibility(View.VISIBLE);
+        }else {
+            submitAnswer.hide();
+            answer.setVisibility(View.GONE);
         }
     }
 

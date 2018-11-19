@@ -35,7 +35,6 @@ import org.json.JSONObject;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
-import me.lgbt.pubhub.trivia.start.TeamSelectionActivity;
 
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<GoogleSignInAccount> {
@@ -45,6 +44,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private String googleToken;
     private String phbToken;
     private GoogleSignInClient googleSignInClient;
+    private SignInButton signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_signin);
 
         //locate button on the activity gui and set its click behavior
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
 
         //sign in variables
@@ -62,6 +62,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 .build();
 
         googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
+        unpack();
     }
 
     @Override
@@ -89,6 +90,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //switch set up for future redundancy, eg. we may have a sign in anonymously button later
         switch (view.getId()) {
             case R.id.sign_in_button:
+                view.setVisibility(View.GONE);
                 signIn();
                 break;
         }
@@ -123,6 +125,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             sendMessage();
         } else {
             System.out.print("Null account or Token");
+            signInButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -131,7 +134,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         RestConnection conn;
         Resources res = getResources();
         if (res.getBoolean(R.bool.backend)) {
-            conn = new RestConnection(getString(R.string.testingBackend), googleToken);
+            conn = new RestConnection(getString(R.string.testingBackendHTTP), googleToken);
         } else {
             conn = new RestConnection(getString(R.string.phb_url), googleToken);
         }
@@ -156,9 +159,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putInt(IntentKeys.GAMEID, -1);
         nextActivity.putExtras(extras);
         startActivity(nextActivity);
         finish();
+    }
+
+    private void unpack(){
+        Bundle bundle =  getIntent().getExtras();
+        if(bundle != null){
+            if(bundle.getBoolean(IntentKeys.SIGNOUT)){
+                googleSignInClient.signOut();
+            }
+        }
     }
 
 
