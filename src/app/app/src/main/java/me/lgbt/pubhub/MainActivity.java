@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import org.json.JSONArray;
@@ -376,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            output("Error : " + t.getMessage());
+            Log.d("WS OnFailure", t.getMessage(), t);
         }
     }
 
