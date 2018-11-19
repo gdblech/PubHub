@@ -1,7 +1,8 @@
 <resources>
     <!-- true to do backend testing locally, false to use production elements -->
     <bool name="backend">false</bool>
-    <string name="testingBackend">localhost</string>
+    <string name="testingBackendHTTP">10.0.2.2:8081</string>
+    <string name="testingBackendWS">ws://10.0.2.2:8082</string>
 
     <!-- set true to use the app camera, false to use enter the code. -->
     <bool name="camera">true</bool>

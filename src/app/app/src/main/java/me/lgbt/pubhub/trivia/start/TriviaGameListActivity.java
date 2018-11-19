@@ -52,7 +52,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         Resources res = getResources();
 
         if (res.getBoolean(R.bool.backend)) {
-            conn = new RestConnection(getString(R.string.testingBackend), phbToken);
+            conn = new RestConnection(getString(R.string.testingBackendHTTP), phbToken);
         } else {
             conn = new RestConnection(getString(R.string.phb_url), phbToken);
         }

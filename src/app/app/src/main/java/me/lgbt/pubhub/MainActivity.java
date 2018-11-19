@@ -1,5 +1,7 @@
 package me.lgbt.pubhub;
 
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -21,6 +23,7 @@ import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
+import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 import me.lgbt.pubhub.trivia.utils.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.interfaces.PlayListener;
@@ -94,7 +97,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         client = new OkHttpClient();
         websocketConnectionOpen();
-        openGame();
+
+        if(gameID != -1){
+            openGame();
+        }
     }
 
     private void unPack() {
@@ -108,7 +114,15 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     private void websocketConnectionOpen() {
         String authHeader = "Bearer " + phbToken;
-        Request request = new Request.Builder().url("ws://pubhub.me:8082").addHeader("Authorization", authHeader).build();
+
+        Resources res = getResources();
+        String ws_url;
+        if (res.getBoolean(R.bool.backend)) {
+            ws_url = getString(R.string.testingBackendWS);
+        } else {
+            ws_url = getString(R.string.phb_ws);
+        }
+        Request request = new Request.Builder().url(ws_url).addHeader("Authorization", authHeader).build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
@@ -366,4 +380,17 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if(hosting){
+            closeGame();
+            Intent nextActivity = new Intent(this, HostOptionsActivity.class);
+            Bundle extras = new Bundle();
+            extras.putString(IntentKeys.PUBHUB, phbToken);
+            extras.putInt(IntentKeys.GAMEID, -1);
+            nextActivity.putExtras(extras);
+            startActivity(nextActivity);
+            finish();
+        }
+    }
 }

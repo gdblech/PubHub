@@ -54,9 +54,9 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         FragmentActivity act = getActivity();
 
         assert act != null;
-        title = act.findViewById(R.id.slideTitlePlay);
-        text = act.findViewById(R.id.slidePlayText);
-        image = act.findViewById(R.id.slidePlayPicture);
+        title = act.findViewById(R.id.slideTitleHost);
+        text = act.findViewById(R.id.slideTextHost);
+        image = act.findViewById(R.id.slidePictureHost);
         next = act.findViewById(R.id.hostNextButton);
         back = act.findViewById(R.id.hostPrevButton);
         fade = act.findViewById(R.id.fadeBackgroundHost);
@@ -99,9 +99,11 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.hostPrevButton: {
                 passer.slideNavClicked(PREVIOUS);
+                break;
             }
             case R.id.hostNextButton: {
                 passer.slideNavClicked(NEXT);
+                break;
             }
             case R.id.launchGameHost: {
                 fade.setVisibility(View.GONE);
@@ -109,6 +111,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
                 next.show();
                 launchGame.setVisibility(View.GONE);
                 passer.slideNavClicked(START);
+                break;
             }
         }
     }
