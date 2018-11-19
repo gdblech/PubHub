@@ -2,6 +2,7 @@
     <!-- Connection Strings -->
     <string name="server_client_id">980331984960-d33t8e79agt8udf140sm30ob83q020na.apps.googleusercontent.com</string>
     <string name="phb_url">pubhub.me</string>
+    <string name="phb_ws">ws://pubhub.me:8082</string>
 
     <!-- activity strings -->
     <string name="app_name">PubHub</string>

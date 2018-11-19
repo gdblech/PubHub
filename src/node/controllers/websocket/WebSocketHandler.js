@@ -47,6 +47,7 @@ class WebSocketHandler {
 		// base message handler needs to be defined inside connect handler to keep client in scope
 		client.on('message', (data) => {
 			let clientMessage;
+			logger.debug(data);
 			try {
 				clientMessage = new ClientMessages.WSClientMessage(data);
 			} catch (err) {
