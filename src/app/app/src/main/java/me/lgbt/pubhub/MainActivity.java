@@ -94,7 +94,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         client = new OkHttpClient();
         websocketConnectionOpen();
-        openGame();
+
+        if(gameID != -1){
+            openGame();
+        }
     }
 
     private void unPack() {
