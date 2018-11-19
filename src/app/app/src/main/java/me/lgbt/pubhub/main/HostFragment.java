@@ -73,7 +73,6 @@ public class HostFragment extends Fragment implements View.OnClickListener {
 
     public void startGame() {
         fade.setVisibility(View.GONE);
-
     }
 
     @Override
