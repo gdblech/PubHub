@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import me.lgbt.pubhub.chat.ChatClickListener;
+import me.lgbt.pubhub.chat.Message;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
@@ -128,23 +129,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         client.dispatcher().executorService().shutdown();
     }
 
-    private void output(final UserMessage mes) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                chatFrag.addMessage(mes);
-            }
-        });
-    }
 
-    private void output(final String mes) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //chatFrag.addMessage(mes);
-            }
-        });
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -249,6 +234,33 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         //todo send team's answer to backend
     }
 
+    private void output(final UserMessage mes) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                chatFrag.addMessage(mes);
+            }
+        });
+    }
+
+    private void output(final TriviaMessage mes) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateUI(mes);
+            }
+        });
+    }
+
+    private void output(final String mes) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //chatFrag.addMessage(mes);
+            }
+        });
+    }
+
     private final class EchoWebSocketListener extends WebSocketListener {
 
         private static final int NORMAL_CLOSURE_STATUS = 1000;
@@ -265,7 +277,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 JSONObject messageObject = new JSONObject(text);
                 JSONObject payloadJSON = messageObject.getJSONObject("payload");
 
-                System.out.println("[DEBUG] " + messageObject.toString());
                 String messageType = messageObject.getString("messageType");
 
                 if (messageType.equals("ServerClientChatMessage")) {
@@ -298,8 +309,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 qtext = subPayloadJSON.getString("text");
                                 qimage = subPayloadJSON.getString("image");
                                 triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
-                                System.out.println(messageType + subMessageType + qtitle + qtext + qimage);
-                                updateUI(triviaMessage);
+                                output(triviaMessage);
                                 break;
 
                             case "RoundStart":
@@ -308,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 qtext = subPayloadJSON.getString("text");
                                 qimage = subPayloadJSON.getString("image");
                                 triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
-                                updateUI(triviaMessage);
+                                output(triviaMessage);
                                 break;
 
                             case "Question":
@@ -316,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 qtext = subPayloadJSON.getString("text");
                                 qimage = subPayloadJSON.getString("image");
                                 triviaMessage = new TriviaMessage(qtitle, qtext, qimage);
-                                updateUI(triviaMessage);
+                                output(triviaMessage);
                                 break;
 
                             case "Grading":
@@ -337,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 qtext = gameJSON.getString("text");
                                 qimage = gameJSON.getString("picture");
                                 triviaMessage = new TriviaMessage(title, qtext, qimage);
-                                updateUI(triviaMessage);
+                                output(triviaMessage);
                                 break;
 
                             case "TableStatusResponse":
