@@ -8,7 +8,6 @@ import me.lgbt.pubhub.chat.Message;
 public class TriviaMessage extends Message {
     private String title;
     private String text;
-    private String pictureString;
     private Bitmap image;
     private boolean isQuestion = false;
 
