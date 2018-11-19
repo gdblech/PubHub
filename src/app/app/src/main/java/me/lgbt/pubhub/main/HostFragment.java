@@ -99,9 +99,11 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.hostPrevButton: {
                 passer.slideNavClicked(PREVIOUS);
+                break;
             }
             case R.id.hostNextButton: {
                 passer.slideNavClicked(NEXT);
+                break;
             }
             case R.id.launchGameHost: {
                 fade.setVisibility(View.GONE);
@@ -109,6 +111,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
                 next.show();
                 launchGame.setVisibility(View.GONE);
                 passer.slideNavClicked(START);
+                break;
             }
         }
     }

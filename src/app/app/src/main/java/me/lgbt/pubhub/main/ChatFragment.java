@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import me.lgbt.pubhub.chat.ChatClickListener;
 import me.lgbt.pubhub.chat.MessageAdapter;
 import me.lgbt.pubhub.chat.UserMessage;
 
-public class ChatFragment extends Fragment implements View.OnClickListener {
+public class ChatFragment extends Fragment implements View.OnClickListener, View.OnKeyListener {
 
     private ArrayList<UserMessage> messageList;
     private RecyclerView chatBox;
@@ -51,6 +52,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         message = act.findViewById(R.id.chatMessage);
         send = act.findViewById(R.id.sendMessage);
         chatBox = act.findViewById(R.id.chatBox);
+        message.setOnKeyListener(this);
 
         adapter = new MessageAdapter(messageList);
         chatBox.setAdapter(adapter);
@@ -77,6 +79,16 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             dataPasser.clicked(message.getText().toString());
             message.setText("");
         }
+    }
+
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+            dataPasser.clicked(message.getText().toString());
+            message.setText("");
+            return true;
+        }
+        return false;
     }
 }
 
