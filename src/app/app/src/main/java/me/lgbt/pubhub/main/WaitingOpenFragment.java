@@ -74,12 +74,19 @@ public class WaitingOpenFragment extends Fragment implements View.OnClickListene
         TextView text = act.findViewById(R.id.waitingOpenText);
     }
 
+    private void changeFrangment(){ //change current frangment to join team
+        System.out.println("Trying to join Team");
+        getFragmentManager().beginTransaction()
+                .replace(R.id.waitToOpenFragment, new JoinTeam())
+                .commit();
+
+    }
     @Override
     public void onClick(View view){
         switch (view.getId()){
             case R.id.btnToJointeam:
                 try {
-                    toTeamJoin();
+                    changeFrangment();
                 }
                 catch (Exception e){
                     //catch what
