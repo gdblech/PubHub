@@ -1,5 +1,6 @@
 package me.lgbt.pubhub;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -111,7 +112,15 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     private void websocketConnectionOpen() {
         String authHeader = "Bearer " + phbToken;
-        Request request = new Request.Builder().url("ws://pubhub.me:8082").addHeader("Authorization", authHeader).build();
+
+        Resources res = getResources();
+        String ws_url;
+        if (res.getBoolean(R.bool.backend)) {
+            ws_url = getString(R.string.testingBackendWS);
+        } else {
+            ws_url = getString(R.string.phb_ws);
+        }
+        Request request = new Request.Builder().url(ws_url).addHeader("Authorization", authHeader).build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
