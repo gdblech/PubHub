@@ -1,6 +1,7 @@
 package me.lgbt.pubhub.main;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,6 +45,7 @@ public class JoinTeam extends Fragment implements View.OnClickListener {
         isTeam = isTeam(mesg);
         isTeamFull = isTeamFull(mesg);
 
+
         //start by scanning QR code
         if(QR == null){//QR code has not been scanned
             btnToQR.setVisibility(View.VISIBLE);
@@ -68,6 +70,23 @@ public class JoinTeam extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQ_CODE){
+            if (resultCode == Activity.RESULT_OK){
+
+            }else if (resultCode == Activity.RESULT_CANCELED){
+
+
+            }
+
+
+        }
+
+
+
+    }
+
+    @Override
     public void onClick(View view){
         switch (view.getId()){
             case R.id.btnToQR:{
@@ -79,7 +98,9 @@ public class JoinTeam extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.btnToCreateTeam:{
-                toTeamCreate();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragContainer, new CreateTeam())
+                        .commit();
                 break;
             }
         }
@@ -90,7 +111,6 @@ public class JoinTeam extends Fragment implements View.OnClickListener {
         // start QRCodeScanner activity
         Intent scanner = new Intent(getActivity(), QRCodeScanner.class);
         startActivityForResult(scanner, REQ_CODE);
-        //todo: how does qr code return
     }
 
     private boolean isTeam(String mesg){
@@ -112,9 +132,4 @@ public class JoinTeam extends Fragment implements View.OnClickListener {
         String teamJoinJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"JoinTeam\",\"payload\":{\"QRCode\" :\"1539ccd0-e391-11e8-9f32-f2801f1b9fd\"}}}";
     }
 
-    private void toTeamCreate(){
-        //start create team
-        Intent intent = new Intent(getActivity(), CreateTeam.class);
-        startActivity(intent);
-    }
 }
