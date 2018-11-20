@@ -6,11 +6,13 @@
 class WSServerMessage {
 	/**
 	 * MESSAGE_TYPES
-	 * "Enum" for supported message types
+	 * 'Enum' for supported message types
 	 */
 	static get MESSAGE_TYPES() {
 		return {
-			ClientServerChatMessage: 'ServerClientChatMessage'
+			ServerClientChatMessage: 'ServerClientChatMessage',
+			ServerHostMessage: 'ServerHostMessage',
+			ServerPlayerMessage: 'ServerPlayerMessage'
 		}
 	}
 
@@ -22,7 +24,11 @@ class WSServerMessage {
 	 */
 	constructor(message) {
 		if (message instanceof ServerClientChatMessage) {
-			this.messageType = 'ServerClientChatMessage';
+			this.messageType = WSServerMessage.MESSAGE_TYPES.ServerClientChatMessage;
+		} else if (message instanceof ServerHostMessage) {
+			this.messageType = WSServerMessage.MESSAGE_TYPES.ServerHostMessage;
+		} else if (message instanceof ServerPlayerMessage) {
+			this.messageType = WSServerMessage.MESSAGE_TYPES.ServerPlayerMessage;
 		} else {
 			throw 'Invalid message type'
 		}
@@ -36,7 +42,7 @@ class WSServerMessage {
 	toJSON() {
 		return {
 			messageType: this.messageType,
-			payload: this.payload
+			payload: this.payload.toJSON()
 		};
 	}
 }
@@ -74,7 +80,92 @@ class ServerClientChatMessage {
 
 }
 
+class ServerHostMessage {
+	constructor(messageType, payload) {
+		if (ServerHostMessage.MESSAGE_TYPES[messageType]) {
+			this.messageType = messageType;
+		} else {
+			throw 'Invalid ServerHostMessage message type';
+		}
+
+		this.payload = payload;
+	}
+
+	static get MESSAGE_TYPES() {
+		return {
+			TriviaStart: 'TriviaStart',
+			RoundStart: 'RoundStart',
+			Question: 'Question',
+			AnswerStatus: "AnswerStatus",
+			Grading: 'Grading',
+			Scores: 'Scores',
+			Winners: 'Winners'
+		}
+	}
+
+	/**
+	 * toServerMessage
+	 * Returns the message wrapped in a WSServerMessage
+	 */
+	toServerMessage() {
+		return new WSServerMessage(this);
+	}
+
+	toJSON() {
+		return {
+			messageType: this.messageType,
+			payload: this.payload
+		};
+	}
+}
+
+class ServerPlayerMessage {
+	constructor(messageType, payload) {
+		if (ServerPlayerMessage.MESSAGE_TYPES[messageType]) {
+			this.messageType = messageType;
+		} else {
+			throw 'Invalid ServerPlayerMessage message type';
+		}
+
+		this.payload = payload;
+	}
+
+	static get MESSAGE_TYPES() {
+		return {
+			GameInfo: 'GameInfo',
+			TableStatusResponse: 'TableStatusResponse',
+			CreateTeamResponse: 'CreateTeamResponse',
+			JoinTeamResponse: 'JoinTeamResponse',
+			TriviaStart: 'TriviaStart',
+			RoundStart: 'RoundStart',
+			Question: 'Question',
+			AnswerSubmission: 'AnswerSubmission',
+			FinalAnswerResponse: 'FinalAnswerResponse',
+			Grading: 'Grading',
+			Scores: 'Scores',
+			Winners: 'Winners'
+		}
+	}
+
+	/**
+	 * toServerMessage
+	 * Returns the message wrapped in a WSServerMessage
+	 */
+	toServerMessage() {
+		return new WSServerMessage(this);
+	}
+
+	toJSON() {
+		return {
+			messageType: this.messageType,
+			payload: this.payload
+		};
+	}
+}
+
 module.exports = {
 	WSServerMessage,
-	ServerClientChatMessage
+	ServerClientChatMessage,
+	ServerPlayerMessage,
+	ServerHostMessage
 }

@@ -4,9 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class UserMessage extends Message implements Comparable<UserMessage> {
 
@@ -42,7 +40,7 @@ public class UserMessage extends Message implements Comparable<UserMessage> {
         this.text = text;
     }
 
-    public long getTime() {
+    private long getTime() {
         return this.time;
     }
 
@@ -70,7 +68,7 @@ public class UserMessage extends Message implements Comparable<UserMessage> {
     }
 
     @Override
-    public int compareTo(UserMessage msg){
+    public int compareTo(@NonNull UserMessage msg){
         return (int)(this.time - msg.getTime());
     }
 

@@ -13,12 +13,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.interfaces.ClickListener;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
     private final ClickListener listener;
-    private ArrayList<String> gameList;
+    private ArrayList<GameDisplay> gameList;
 
-    public GameAdapter(ArrayList<String> gameList, ClickListener listener) {
+    public GameAdapter(ArrayList<GameDisplay> gameList, ClickListener listener) {
         this.gameList = gameList;
         this.listener = listener;
     }
@@ -36,14 +37,16 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull GameAdapter.ViewHolder viewHolder, int position) {
-        String game = gameList.get(position);
+        GameDisplay game = gameList.get(position);
 
         TextView textView = viewHolder.title;
         ImageButton editButton = viewHolder.editButton;
         ImageButton playButton = viewHolder.playButton;
         ImageButton deleteButton = viewHolder.deleteButton;
 
-        textView.setText(game);
+        String title = game.getName() + ", " + game.getHost();
+
+        textView.setText(title);
     }
 
     @Override

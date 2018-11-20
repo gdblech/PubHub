@@ -10,7 +10,7 @@ import android.view.View;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.utils.ClickListener;
+import me.lgbt.pubhub.interfaces.ClickListener;
 import me.lgbt.pubhub.trivia.utils.RoundAdapter;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
@@ -19,7 +19,6 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
 
     private String phbToken;
     private TriviaGame currentGame;
-    private RecyclerView roundList;
     private TriviaRound selectedRound;
     private int roundPosition;
     private RoundAdapter adapter;
@@ -30,7 +29,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_round_list);
         FloatingActionButton addRoundButton = findViewById(R.id.addRoundButton);
         FloatingActionButton doneRoundButton = findViewById(R.id.roundListDoneButton);
-        roundList = findViewById(R.id.roundList);
+        RecyclerView roundList = findViewById(R.id.roundList);
 
         unPack();
 
@@ -42,7 +41,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         doneRoundButton.setOnClickListener(this);
     }
 
-    public void doneMessage() {
+    private void doneMessage() {
         Intent doneActivity = new Intent(this, GameFinishActivity.class);
         Bundle extras = new Bundle();
 
@@ -67,7 +66,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    public void sendMessage() {
+    private void sendMessage() {
         Intent nextActivity = new Intent(this, RoundCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -83,7 +82,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
         finish();
     }
 
-    public void unPack() {
+    private void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);

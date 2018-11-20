@@ -2,6 +2,7 @@
     <!-- Connection Strings -->
     <string name="server_client_id">980331984960-d33t8e79agt8udf140sm30ob83q020na.apps.googleusercontent.com</string>
     <string name="phb_url">pubhub.me</string>
+    <string name="phb_ws">ws://pubhub.me:8082</string>
 
     <!-- activity strings -->
     <string name="app_name">PubHub</string>
@@ -15,10 +16,9 @@
     <string name="question_title">Question Title</string>
     <string name="enter_game_name">Enter Game Name</string>
     <string name="upload">Upload</string>
-    <string name="skip_to_work">Skip To Work</string>
     <string name="enter_host_name">Enter Host Name</string>
-    <string name="host">Host</string>
-    <string name="play">Play</string>
+    <string name="host">Host Trivia</string>
+    <string name="play">Play Trivia</string>
     <string name="waiting_text">Waiting For the Host to Launch the Game</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="menu_trivia">Trivia</string>
@@ -26,7 +26,27 @@
     <string name="menu_team">Team</string>
     <string name="menu_scores">Score</string>
     <string name="playingDefault">Title Missing</string>
+    <string name="launch_game">Launch Game</string>
+    <string name="waitingtxt">No Games Available, Please Check Back Later</string>
+    <string name="welcomehost">Welcome, Do You want to:</string>
+    <string name="pubhub">PUBHUB</string>
+    <string name="chat">Chat</string>
+    <string name="create_trivia">create trivia</string>
+    <string name="scan_qr_code">scan qr_code</string>
+    <string name="join_team_button">Join team button</string>
+    <string name="create_team_button">Create team button</string>
+    <string name="team_join1">You Are Not Currently On a Team</string>
+    <string name="click_join">Click to join a Team</string>
 
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="go_to_chat">Go to chat</string>
+    <string name="to_team_create">To Team Create</string>
+    <string name="scan_qrcode">Scan QRcode</string>
+    <string name="join_team">Join team</string>
+    <string name="create_team">Create Team</string>
+    <string name="enter_team_name">Enter Team Name</string>
 
     >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
 

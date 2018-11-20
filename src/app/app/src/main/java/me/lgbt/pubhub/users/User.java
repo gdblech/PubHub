@@ -2,12 +2,7 @@ package me.lgbt.pubhub.users;
 
 import android.net.Uri;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import me.lgbt.pubhub.connect.RestConnection;
-
-public class User {
+class User {
     private static int userId;
     private String userName;
     private int nickname;
@@ -30,7 +25,7 @@ public class User {
     }
 
     public User(int userId, String email, String userName, String roleName, int authType, String profilePicturePath, int teamId, String teamName) {
-        this.userId = userId;
+        User.userId = userId;
         this.email = email;
         this.userName = userName;
         this.role = roleName;
@@ -41,7 +36,7 @@ public class User {
     }
 
     public User(int userId, String email, String userName, String roleName, int authType, Uri profilePicture, int teamId, String teamName) {
-        this.userId = userId;
+        User.userId = userId;
         this.email = email;
         this.userName = userName;
         this.role = roleName;
@@ -73,7 +68,7 @@ public class User {
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        User.userId = userId;
     }
 
     public String getEmail() {

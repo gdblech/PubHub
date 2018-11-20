@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.Session;
 
 @ApplicationScoped
-public class ChatHandler {
+class ChatHandler {
     private final Set<Session> sessions = new HashSet<>();
 
     public void addSession(Session s){

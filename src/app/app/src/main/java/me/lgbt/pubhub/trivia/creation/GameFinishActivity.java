@@ -44,10 +44,7 @@ import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
 public class GameFinishActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //todo add gameDate
-    //todo remove check name
-
-    DialogFragment newFragment;
+    private DialogFragment newFragment;
     private String phbToken;
     private TriviaGame currentGame;
     private String jsonGame;
@@ -56,13 +53,13 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     private EditText hostName;
     private String host;
     private String gameDate;
-
+    private Button upload;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_finish);
         progressBar = findViewById(R.id.progressBar);
-        Button upload = findViewById(R.id.uploadButton);
+        upload = findViewById(R.id.uploadButton);
         gameName = findViewById(R.id.gameNameFinish);
         hostName = findViewById(R.id.hostNameFinish);
         Button setDate = findViewById(R.id.selectDateFinish);
@@ -92,7 +89,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.uploadButton:
-
+                upload.setVisibility(View.GONE);
                 String gName = gameName.getText().toString();
                 host = hostName.getText().toString();
                 gameDate = ((DatePickerFragment) newFragment).getDate();
@@ -133,7 +130,6 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         int i = 0;
         for (TriviaRound r : currentGame.getRounds()) {
             JSONObject jsonRound = new JSONObject();
-            i++;
             try {
                 jsonRound.put("roundNumber", i);
                 jsonRound.put("title", r.getTitle());
@@ -143,11 +139,11 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            i++;
             JSONArray questArray = new JSONArray();
             int j = 0;
             for (TriviaQuestion q : r.getQuestions()) {
                 JSONObject jsonQuest = new JSONObject();
-                j++;
                 try {
                     jsonQuest.put("questionNumber", j);
                     jsonQuest.put("title", q.getTitle());
@@ -159,6 +155,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                j++;
             }
             try {
                 jsonRound.put("triviaQuestions", questArray);
@@ -181,14 +178,20 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         RestConnection conn;
         Resources res = getResources();
         if (res.getBoolean(R.bool.backend)) {
-            conn = new RestConnection(getString(R.string.testingBackend), phbToken);
+            conn = new RestConnection(getString(R.string.testingBackendHTTP), phbToken);
         } else {
             conn = new RestConnection(getString(R.string.phb_url), phbToken);
         }
         conn.setBody(jsonGame);
 
         conn.start(RestConnection.SENDGAME);
-        sendMessage();
+        try {
+            conn.join();
+        } catch (InterruptedException e) {
+            //do nothing it failed
+        }finally {
+            sendMessage();
+        }
     }
 
     private String picToBase64(Uri pictureUri) {

@@ -15,16 +15,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import me.lgbt.pubhub.MainActivity;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
-import me.lgbt.pubhub.trivia.utils.ClickListener;
+import me.lgbt.pubhub.interfaces.ClickListener;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
+import me.lgbt.pubhub.trivia.utils.GameDisplay;
 
 public class TriviaGameListActivity extends AppCompatActivity implements View.OnClickListener, ClickListener {
     private String phbToken;
-    private ArrayList<String> listOfGames;
+    private ArrayList<GameDisplay> listOfGames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +45,14 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         newGame.setOnClickListener(this);
     }
 
-    public void fetchGameList() {
+    private void fetchGameList() {
         listOfGames = new ArrayList<>();
 
         RestConnection conn;
         Resources res = getResources();
 
         if (res.getBoolean(R.bool.backend)) {
-            conn = new RestConnection(getString(R.string.testingBackend), phbToken);
+            conn = new RestConnection(getString(R.string.testingBackendHTTP), phbToken);
         } else {
             conn = new RestConnection(getString(R.string.phb_url), phbToken);
         }
@@ -67,12 +69,11 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
                 jsonList = new JSONArray(json);
                 for (int i = 0; i < jsonList.length(); i++) {
                     JSONObject obj = jsonList.getJSONObject(i);
-                    String s = obj.getString("date");
-                    //s = s.substring(0,9);
-                    String str = obj.getString("gameName") + ", " +
-                            obj.getString("hostName") + ", " + s;
-                    if (!str.contains("null")) {
-                        listOfGames.add(str);
+                    String name = obj.getString("gameName");
+                    GameDisplay game = new GameDisplay(name, obj.getString("hostName"),
+                            obj.getString("date"), obj.getInt("id"));
+                    if (!name.equals("") && !name.equalsIgnoreCase("null")) {
+                        listOfGames.add(game);
                     }
                 }
             } catch (JSONException e) {
@@ -81,7 +82,7 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         }
     }
 
-    public void sendMessage() {
+    private void sendMessageCreate() {
         Intent nextActivity = new Intent(this, GameSlideCreationActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
@@ -90,34 +91,47 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         finish();
     }
 
-    /* Use this method somewhere without google token */
+    /* This is what takes you to the next activity from the play button. */
+    private void sendMessagePlay(int id) {
+        Intent nextActivity = new Intent(this, MainActivity.class);
+        Bundle extras = new Bundle();
+        extras.putBoolean(IntentKeys.HOST, true);
+        extras.putString(IntentKeys.PUBHUB, phbToken);
+        extras.putInt(IntentKeys.GAMEID, id); // TODO PASS JSON TO SERVER
+        nextActivity.putExtras(extras);
+        startActivity(nextActivity);
+        finish();
+    }
 
-    public void unPack() {
+    private void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
-//            googleToken = data.getString(IntentKeys.GOOGLE); // TODO DELETE this line
         }
     }
+
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.newGame){
-            sendMessage();
+        if (view.getId() == R.id.newGame) {
+            sendMessageCreate();
         }
     }
 
+    /* Button handling for edit, delete, and play. Play calls  */
+
     @Override
     public void onPositionClicked(int position, int button) {
-        switch (button){
-            case R.id.editButton:{
+        switch (button) {
+            case R.id.editButton: {
                 break; //todo add edit functionality
             }
-            case R.id.deleteButton:{
+            case R.id.deleteButton: {
                 break; //todo add delete functionality
             }
-            case R.id.playButton:{
-                break; //todo add waiting to start activity
+            case R.id.playButton: {
+                sendMessagePlay(listOfGames.get(position).getId());
+// sendMessagePlay(listOfGames.get(position).getId());
             }
         }
     }
