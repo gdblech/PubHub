@@ -10,7 +10,7 @@ import android.view.View;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.utils.interfaces.ClickListener;
+import me.lgbt.pubhub.interfaces.ClickListener;
 import me.lgbt.pubhub.trivia.utils.QuestionAdapter;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
