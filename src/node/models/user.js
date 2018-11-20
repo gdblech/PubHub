@@ -26,7 +26,12 @@ module.exports = (sequelize, DataTypes) => {
 		User.belongsTo(models.AuthType);
 		User.hasMany(models.ChatMessage);
 		User.belongsToMany(models.Team, {
+			as: 'Teams',
 			through: 'TeamToUser'
+		});
+		User.hasMany(models.Team, {
+			as: 'teamLeader',
+			foreignKey: 'teamLeaderId'
 		});
 	};
 

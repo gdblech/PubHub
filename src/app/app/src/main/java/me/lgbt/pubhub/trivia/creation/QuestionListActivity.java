@@ -10,7 +10,7 @@ import android.view.View;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.trivia.utils.ClickListener;
+import me.lgbt.pubhub.interfaces.ClickListener;
 import me.lgbt.pubhub.trivia.utils.QuestionAdapter;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
@@ -44,7 +44,7 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         doneQuestion.setOnClickListener(this);
     }
 
-    public void sendMessage() {
+    private void sendMessage() {
         Intent nextActivity = new Intent(this, CreateQuestionsActivity.class);
         Bundle extras = new Bundle();
 
@@ -64,7 +64,7 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         finish();
     }
 
-    public void doneMessage() {
+    private void doneMessage() {
         Intent doneActivity = new Intent(this, RoundListActivity.class);
         Bundle extras = new Bundle();
 
@@ -83,7 +83,7 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
         finish();
     }
 
-    public void unPack() {
+    private void unPack() {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             phbToken = data.getString(IntentKeys.PUBHUB);
