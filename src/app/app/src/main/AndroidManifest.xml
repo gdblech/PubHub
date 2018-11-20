@@ -36,7 +36,6 @@
         <activity android:name=".trivia.creation.RoundCreationActivity"/>
         <activity android:name=".trivia.creation.QuestionListActivity" />
         <activity android:name=".trivia.creation.GameFinishActivity" />
-        <activity android:name=".trivia.start.TeamSelectionActivity" />
         <activity android:name=".trivia.start.QRCodeScanner" />
         <activity android:name=".trivia.start.HostOptionsActivity" />
         <activity
