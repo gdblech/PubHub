@@ -1,3 +1,4 @@
 {
-
+	"S3Bucket": "pubhub-storage",
+	"imageFormat": "image/webp"
 }

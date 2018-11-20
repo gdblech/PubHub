@@ -24,6 +24,15 @@ module.exports = (sequelize, DataTypes) => {
 		// associations can be defined here
 		User.belongsTo(models.Role);
 		User.belongsTo(models.AuthType);
+		User.hasMany(models.ChatMessage);
+		User.belongsToMany(models.Team, {
+			as: 'Teams',
+			through: 'TeamToUser'
+		});
+		User.hasMany(models.Team, {
+			as: 'teamLeader',
+			foreignKey: 'teamLeaderId'
+		});
 	};
 
 	/**
@@ -68,13 +77,16 @@ module.exports = (sequelize, DataTypes) => {
 		let payload = {};
 		payload.userId = this.userId;
 		payload.userName = this.userName;
+		if (this.Role) {
+			payload.role = this.Role;
+		}
 		return payload;
 	};
 
 	/**
 	 * return the JSON representation of the user
 	 */
-	User.prototype.getJSON = function () {
+	User.prototype.toJSON = function () {
 		let json = {};
 		json.userId = this.userId;
 		json.userName = this.userName;
