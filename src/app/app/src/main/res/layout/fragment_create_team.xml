@@ -7,16 +7,16 @@
 
 
     <TextView
-        android:id="@+id/btnCreateTeam"
+        android:id="@+id/createTeam"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Create team" />
 
     <Button
-        android:id="@+id/btnJoinTeam"
+        android:id="@+id/btnTeamCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/join_team_button"
+        android:text="@string/create_team"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
