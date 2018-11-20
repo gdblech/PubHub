@@ -18,7 +18,7 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.chat.ChatClickListener;
+import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.chat.MessageAdapter;
 import me.lgbt.pubhub.chat.UserMessage;
 

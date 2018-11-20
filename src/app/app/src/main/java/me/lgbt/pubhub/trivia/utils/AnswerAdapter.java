@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.utils.interfaces.ClickListener;
+import me.lgbt.pubhub.interfaces.ClickListener;
 
 public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder> {
     private final ClickListener listener;
