@@ -77,7 +77,7 @@ public class WaitingOpenFragment extends Fragment implements View.OnClickListene
     private void changeFrangment(){ //change current frangment to join team
         System.out.println("Trying to join Team");
         getFragmentManager().beginTransaction()
-                .replace(R.id.waitToOpenFragment, new JoinTeam())
+                .replace(R.id.fragContainer, new JoinTeam())
                 .commit();
 
     }
