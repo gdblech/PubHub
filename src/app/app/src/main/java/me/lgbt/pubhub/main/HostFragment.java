@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.utils.interfaces.HostListener;
+import me.lgbt.pubhub.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
 /*

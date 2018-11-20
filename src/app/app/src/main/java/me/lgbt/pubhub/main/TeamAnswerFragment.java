@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.trivia.utils.AnswerAdapter;
-import me.lgbt.pubhub.trivia.utils.interfaces.ClickListener;
-import me.lgbt.pubhub.trivia.utils.interfaces.TeamAnswerListener;
+import me.lgbt.pubhub.interfaces.ClickListener;
+import me.lgbt.pubhub.interfaces.TeamAnswerListener;
 
 public class TeamAnswerFragment extends Fragment implements ClickListener {
     private ArrayList<String> answers = new ArrayList<>();

@@ -35,15 +35,18 @@
     <string name="scan_qr_code">scan qr_code</string>
     <string name="join_team_button">Join team button</string>
     <string name="create_team_button">Create team button</string>
+    <string name="team_join1">You Are Not Currently On a Team</string>
+    <string name="click_join">Click to join a Team</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="go_to_chat">Go to chat</string>
-    <string name="team_join">Team Join</string>
     <string name="to_team_create">To Team Create</string>
     <string name="scan_qrcode">Scan QRcode</string>
     <string name="join_team">Join team</string>
     <string name="create_team">Create Team</string>
+    <string name="enter_team_name">Enter Team Name</string>
 
     >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
 

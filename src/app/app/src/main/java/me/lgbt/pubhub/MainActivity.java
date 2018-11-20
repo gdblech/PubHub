@@ -1,5 +1,6 @@
 package me.lgbt.pubhub;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -10,26 +11,31 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import me.lgbt.pubhub.chat.ChatClickListener;
+import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
+import me.lgbt.pubhub.interfaces.JoinTeamListener;
+import me.lgbt.pubhub.interfaces.TeamNameCreatedListenser;
 import me.lgbt.pubhub.main.ChatFragment;
+import me.lgbt.pubhub.main.CreateTeam;
 import me.lgbt.pubhub.main.HostFragment;
+import me.lgbt.pubhub.main.JoinTeam;
 import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
-import me.lgbt.pubhub.trivia.utils.interfaces.HostListener;
-import me.lgbt.pubhub.trivia.utils.interfaces.PlayListener;
-import me.lgbt.pubhub.trivia.utils.interfaces.TeamAnswerListener;
+import me.lgbt.pubhub.interfaces.HostListener;
+import me.lgbt.pubhub.interfaces.PlayListener;
+import me.lgbt.pubhub.interfaces.TeamAnswerListener;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -38,23 +44,36 @@ import okhttp3.WebSocketListener;
 import okio.ByteString;
 
 public class MainActivity extends AppCompatActivity implements ChatClickListener,
-        BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener, TeamAnswerListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener, TeamAnswerListener,
+        JoinTeamListener, TeamNameCreatedListenser {
+    final static int NOGAME = 0; //waiting for open
+    final static int NOTONTEAM = 1; // JoinTeam
+    final static int TEAMNOEXIST = 2; //Create team
+    final static int PLAYING = 3; //if on a tram and ready to play
+
+    private int triviaTracker = -1;
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
     private String textFromFragment;
+
     private ChatFragment chatFrag;
     private Fragment triviaFrag;
     private ScoreFragment scoreFrag;
     private TeamFragment teamFrag;
+    private CreateTeam createTeam;
+    private JoinTeam joinTeam;
+    private WaitingOpenFragment waiting;
+
     private Fragment active;
     private Fragment currentTriv;
+
     private BottomNavigationView navBar;
     private String playAnswer;
     private FragmentManager manager;
     private boolean hosting = false;
-    private WaitingOpenFragment waiting;
     private int gameID;
+    private String qrCode = "";
 
     @Override
     public void clicked(String data) {
@@ -78,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             if (savedInstanceState != null) {
                 return;
             }
+            createTeam = new CreateTeam();
+            joinTeam = new JoinTeam();
             waiting = new WaitingOpenFragment();
             chatFrag = new ChatFragment();
             if (hosting) {
@@ -88,20 +109,54 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
-            active = waiting;
+            active = chatFrag;
 
-            manager.beginTransaction().add(R.id.fragContainer, waiting).commit(); //change me to fragment you want to test
-            manager.beginTransaction().add(R.id.fragContainer, chatFrag).hide(chatFrag).commit();
+
+            manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer, waiting).hide(waiting).commit();
+            manager.beginTransaction().add(R.id.fragContainer, createTeam).hide(createTeam).commit();
+            manager.beginTransaction().add(R.id.fragContainer, joinTeam).hide(joinTeam).commit();
             manager.beginTransaction().add(R.id.fragContainer, triviaFrag).hide(triviaFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
-        }
 
+            if(hosting){
+                triviaTracker = PLAYING;
+                trivSwitcher();
+            }else{
+                triviaTracker = NOGAME;
+                trivSwitcher();
+            }
+        }
+        navBar.setSelectedItemId(R.id.navigation_chat);
         client = new OkHttpClient();
         websocketConnectionOpen();
 
         if (gameID != -1) {
             openGame();
+        }
+    }
+
+    private void trivSwitcher(){
+        if (currentTriv != null) {
+            manager.beginTransaction().hide(currentTriv).commit();
+        }
+        switch (triviaTracker){
+            case NOGAME:
+                currentTriv = waiting;
+                break;
+            case NOTONTEAM:
+                currentTriv = joinTeam;
+                break;
+            case TEAMNOEXIST:
+                currentTriv = createTeam;
+                break;
+            case PLAYING:
+                currentTriv = triviaFrag;
+                break;
+        }
+        if(navBar.getSelectedItemId() == R.id.navigation_trivia){
+            manager.beginTransaction().show(currentTriv).commit();
         }
     }
 
@@ -149,8 +204,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 return true;
             }
             case R.id.navigation_trivia: {
-                manager.beginTransaction().hide(active).show(triviaFrag).commit();
-                active = triviaFrag;
+                manager.beginTransaction().hide(active).show(currentTriv).commit();
+                active = currentTriv;
                 return true;
             }
         }
@@ -262,10 +317,18 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             }
         });
     }
+    private void wrongTeam() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                joinTeam.upDateText("Wrong table, Please Try Again");
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {
-        if (hosting) {
+        if (hosting && gameID != -1){
             closeGame();
             Intent nextActivity = new Intent(this, HostOptionsActivity.class);
             Bundle extras = new Bundle();
@@ -279,7 +342,24 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
+    @Override
+    public void qrCodeScanned(String qrCode){
+        this.qrCode = qrCode;
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"JoinTeam\",\"payload\":{\"QRCode\":\"" + qrCode + "\"}}}";
+        ws.send(startGameJSON);
+    }
+
+    @Override
+    public void nameChosen(String teamName) {
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
+        ws.send(startGameJSON);
+    }
+
+    private Context getContext(){
+        return this;
+    }
     private final class EchoWebSocketListener extends WebSocketListener {
+
 
         private static final int NORMAL_CLOSURE_STATUS = 1000;
 
@@ -290,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-
+            System.out.println(text);
             try {
                 JSONObject messageObject = new JSONObject(text);
                 JSONObject payloadJSON = messageObject.getJSONObject("payload");
@@ -335,22 +415,46 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
                         switch (subMessageType) {
                             case "CreateTeamResponse":
-//                                String isTeamCreated = messageObject.getString("success");
-//                                qrcode = messageObject.getString("QRCode");
-//                                teamName = messageObject.getString("teamName");
-//                                if (messageObject.getString("reason") != null) {
-//                                    String reason = messageObject.getString("reason");
-//                                }
+                                boolean isTeamCreated = subPayloadJSON.getBoolean("success");
+
+                                if(isTeamCreated){
+                                    triviaTracker = PLAYING;
+                                    trivSwitcher();
+                                }else{
+                                    String reasonTC = subPayloadJSON.getString("reason");
+                                    if(reasonTC.equals("Team already exists for table")){
+                                        Toast.makeText( getContext(), "A Team Name Is Required", Toast.LENGTH_LONG).show();
+                                    }
+                                }
                                 break;
                             case "TableStatusResponse":
                                 break;
                             case "JoinTeamResponse":
-                                qrcode = subPayloadJSON.getString("QRCode");
-                                teamName = subPayloadJSON.getString("teamName");
-                                String success = subPayloadJSON.getString("success");
+                                boolean success = subPayloadJSON.getBoolean("success");
+
+                                if(success){
+                                    triviaTracker = PLAYING;
+                                    trivSwitcher();
+                                }else{
+                                    String reason = subPayloadJSON.getString("reason");
+                                    if(reason.equals("User already belongs to a team")){
+                                        wrongTeam();
+                                    }else{
+                                        triviaTracker = TEAMNOEXIST;
+                                        trivSwitcher();
+                                    }
+                                }
                                 break;
                             case "GameInfo":
                                 JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
+//                                if(subPayloadJSON.getBoolean("onTeam")){ //todo
+                                if(false) {
+                                    triviaTracker = PLAYING;
+                                    trivSwitcher();
+                                }else if(!hosting){
+                                    triviaTracker = NOTONTEAM;
+                                    trivSwitcher();
+                                }
                                 output(extract(gameJSON));
                                 break;
                             case "TriviaStart":
@@ -395,10 +499,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             webSocket.close(NORMAL_CLOSURE_STATUS, null);
             output("Closing : " + code + " / " + reason);
         }
-
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
             Log.d("WS OnFailure", t.getMessage(), t);
         }
+
     }
 }
