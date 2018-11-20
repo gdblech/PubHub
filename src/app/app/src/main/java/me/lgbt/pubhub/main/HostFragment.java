@@ -106,7 +106,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
             }
             case R.id.launchGameHost: {
                 fade.setVisibility(View.GONE);
-                back.show();
+               // back.show();
                 next.show();
                 launchGame.setVisibility(View.GONE);
                 passer.slideNavClicked(START);
