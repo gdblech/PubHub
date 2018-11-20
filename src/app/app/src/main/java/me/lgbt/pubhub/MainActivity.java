@@ -2,6 +2,7 @@ package me.lgbt.pubhub;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -19,7 +20,9 @@ import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
 import me.lgbt.pubhub.main.ChatFragment;
+import me.lgbt.pubhub.main.CreateTeam;
 import me.lgbt.pubhub.main.HostFragment;
+import me.lgbt.pubhub.main.JoinTeam;
 import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
 import me.lgbt.pubhub.main.TeamFragment;
@@ -38,21 +41,32 @@ import okio.ByteString;
 
 public class MainActivity extends AppCompatActivity implements ChatClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener, TeamAnswerListener {
+    final static int NOGAME = 0; //waiting for open
+    final static int NOTONTEAM = 1; // JoinTeam
+    final static int TEAMNOEXIST = 2; //Create team
+    final static int PLAYING = 3; //if on a tram and ready to play
+
+    private int triviaTracker = -1;
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
     private String textFromFragment;
+
     private ChatFragment chatFrag;
     private Fragment triviaFrag;
     private ScoreFragment scoreFrag;
     private TeamFragment teamFrag;
+    private CreateTeam createTeam;
+    private JoinTeam joinTeam;
+    private WaitingOpenFragment waiting;
+
     private Fragment active;
     private Fragment currentTriv;
+
     private BottomNavigationView navBar;
     private String playAnswer;
     private FragmentManager manager;
     private boolean hosting = false;
-    private WaitingOpenFragment waiting;
     private int gameID;
 
     @Override
@@ -77,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             if (savedInstanceState != null) {
                 return;
             }
+            createTeam = new CreateTeam();
+            joinTeam = new JoinTeam();
             waiting = new WaitingOpenFragment();
             chatFrag = new ChatFragment();
             if (hosting) {
@@ -87,20 +103,54 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
-            active = waiting;
+            active = chatFrag;
 
-            manager.beginTransaction().add(R.id.fragContainer, waiting).commit(); //change me to fragment you want to test
-            manager.beginTransaction().add(R.id.fragContainer, chatFrag).hide(chatFrag).commit();
+
+            manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer, waiting).hide(waiting).commit();
+            manager.beginTransaction().add(R.id.fragContainer, createTeam).hide(createTeam).commit();
+            manager.beginTransaction().add(R.id.fragContainer, joinTeam).hide(joinTeam).commit();
             manager.beginTransaction().add(R.id.fragContainer, triviaFrag).hide(triviaFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
-        }
 
+            if(hosting){
+                triviaTracker = PLAYING;
+                trivSwitcher();
+            }else{
+                triviaTracker = NOGAME;
+                trivSwitcher();
+            }
+        }
+        navBar.setSelectedItemId(R.id.navigation_chat);
         client = new OkHttpClient();
         websocketConnectionOpen();
 
         if (gameID != -1) {
             openGame();
+        }
+    }
+
+    private void trivSwitcher(){
+        if (currentTriv != null) {
+            manager.beginTransaction().hide(currentTriv).commit();
+        }
+        switch (triviaTracker){
+            case NOGAME:
+                currentTriv = waiting;
+                break;
+            case NOTONTEAM:
+                currentTriv = joinTeam;
+                break;
+            case TEAMNOEXIST:
+                currentTriv = createTeam;
+                break;
+            case PLAYING:
+                currentTriv = triviaFrag;
+                break;
+        }
+        if(navBar.getSelectedItemId() == R.id.navigation_trivia){
+            manager.beginTransaction().show(currentTriv).commit();
         }
     }
 
@@ -148,8 +198,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 return true;
             }
             case R.id.navigation_trivia: {
-                manager.beginTransaction().hide(active).show(triviaFrag).commit();
-                active = triviaFrag;
+                manager.beginTransaction().hide(active).show(currentTriv).commit();
+                active = currentTriv;
                 return true;
             }
         }
@@ -264,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     @Override
     public void onBackPressed() {
-        if (hosting) {
+        if (hosting && gameID != -1){
             closeGame();
             Intent nextActivity = new Intent(this, HostOptionsActivity.class);
             Bundle extras = new Bundle();
@@ -351,6 +401,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             case "GameInfo":
                                 JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
                                 output(extract(gameJSON));
+                                if(!hosting){
+                                    triviaTracker = NOTONTEAM;
+                                    trivSwitcher();
+                                }
                                 break;
                             case "TriviaStart":
                                 startGame(hosting);
