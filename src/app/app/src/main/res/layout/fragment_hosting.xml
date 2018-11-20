@@ -41,6 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/slide_desc"
         app:layout_constraintTop_toBottomOf="@+id/slideTitleHost"
         app:srcCompat="@drawable/add_image_icon" />
 
@@ -52,7 +53,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:text="TextMissing"
+        android:text="@string/textmissing"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/hostNextButton"
         app:layout_constraintEnd_toEndOf="parent"
