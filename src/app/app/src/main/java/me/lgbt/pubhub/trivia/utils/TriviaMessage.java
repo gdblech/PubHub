@@ -52,7 +52,8 @@ public class TriviaMessage extends Message {
         return isQuestion;
     }
 
-    public void setQuestion(boolean question) {
+    public boolean isQuestion(boolean question) {
         isQuestion = question;
+        return isQuestion;
     }
 }
