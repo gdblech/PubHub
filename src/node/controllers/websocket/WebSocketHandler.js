@@ -222,7 +222,7 @@ class WebSocketHandler {
 					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage());
 				this.sendToPlayers(response);
 			} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.Next) {
-				let next = this.activeTrivia.next();
+				let next = await this.activeTrivia.next();
 				if (next.type === 'round') {
 					let response = new ServerMessages.ServerHostMessage(
 						ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
@@ -240,8 +240,19 @@ class WebSocketHandler {
 						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
 					this.sendToPlayers(response);
 				} else if (next.type === 'grading') {
+					for (let i = 0; i < next.assignments.length; i++) {
+						let response = new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, {
+								question: next.question,
+								teamAnswers: next.assignments[i].teamAnswers
+							}).toServerMessage();
+						this.sendToUser(JSON.stringify(response), next.assignments[i].team);
+					}
 					let response = new ServerMessages.ServerHostMessage(
-						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
+						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, {
+							question: question,
+
+						}).toServerMessage();
 					this.activeTrivia.host.client.send(JSON.stringify(response));
 
 					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
@@ -546,13 +557,13 @@ class WebSocketHandler {
 				await answer.setTriviaQuestion(question);
 				await answer.setTeam(team);
 
-				this.activeTrivia.teamsAnswered++;
+				this.activeTrivia.teamsSubmitted++;
 				let hostMessage = new ServerMessages.ServerHostMessage(
 					ServerMessages.ServerHostMessage.MESSAGE_TYPES.AnswerStatus, {
 						roundNumber: this.activeTrivia.currentRound,
 						questionNumber: this.activeTrivia.currentQuestion,
 						numTeams: this.activeTrivia.teams.length,
-						answersSubmitted: this.activeTrivia.teamsAnswered
+						answersSubmitted: this.activeTrivia.teamsSubmitted
 					}
 				).toServerMessage();
 

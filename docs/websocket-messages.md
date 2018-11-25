@@ -192,12 +192,12 @@ Only the team leader can submit a FinalAnswer.
 <td>
 <pre>
 {
-  "messageType": "ServerPlayerMessage",
+  "messageType": "PlayerServerMessage",
   "payload": {
     "messageType": "Grading",
     "payload": {
       "questionNumber": 1,
-	  "roundNumber": 0,
+      "roundNumber": 0,
       "teamGrades": [{
         "teamId": 1,
         "correct": false
@@ -322,6 +322,26 @@ When user connects they receive an array of all messages. Receive array with sin
 </tr>
 <tr>
 <td>ServerHostMessage</td>
+<td>AnswerStatus</td>
+<td>
+<pre>
+{
+  "messageType": "ServerHostMessage",
+  "payload": {
+    "messageType": "AnswerStatus",
+    "payload": {
+    "roundNumber": 0,
+      "questionNumber": 1,
+      "numTeams": 3,
+    "answersSubmitted": 2
+    }
+  }
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>ServerHostMessage</td>
 <td>Grading</td>
 <td>
 <pre>
@@ -331,7 +351,7 @@ When user connects they receive an array of all messages. Receive array with sin
     "messageType": "Grading",
     "payload": {
       "id": 3,
-    "roundNumber": 0,
+      "roundNumber": 0,
       "questionNumber": 1,
       "title": "Smells Like Nirvana",
       "text": "Released 1992",
@@ -345,18 +365,18 @@ When user connects they receive an array of all messages. Receive array with sin
 </tr>
 <tr>
 <td>ServerHostMessage</td>
-<td>AnswerStatus</td>
+<td>GradingStatus</td>
 <td>
 <pre>
 {
   "messageType": "ServerHostMessage",
   "payload": {
-    "messageType": "AnswerStatus",
+    "messageType": "GradingStatus",
     "payload": {
     "roundNumber": 0,
-      "questionNumber": 1,
-      "numTeams": 3,
-    "answersSubmitted": 2
+    "questionNumber": 1,
+    "numTeams": 3,
+    "gradesSubmitted": 2
     }
   }
 }
@@ -583,13 +603,15 @@ If success is false, message is sent to only submitter and reason is included. I
   "payload": {
     "messageType": "Grading",
     "payload": {
-      "id": 3,
-      "questionNumber": 1,
-	  "roundNumber": 0,
-      "title": "Smells Like Nirvana",
-      "text": "Released 1992",
-      "image": "base64 webp image data",
-      "answer": "Smells Like Teen Spirit",
+      "question": {
+        "id": 3,
+        "questionNumber": 1,
+        "roundNumber": 0,
+        "title": "Smells Like Nirvana",
+        "text": "Released 1992",
+        "image": "base64 webp image data",
+        "answer": "Smells Like Teen Spirit"
+      },
       "teamAnswers": [{
         "teamId": 1,
         "answer": "Come as you are"
