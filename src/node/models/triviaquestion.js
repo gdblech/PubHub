@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
 		json.text = this.text;
 		json.image = this.image;
 		json.answer = this.answer;
+		if (this.roundNumber) {
+			json.roundNumber = this.roundNumber;
+		}
 		return json;
 	};
 

@@ -138,6 +138,20 @@ module.exports = {
 							"text": "Released 2014",
 							"image": "47a8d3b0-e6f6-11e8-aca3-ffe90892d3f6",
 							"answer": "Imitation Game"
+						},
+						{
+							"questionNumber": 2,
+							"title": "Animation",
+							"text": "Released 2008",
+							"image": "54182440-ecee-11e8-9abb-ab59297ae4ab",
+							"answer": "WALL-E"
+						},
+						{
+							"questionNumber": 3,
+							"title": "Sci-Fi",
+							"text": "Released 1968",
+							"image": "2ff77c00-ecee-11e8-b1bb-f51c35dd0199",
+							"answer": "2001: A Space Odyssey"
 						}
 					]
 				},
@@ -159,6 +173,13 @@ module.exports = {
 							"text": "Released 1996",
 							"image": "498a16d0-e6f6-11e8-aca3-ffe90892d3f6",
 							"answer": "Gangsta's Paradise"
+						},
+						{
+							"questionNumber": 2,
+							"title": "The Saga Begins",
+							"text": "Released 1999",
+							"image": "859cd6a0-ecee-11e8-8853-53b139d97086",
+							"answer": "American Pie"
 						}
 					]
 				}
