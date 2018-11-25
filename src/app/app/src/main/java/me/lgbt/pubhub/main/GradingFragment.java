@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -23,8 +24,8 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
     private TextView answerGiven;
     private TextView teamAnswer;
     private ImageView image;
-    private Button right;
-    private Button wrong;
+    private FloatingActionButton right;
+    private FloatingActionButton wrong;
     private GradingListener passer;
 
     @Nullable
