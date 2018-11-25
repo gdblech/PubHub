@@ -240,8 +240,19 @@ class WebSocketHandler {
 						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
 					this.sendToPlayers(response);
 				} else if (next.type === 'grading') {
+					for (let i = 0; i < next.assignments.length; i++) {
+						let response = new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, {
+								question: next.question,
+								teamAnswers: next.assignments[i].teamAnswers
+							}).toServerMessage();
+						this.sendToUser(JSON.stringify(response), next.assignments[i].team);
+					}
 					let response = new ServerMessages.ServerHostMessage(
-						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
+						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, {
+							question: question,
+
+						}).toServerMessage();
 					this.activeTrivia.host.client.send(JSON.stringify(response));
 
 					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(

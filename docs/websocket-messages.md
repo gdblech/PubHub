@@ -365,7 +365,7 @@ When user connects they receive an array of all messages. Receive array with sin
 </tr>
 <tr>
 <td>ServerHostMessage</td>
-<td>AnswerStatus</td>
+<td>GradingStatus</td>
 <td>
 <pre>
 {
@@ -611,7 +611,7 @@ If success is false, message is sent to only submitter and reason is included. I
         "text": "Released 1992",
         "image": "base64 webp image data",
         "answer": "Smells Like Teen Spirit"
-	  },
+      },
       "teamAnswers": [{
         "teamId": 1,
         "answer": "Come as you are"
