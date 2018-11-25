@@ -31,6 +31,7 @@ import me.lgbt.pubhub.main.HostFragment;
 import me.lgbt.pubhub.main.JoinTeam;
 import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
+import me.lgbt.pubhub.main.TeamAnswerFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
@@ -52,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     final static int NOTONTEAM = 1; // JoinTeam
     final static int TEAMNOEXIST = 2; //Create team
     final static int PLAYING = 3; //if on a team and ready to play
-    final static int GRADING = 4; //if grading is now active
+    final static int TEAMANSWER = 4; //if team lead, you can chose team answer.
+    final static int GRADING = 5; //if grading is now active
 
     private int triviaTracker = -1;
     private OkHttpClient client;
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private TeamFragment teamFrag;
     private CreateTeam createTeam;
     private JoinTeam joinTeam;
+    private TeamAnswerFragment teamAnswer;
     private WaitingOpenFragment waiting;
     private GradingFragment grading;
 
@@ -72,10 +75,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private Fragment currentTriv;
 
     private BottomNavigationView navBar;
-    private String playAnswer;
     private FragmentManager manager;
     private boolean hosting = false;
     private int gameID;
+    private boolean teamLead = false;
     private String qrCode = "";
 
     /**
@@ -116,11 +119,13 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
             grading = new GradingFragment();
+            teamAnswer = new TeamAnswerFragment();
             active = chatFrag;
 
 
             manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, waiting).hide(waiting).commit();
+            manager.beginTransaction().add(R.id.fragContainer, teamAnswer).hide(teamAnswer).commit();
             manager.beginTransaction().add(R.id.fragContainer, grading).hide(grading).commit();
             manager.beginTransaction().add(R.id.fragContainer, createTeam).hide(createTeam).commit();
             manager.beginTransaction().add(R.id.fragContainer, joinTeam).hide(joinTeam).commit();
@@ -164,6 +169,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 break;
             case GRADING:
                 currentTriv = grading;
+                break;
+            case TEAMANSWER:
+                currentTriv = teamAnswer;
                 break;
         }
         if(navBar.getSelectedItemId() == R.id.navigation_trivia){
@@ -227,6 +235,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         return false;
     }
 
+    /**
+     * On back button press, takes host back to host option screen
+     */
     @Override
     public void onBackPressed() {
         if (hosting && gameID != -1){
@@ -255,8 +266,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     @Override
     public void answerClicked(String data) {
-        playAnswer = data;
-        //todo get answer and send to team/grading
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerSubmission\",\"payload\":{\"answer\":\""+ data +"\"}}}";
+        ws.send(startGameJSON);
+        if(teamLead){
+            triviaTracker = TEAMANSWER;
+            trivSwitcher();
+        }
     }
 
     /**
@@ -364,15 +379,21 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     @Override
     public void answerGraded(boolean grade) {
         //todo change message parameters
-        //String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
+       // String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
         //ws.send(startGameJSON);
+    }
+
+    @Override
+    public void teamAnswerChosen(String answer) {
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"answer\":\""+ answer +"\"}}}";
+        ws.send(startGameJSON);
     }
 
     /*
      * End Playing Fragment Control Code
      */
 
-    /*
+    /**
      * Opens game so that teams can be created and joined.
      * Tells server that game has started.
      * Game ID is from the TriviaGameListActivity.sendMessagePlay(int id) method.
@@ -386,11 +407,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private void closeGame() {
         String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"EndGame\"}}";
         ws.send(endGameJSON);
-    }
-
-    @Override
-    public void teamAnswerChosen(String answer) {
-        //todo send team's answer to backend
     }
 
     private void output(final UserMessage mes) {
@@ -486,11 +502,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
                                 if(isTeamCreated){
                                     triviaTracker = PLAYING;
+                                    teamLead = true;
                                     trivSwitcher();
                                 }else{
                                     String reasonTC = subPayloadJSON.getString("reason");
                                     if(reasonTC.equals("Team already exists for table")){
-                                        Toast.makeText( getContext(), "A Team Name Is Required", Toast.LENGTH_LONG).show();
+                                        Toast.makeText( getContext(), reasonTC, Toast.LENGTH_LONG).show();
                                     }
                                 }
                                 break;
@@ -539,6 +556,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             case "FinalAnswerResponse":
                                 break;
                             case "Grading":
+                                triviaMessage = extract(subPayloadJSON);
+                                updateUI(triviaMessage, subPayloadJSON.getString("answer"), null); //todo get team answer
                                 break;
                         }
                     }
