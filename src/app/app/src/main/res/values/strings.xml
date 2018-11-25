@@ -47,6 +47,8 @@
     <string name="join_team">Join team</string>
     <string name="create_team">Create Team</string>
     <string name="enter_team_name">Enter Team Name</string>
+    <string name="textmissing">TextMissing</string>
+    <string name="slide_desc">Slide Image</string>
 
     >>>>>>> a7627a513bcd7ac90d14e2087c199a93ff1dfa00
 
