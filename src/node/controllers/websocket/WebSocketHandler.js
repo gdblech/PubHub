@@ -222,47 +222,46 @@ class WebSocketHandler {
 					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage());
 				this.sendToPlayers(response);
 			} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.Next) {
-				let next = await this.activeTrivia.next();
-				if (next.type === 'round') {
-					let response = new ServerMessages.ServerHostMessage(
-						ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
-					this.activeTrivia.host.client.send(JSON.stringify(response));
+				try {
+					let next = await this.activeTrivia.next();
+					if (next.type === 'round') {
+						let response = new ServerMessages.ServerHostMessage(
+							ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
+						this.activeTrivia.host.client.send(JSON.stringify(response));
 
-					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage());
-					this.sendToPlayers(response);
-				} else if (next.type === 'question') {
-					let response = new ServerMessages.ServerHostMessage(
-						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Question, next.question).toServerMessage();
-					this.activeTrivia.host.client.send(JSON.stringify(response));
+						response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage());
+						this.sendToPlayers(response);
+					} else if (next.type === 'question') {
+						let response = new ServerMessages.ServerHostMessage(
+							ServerMessages.ServerHostMessage.MESSAGE_TYPES.Question, next.question).toServerMessage();
+						this.activeTrivia.host.client.send(JSON.stringify(response));
 
-					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
-					this.sendToPlayers(response);
-				} else if (next.type === 'grading') {
-					for (let i = 0; i < next.assignments.length; i++) {
-						let response = new ServerMessages.ServerPlayerMessage(
-							ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, {
-								question: next.question,
-								teamAnswers: next.assignments[i].teamAnswers
-							}).toServerMessage();
-						this.sendToUser(JSON.stringify(response), next.assignments[i].team);
+						response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
+						this.sendToPlayers(response);
+					} else if (next.type === 'grading') {
+						for (let i = 0; i < next.assignments.length; i++) {
+							let response = new ServerMessages.ServerPlayerMessage(
+								ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, {
+									question: next.question,
+									teamAnswers: next.assignments[i].teamAnswers
+								}).toServerMessage();
+							this.sendToUser(JSON.stringify(response), next.assignments[i].team.teamLeader);
+						}
+						let response = new ServerMessages.ServerHostMessage(
+							ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
+						this.activeTrivia.host.client.send(JSON.stringify(response));
+
+					} else if (next.type === 'end') {
+						logger.debug('end game');
+					} else if (next.type === 'scoreboard') {
+						logger.debug('scoreboard');
 					}
-					let response = new ServerMessages.ServerHostMessage(
-						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, {
-							question: question,
-
-						}).toServerMessage();
-					this.activeTrivia.host.client.send(JSON.stringify(response));
-
-					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage());
-					this.sendToPlayers(response);
-				} else if (next.type === 'end') {
-					logger.debug('end game');
-				} else if (next.type === 'scoreboard') {
-					logger.debug('scoreboard');
+				} catch (err) {
+					this.sendError('Game not started', client);
 				}
+
 			} else {
 				this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
 			}
