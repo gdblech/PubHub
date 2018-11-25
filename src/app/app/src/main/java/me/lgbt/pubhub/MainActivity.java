@@ -35,6 +35,7 @@ import me.lgbt.pubhub.main.TeamAnswerFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
+import me.lgbt.pubhub.trivia.utils.Answer;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 import me.lgbt.pubhub.interfaces.HostListener;
 import me.lgbt.pubhub.interfaces.PlayListener;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private String phbToken;
     private WebSocket ws;
 
+
     private ChatFragment chatFrag;
     private Fragment triviaFrag;
     private ScoreFragment scoreFrag;
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private int gameID;
     private boolean teamLead = false;
     private String qrCode = "";
+    private int currentRound = -1;
+    private int currentQuestion = -1;
 
     /**
      * Handles when a chat message is sent from the chat fragment
@@ -266,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     @Override
     public void answerClicked(String data) {
-        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerSubmission\",\"payload\":{\"answer\":\""+ data +"\"}}}";
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerSubmission\",\"payload\":{\"roundNumber\": "+ currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\""+ data +"\"}}}";
         ws.send(startGameJSON);
         if(teamLead){
             triviaTracker = TEAMANSWER;
@@ -316,11 +320,20 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      * update the UI on the grading fragment
      * @param msg trivia slide to display
      * @param answerGiven answer given by the server to check against
-     * @param answer the answer given by the team
      */
-    private void updateUI(TriviaMessage msg, String answerGiven, String answer ){
+    private void updateUI(TriviaMessage msg, String answerGiven){
         if(!hosting){
-            grading.updateUI(msg, answerGiven, answer);
+            grading.updateUI(msg, answerGiven);
+        }
+    }
+
+    /**
+     *  adds the list of answers to the grading fragment
+     * @param answers array of answersto be graded
+     */
+    private void answerRunner(Answer[] answers){
+        if(!hosting){
+            grading.answerList(answers);
         }
     }
 
@@ -356,8 +369,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     @Override
     public void nameChosen(String teamName) {
-        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
-        ws.send(startGameJSON);
+        String gameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
+        ws.send(gameJSON);
     }
 
     /**
@@ -374,13 +387,30 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     /**
      * Get the whether the answer is right or wrong
-     * @param grade true for correct answer, false for wrong
+     * @param answers answer array thath as been graded
      */
     @Override
-    public void answerGraded(boolean grade) {
-        //todo change message parameters
-       // String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
-        //ws.send(startGameJSON);
+    public void answerGraded(Answer[] answers) {
+        JSONObject obj = new JSONObject();
+        JSONArray ans = new JSONArray();
+        for(int i = 0; i < answers.length; i++){
+            JSONObject ansObj = new JSONObject();
+            try {
+                ansObj.put("teamId", answers[i].getTeamID());
+                ansObj.put("correct", answers[i].isCorrect());
+                ans.put(ansObj);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            obj.put("teamGrades",ans);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String gameJSON = "{\"messageType\": \"PlayerServerMessage\",\"payload\": {\"messageType\": \"Grading\",\"payload\": {\"questionNumber\": " + currentQuestion + ",\"roundNumber\": " + currentRound;
+        gameJSON = gameJSON + obj.toString();
+        ws.send(gameJSON);
     }
 
     @Override
@@ -438,6 +468,16 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     private Context getContext(){
         return this;
+    }
+
+    private Answer[] gradeExtractor(JSONArray array) throws JSONException {
+        int length = array.length();
+        Answer[] answers = new Answer[length];
+        for(int i = 0; i < length; i++){
+            JSONObject obj = array.getJSONObject(i);
+            answers[i] = new Answer(obj.getString("answer"), obj.getInt("teamId"));
+        }
+        return answers;
     }
 
 
@@ -552,12 +592,16 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 output(triviaMessage);
                                 break;
                             case "AnswerSubmission":
+                                teamAnswer.addAnswer(subPayloadJSON.getString("answer"));
                                 break;
                             case "FinalAnswerResponse":
                                 break;
                             case "Grading":
+                                currentQuestion = subPayloadJSON.getInt("questionNumber");
+                                currentRound = subPayloadJSON.getInt("roundNumber");
                                 triviaMessage = extract(subPayloadJSON);
-                                updateUI(triviaMessage, subPayloadJSON.getString("answer"), null); //todo get team answer
+                                updateUI(triviaMessage, subPayloadJSON.getString("answer"));
+                                answerRunner(gradeExtractor(subPayloadJSON.getJSONArray("teamAnswers")));
                                 break;
                         }
                     }
