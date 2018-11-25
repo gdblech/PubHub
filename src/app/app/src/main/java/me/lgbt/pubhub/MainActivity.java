@@ -21,14 +21,17 @@ import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
+import me.lgbt.pubhub.interfaces.GradingListener;
 import me.lgbt.pubhub.interfaces.JoinTeamListener;
 import me.lgbt.pubhub.interfaces.TeamNameCreatedListenser;
 import me.lgbt.pubhub.main.ChatFragment;
 import me.lgbt.pubhub.main.CreateTeam;
+import me.lgbt.pubhub.main.GradingFragment;
 import me.lgbt.pubhub.main.HostFragment;
 import me.lgbt.pubhub.main.JoinTeam;
 import me.lgbt.pubhub.main.PlayFragment;
 import me.lgbt.pubhub.main.ScoreFragment;
+import me.lgbt.pubhub.main.TeamAnswerFragment;
 import me.lgbt.pubhub.main.TeamFragment;
 import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
@@ -45,17 +48,18 @@ import okio.ByteString;
 
 public class MainActivity extends AppCompatActivity implements ChatClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener, TeamAnswerListener,
-        JoinTeamListener, TeamNameCreatedListenser {
+        JoinTeamListener, TeamNameCreatedListenser, GradingListener {
     final static int NOGAME = 0; //waiting for open
     final static int NOTONTEAM = 1; // JoinTeam
     final static int TEAMNOEXIST = 2; //Create team
-    final static int PLAYING = 3; //if on a tram and ready to play
+    final static int PLAYING = 3; //if on a team and ready to play
+    final static int TEAMANSWER = 4; //if team lead, you can chose team answer.
+    final static int GRADING = 5; //if grading is now active
 
     private int triviaTracker = -1;
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
-    private String textFromFragment;
 
     private ChatFragment chatFrag;
     private Fragment triviaFrag;
@@ -63,21 +67,26 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private TeamFragment teamFrag;
     private CreateTeam createTeam;
     private JoinTeam joinTeam;
+    private TeamAnswerFragment teamAnswer;
     private WaitingOpenFragment waiting;
+    private GradingFragment grading;
 
     private Fragment active;
     private Fragment currentTriv;
 
     private BottomNavigationView navBar;
-    private String playAnswer;
     private FragmentManager manager;
     private boolean hosting = false;
     private int gameID;
+    private boolean teamLead = false;
     private String qrCode = "";
 
+    /**
+     * Handles when a chat message is sent from the chat fragment
+     * @param data the message the use wants to send
+     */
     @Override
     public void clicked(String data) {
-        textFromFragment = data;
         ClientChatMessage message = new ClientChatMessage(data);
         ws.send(message.toString());
     }
@@ -109,11 +118,15 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
             scoreFrag = new ScoreFragment();
             teamFrag = new TeamFragment();
+            grading = new GradingFragment();
+            teamAnswer = new TeamAnswerFragment();
             active = chatFrag;
 
 
             manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, waiting).hide(waiting).commit();
+            manager.beginTransaction().add(R.id.fragContainer, teamAnswer).hide(teamAnswer).commit();
+            manager.beginTransaction().add(R.id.fragContainer, grading).hide(grading).commit();
             manager.beginTransaction().add(R.id.fragContainer, createTeam).hide(createTeam).commit();
             manager.beginTransaction().add(R.id.fragContainer, joinTeam).hide(joinTeam).commit();
             manager.beginTransaction().add(R.id.fragContainer, triviaFrag).hide(triviaFrag).commit();
@@ -154,6 +167,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             case PLAYING:
                 currentTriv = triviaFrag;
                 break;
+            case GRADING:
+                currentTriv = grading;
+                break;
+            case TEAMANSWER:
+                currentTriv = teamAnswer;
+                break;
         }
         if(navBar.getSelectedItemId() == R.id.navigation_trivia){
             manager.beginTransaction().show(currentTriv).commit();
@@ -185,6 +204,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         client.dispatcher().executorService().shutdown();
     }
 
+    /*
+     * Start MainActivity click controllers
+     */
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -212,17 +235,49 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         return false;
     }
 
-    /*
-     * Start Playing Fragment control code
+    /**
+     * On back button press, takes host back to host option screen
      */
-    //a customer sends in an answer
     @Override
-    public void answerClicked(String data) {
-        playAnswer = data;
-        //todo get answer and send to team/grading
+    public void onBackPressed() {
+        if (hosting && gameID != -1){
+            closeGame();
+            Intent nextActivity = new Intent(this, HostOptionsActivity.class);
+            Bundle extras = new Bundle();
+            extras.putString(IntentKeys.PUBHUB, phbToken);
+            extras.putInt(IntentKeys.GAMEID, -1);
+            nextActivity.putExtras(extras);
+            startActivity(nextActivity);
+            finish();
+        }else{
+            //todo add back button for players
+        }
     }
 
-    //host navigates either to the next or previous slide
+    /*
+     * End MainActivity click controllers
+     *
+     * Start Playing Fragment control code
+     */
+
+    /**
+     * Gets the answer from the customer when press the submit button.
+     * @param data the answer returned from the customer
+     */
+    @Override
+    public void answerClicked(String data) {
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerSubmission\",\"payload\":{\"answer\":\""+ data +"\"}}}";
+        ws.send(startGameJSON);
+        if(teamLead){
+            triviaTracker = TEAMANSWER;
+            trivSwitcher();
+        }
+    }
+
+    /**
+     * gets the button push from the host fragment.
+     * @param button which button was pushed, see final ints for more info.
+     */
     @Override
     public void slideNavClicked(int button) {
         switch (button) {
@@ -245,7 +300,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
-    //update the info on the current slide
+    /**
+     * Updates the playing of hosting fragments with the current slide from the server.
+     * @param msg contains the message from the server to be displayed
+     */
     private void updateUI(TriviaMessage msg) {
         if (hosting) {
             ((HostFragment) triviaFrag).setSlide(msg);
@@ -254,8 +312,22 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
+    /**
+     * update the UI on the grading fragment
+     * @param msg trivia slide to display
+     * @param answerGiven answer given by the server to check against
+     * @param answer the answer given by the team
+     */
+    private void updateUI(TriviaMessage msg, String answerGiven, String answer ){
+        if(!hosting){
+            grading.updateUI(msg, answerGiven, answer);
+        }
+    }
 
-    //being the game
+    /**
+     *  changes the trivia fragment from lockout mode to playMode
+     * @param hos whether the user is a host or not
+     */
     private void startGame(final boolean hos) {
         runOnUiThread(new Runnable() {
             @Override
@@ -266,11 +338,62 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             }
         });
     }
+
+    /**
+     *  Takes the qrCode scanned by the user and sends it to the server
+     * @param qrCode the code scanned by the user from the table
+     */
+    @Override
+    public void qrCodeScanned(String qrCode){
+        this.qrCode = qrCode;
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"JoinTeam\",\"payload\":{\"QRCode\":\"" + qrCode + "\"}}}";
+        ws.send(startGameJSON);
+    }
+
+    /**
+     *  gets the team name from the customer and sends it to the server
+     * @param teamName the name chosen by the customer for their team
+     */
+    @Override
+    public void nameChosen(String teamName) {
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
+        ws.send(startGameJSON);
+    }
+
+    /**
+     * if the user is already on the team updates the UI to tell them so they scanned the QR code for the wrong team.
+     */
+    private void wrongTeam() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                joinTeam.upDateText("Wrong table, Please Try Again");
+            }
+        });
+    }
+
+    /**
+     * Get the whether the answer is right or wrong
+     * @param grade true for correct answer, false for wrong
+     */
+    @Override
+    public void answerGraded(boolean grade) {
+        //todo change message parameters
+       // String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
+        //ws.send(startGameJSON);
+    }
+
+    @Override
+    public void teamAnswerChosen(String answer) {
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"answer\":\""+ answer +"\"}}}";
+        ws.send(startGameJSON);
+    }
+
     /*
      * End Playing Fragment Control Code
      */
 
-    /*
+    /**
      * Opens game so that teams can be created and joined.
      * Tells server that game has started.
      * Game ID is from the TriviaGameListActivity.sendMessagePlay(int id) method.
@@ -284,11 +407,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private void closeGame() {
         String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"EndGame\"}}";
         ws.send(endGameJSON);
-    }
-
-    @Override
-    public void teamAnswerChosen(String answer) {
-        //todo send team's answer to backend
     }
 
     private void output(final UserMessage mes) {
@@ -317,47 +435,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             }
         });
     }
-    private void wrongTeam() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                joinTeam.upDateText("Wrong table, Please Try Again");
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (hosting && gameID != -1){
-            closeGame();
-            Intent nextActivity = new Intent(this, HostOptionsActivity.class);
-            Bundle extras = new Bundle();
-            extras.putString(IntentKeys.PUBHUB, phbToken);
-            extras.putInt(IntentKeys.GAMEID, -1);
-            nextActivity.putExtras(extras);
-            startActivity(nextActivity);
-            finish();
-        }else{
-            //todo add back button for players
-        }
-    }
-
-    @Override
-    public void qrCodeScanned(String qrCode){
-        this.qrCode = qrCode;
-        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"JoinTeam\",\"payload\":{\"QRCode\":\"" + qrCode + "\"}}}";
-        ws.send(startGameJSON);
-    }
-
-    @Override
-    public void nameChosen(String teamName) {
-        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
-        ws.send(startGameJSON);
-    }
 
     private Context getContext(){
         return this;
     }
+
+
     private final class EchoWebSocketListener extends WebSocketListener {
 
 
@@ -370,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            System.out.println(text);
+            //System.out.println(text);
             try {
                 JSONObject messageObject = new JSONObject(text);
                 JSONObject payloadJSON = messageObject.getJSONObject("payload");
@@ -419,11 +502,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
                                 if(isTeamCreated){
                                     triviaTracker = PLAYING;
+                                    teamLead = true;
                                     trivSwitcher();
                                 }else{
                                     String reasonTC = subPayloadJSON.getString("reason");
                                     if(reasonTC.equals("Team already exists for table")){
-                                        Toast.makeText( getContext(), "A Team Name Is Required", Toast.LENGTH_LONG).show();
+                                        Toast.makeText( getContext(), reasonTC, Toast.LENGTH_LONG).show();
                                     }
                                 }
                                 break;
@@ -472,6 +556,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             case "FinalAnswerResponse":
                                 break;
                             case "Grading":
+                                triviaMessage = extract(subPayloadJSON);
+                                updateUI(triviaMessage, subPayloadJSON.getString("answer"), null); //todo get team answer
                                 break;
                         }
                     }

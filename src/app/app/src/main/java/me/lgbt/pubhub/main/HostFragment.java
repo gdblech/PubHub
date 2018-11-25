@@ -44,11 +44,6 @@ public class HostFragment extends Fragment implements View.OnClickListener {
     private Button launchGame;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         FragmentActivity act = getActivity();
