@@ -222,7 +222,7 @@ class WebSocketHandler {
 					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage());
 				this.sendToPlayers(response);
 			} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.Next) {
-				let next = this.activeTrivia.next();
+				let next = await this.activeTrivia.next();
 				if (next.type === 'round') {
 					let response = new ServerMessages.ServerHostMessage(
 						ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
@@ -546,13 +546,13 @@ class WebSocketHandler {
 				await answer.setTriviaQuestion(question);
 				await answer.setTeam(team);
 
-				this.activeTrivia.teamsAnswered++;
+				this.activeTrivia.teamsSubmitted++;
 				let hostMessage = new ServerMessages.ServerHostMessage(
 					ServerMessages.ServerHostMessage.MESSAGE_TYPES.AnswerStatus, {
 						roundNumber: this.activeTrivia.currentRound,
 						questionNumber: this.activeTrivia.currentQuestion,
 						numTeams: this.activeTrivia.teams.length,
-						answersSubmitted: this.activeTrivia.teamsAnswered
+						answersSubmitted: this.activeTrivia.teamsSubmitted
 					}
 				).toServerMessage();
 
