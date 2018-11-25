@@ -139,10 +139,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
             if(hosting){
                 triviaTracker = PLAYING;
-                trivSwitcher();
+                triviaSwitcher();
             }else{
                 triviaTracker = NOGAME;
-                trivSwitcher();
+                triviaSwitcher();
             }
         }
         navBar.setSelectedItemId(R.id.navigation_chat);
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
-    private void trivSwitcher(){
+    private void triviaSwitcher(){
         if (currentTriv != null) {
             manager.beginTransaction().hide(currentTriv).commit();
         }
@@ -270,11 +270,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     @Override
     public void answerClicked(String data) {
-        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerSubmission\",\"payload\":{\"roundNumber\": "+ currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\""+ data +"\"}}}";
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerQuestion\",\"payload\":{\"roundNumber\": "+ currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\""+ data +"\"}}}";
         ws.send(startGameJSON);
         if(teamLead){
             triviaTracker = TEAMANSWER;
-            trivSwitcher();
+            triviaSwitcher();
         }
     }
 
@@ -415,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     @Override
     public void teamAnswerChosen(String answer) {
-        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"answer\":\""+ answer +"\"}}}";
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"roundNumber\": "+ currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\""+ data +"\"}}}";
         ws.send(startGameJSON);
     }
 
@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 if(isTeamCreated){
                                     triviaTracker = PLAYING;
                                     teamLead = true;
-                                    trivSwitcher();
+                                    triviaSwitcher();
                                 }else{
                                     String reasonTC = subPayloadJSON.getString("reason");
                                     if(reasonTC.equals("Team already exists for table")){
@@ -558,14 +558,14 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
                                 if(success){
                                     triviaTracker = PLAYING;
-                                    trivSwitcher();
+                                    triviaSwitcher();
                                 }else{
                                     String reason = subPayloadJSON.getString("reason");
                                     if(reason.equals("User already belongs to a team")){
                                         wrongTeam();
                                     }else{
                                         triviaTracker = TEAMNOEXIST;
-                                        trivSwitcher();
+                                        triviaSwitcher();
                                     }
                                 }
                                 break;
@@ -574,10 +574,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 //                                if(subPayloadJSON.getBoolean("onTeam")){ //todo
                                 if(false) {
                                     triviaTracker = PLAYING;
-                                    trivSwitcher();
+                                    triviaSwitcher();
                                 }else if(!hosting){
                                     triviaTracker = NOTONTEAM;
-                                    trivSwitcher();
+                                    triviaSwitcher();
                                 }
                                 output(extract(gameJSON));
                                 break;
@@ -585,13 +585,17 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 startGame(hosting);
                             case "RoundStart":
                                 output(extract(subPayloadJSON));
+                                currentRound = subPayloadJSON.getInt("roundNumber");
                                 break;
                             case "Question":
                                 triviaMessage = extract(subPayloadJSON);
                                 triviaMessage.isQuestion(true);
+                                currentQuestion = subPayloadJSON.getInt("questionNumber");
                                 output(triviaMessage);
                                 break;
                             case "AnswerSubmission":
+                                currentRound = subPayloadJSON.getInt("roundNumber");
+                                currentQuestion = subPayloadJSON.getInt("questionNumber");
                                 teamAnswer.addAnswer(subPayloadJSON.getString("answer"));
                                 break;
                             case "FinalAnswerResponse":
