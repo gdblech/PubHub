@@ -186,6 +186,34 @@ Answers submitted will be sent to team leader for review.
 Only the team leader can submit a FinalAnswer.
 </td>
 </tr>
+<tr>
+<td>PlayerServerMessage</td>
+<td>FinalAnswer</td>
+<td>
+<pre>
+{
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "Grading",
+    "payload": {
+      "questionNumber": 1,
+	  "roundNumber": 0,
+      "teamGrades": [{
+        "teamId": 1,
+        "correct": false
+      },{
+        "teamId": 5,
+        "correct": true
+      }]
+    }
+  }
+}
+</pre>
+</td>
+<td>
+Only the team leader can submit grades.
+</td>
+</tr>
 </table>
 
 ## Server Messages
@@ -207,14 +235,14 @@ Only the team leader can submit a FinalAnswer.
   "payload": {
   "messages": [
     {
-    "message": "eat my shorts",
-    "timestamp": "2018-10-14T16:36:35.000Z",
-    "user": "tcox3799"
+      "message": "eat my shorts",
+      "timestamp": "2018-10-14T16:36:35.000Z",
+      "user": "tcox3799"
     },
     {
-    "message": "heyo",
-    "timestamp": "2018-10-14T16:38:22.000Z",
-    "user": "keshek"
+      "message": "heyo",
+      "timestamp": "2018-10-14T16:38:22.000Z",
+      "user": "keshek"
     }
   ]
   }
@@ -281,7 +309,7 @@ When user connects they receive an array of all messages. Receive array with sin
     "messageType": "Question",
     "payload": {
       "id": 3,
-	  "roundNumber": 0,
+      "roundNumber": 0,
       "questionNumber": 1,
       "title": "Smells Like Nirvana",
       "text": "Released 1992",
@@ -303,7 +331,7 @@ When user connects they receive an array of all messages. Receive array with sin
     "messageType": "Grading",
     "payload": {
       "id": 3,
-	  "roundNumber": 0,
+    "roundNumber": 0,
       "questionNumber": 1,
       "title": "Smells Like Nirvana",
       "text": "Released 1992",
@@ -325,10 +353,10 @@ When user connects they receive an array of all messages. Receive array with sin
   "payload": {
     "messageType": "AnswerStatus",
     "payload": {
-	  "roundNumber": 0,
+    "roundNumber": 0,
       "questionNumber": 1,
       "numTeams": 3,
-	  "answersSubmitted": 2
+    "answersSubmitted": 2
     }
   }
 }
@@ -557,10 +585,18 @@ If success is false, message is sent to only submitter and reason is included. I
     "payload": {
       "id": 3,
       "questionNumber": 1,
+	  "roundNumber": 0,
       "title": "Smells Like Nirvana",
       "text": "Released 1992",
       "image": "base64 webp image data",
-      "answer": "Smells Like Teen Spirit"
+      "answer": "Smells Like Teen Spirit",
+      "teamAnswers": [{
+        "teamId": 1,
+        "answer": "Come as you are"
+      },{
+        "teamId": 5,
+        "answer": "Smells Like Teen Spirit"
+      }]
     }
   }
 }
