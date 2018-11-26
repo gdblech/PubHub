@@ -3,8 +3,8 @@ const ClientMessages = require('./ClientMessages');
 const ServerMessages = require('./ServerMessages');
 const Models = require('../../models');
 const ws = require('ws');
-const log4js = require('log4js');
 const ActiveTriviaGame = require('./ActiveTriviaGame');
+const log4js = require('log4js');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
@@ -259,7 +259,7 @@ class WebSocketHandler {
 						logger.debug('scoreboard');
 					}
 				} catch (err) {
-					logger.debug(`Error: ${err}`);
+					logger.error(`Error: ${err}`);
 					this.sendError('Game not started', client);
 				}
 

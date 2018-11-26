@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
 		});
 		Team.hasMany(models.TeamAnswer);
 		Team.hasMany(models.AnswerGrade, {
-			as: 'gradingTeam'
+			as: 'gradingTeam',
+			foreignKey: 'gradingTeamId'
 		});
 		Team.belongsTo(models.TriviaGame);
 	};
