@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.Utils.Utils;
 import me.lgbt.pubhub.interfaces.TeamNameCreatedListenser;
 
 
@@ -52,6 +53,7 @@ public class CreateTeam extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
+        Utils.hideKeyboard(view);
         switch (view.getId()){
             case R.id.createTeamButton:
                 name = text.getText().toString();

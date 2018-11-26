@@ -90,12 +90,13 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        closeKeyboard();
         switch (view.getId()) {
             case R.id.doneSlideButton: {
                 passer.answerClicked(answer.getText().toString());
                 answer.setVisibility(View.GONE);
                 answer.setText("");
-                closeKeyboard();
+
                 submitAnswer.hide();
             }
         }
