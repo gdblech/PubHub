@@ -313,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     private void updateUI(TriviaMessage msg) {
         if (hosting) {
+            ((HostFragment)triviaFrag).switchMode(false);
             ((HostFragment) triviaFrag).setSlide(msg);
         } else {
             ((PlayFragment) triviaFrag).setSlide(msg);
@@ -327,7 +328,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     private void updateUI(TriviaMessage msg, String answerGiven) {
         if (!hosting) {
+            triviaTracker = GRADING;
+            triviaSwitcher();
             grading.updateUI(msg, answerGiven);
+        }else {
+            ((HostFragment)triviaFrag).switchMode(true);
+            ((HostFragment)triviaFrag).setSlide(msg,answerGiven);
         }
     }
 
@@ -417,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String gameJSON = "{\"messageType\": \"PlayerServerMessage\",\"payload\": {\"messageType\": \"Grading\",\"payload\": {\"questionNumber\": " + currentQuestion + ",\"roundNumber\": " + currentRound;
+        String gameJSON = "{\"messageType\": \"PlayerServerMessage\",\"payload\": {\"messageType\": \"GradeQuestion\",\"payload\": {\"questionNumber\": " + currentQuestion + ",\"roundNumber\": " + currentRound;
         gameJSON = gameJSON + obj.toString();
         ws.send(gameJSON);
     }
@@ -468,6 +474,15 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         });
     }
 
+    private void output(final TriviaMessage mes, final String answer ) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateUI(mes, answer);
+            }
+        });
+    }
+
     private void output(final String mes) {
         runOnUiThread(new Runnable() {
             @Override
@@ -512,10 +527,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            //System.out.println(text);
+            System.out.println(text);
             try {
                 JSONObject messageObject = new JSONObject(text);
-                JSONObject payloadJSON = messageObject.getJSONObject("payload");
+                JSONObject payloadJSON = messageObject.getJSONObject("payload"); // todo error here
 
                 String messageType = messageObject.getString("messageType");
 
@@ -538,13 +553,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                     JSONObject subPayloadJSON = payloadJSON.getJSONObject("payload");
 
                     if (messageType.equals("ServerHostMessage")) {
-                        String qtitle;
-                        String qtext;
-                        String qimage;
-                        TriviaMessage triviaMessage;
-
                         if (subMessageType.equals("Grading")) {
-                            // TODO need to send host to grading fragment somehow
+                            output(extract(subPayloadJSON), subPayloadJSON.getString("answer"));
                         } else {
                             output(extract(subPayloadJSON));
                         }
@@ -557,7 +567,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         String qrcode;
                         String qimage;
                         String teamName;
-                        int currentQuestion;
 
                         TriviaMessage triviaMessage;
 
@@ -595,21 +604,23 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 }
                                 break;
                             case "GameInfo":
-                                JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
+                                if(subPayloadJSON.getString("status") != "closed") {
+                                    JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
 //                                if(subPayloadJSON.getBoolean("onTeam")){ //todo
-                                if (false) {
-                                    triviaTracker = PLAYING;
-                                    triviaSwitcher();
-                                } else if (!hosting) {
-                                    triviaTracker = NOTONTEAM;
-                                    triviaSwitcher();
+                                    if (false) {
+                                        triviaTracker = PLAYING;
+                                        triviaSwitcher();
+                                    } else if (!hosting) {
+                                        triviaTracker = NOTONTEAM;
+                                        triviaSwitcher();
+                                    }
+                                    output(extract(gameJSON));
+                                    break;
                                 }
-                                output(extract(gameJSON));
-                                break;
                             case "TriviaStart":
                                 startGame(hosting);
                             case "RoundStart":
-
+                                output(extract(subPayloadJSON));
                                 break;
                             case "Question":
                                 triviaMessage = extract(subPayloadJSON);
@@ -625,10 +636,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 System.out.println("FinalAnswerResponse");
                                 break;
                             case "Grading":
-                                currentQuestion = subPayloadJSON.getInt("questionNumber");
-                                currentRound = subPayloadJSON.getInt("roundNumber");
-                                triviaMessage = extract(subPayloadJSON);
-                                updateUI(triviaMessage, subPayloadJSON.getString("answer"));
+                                JSONObject subSubPayloadJSON = subPayloadJSON.getJSONObject("question");
+                                currentQuestion = subSubPayloadJSON.getInt("questionNumber");
+                                currentRound = subSubPayloadJSON.getInt("roundNumber");
+                                triviaMessage = extract(subSubPayloadJSON);
+                                updateUI(triviaMessage, subSubPayloadJSON.getString("answer"));
                                 answerRunner(gradeExtractor(subPayloadJSON.getJSONArray("teamAnswers")));
                                 break;
                         }
@@ -643,16 +655,17 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             String title = Payload.getString("title");
             String text = Payload.getString("text");
             String image = Payload.getString("image");
-            int currentRound = -1;
-            int currentQuestion = -1;
 
             try {
                 currentRound = Payload.getInt("roundNumber");
-                currentQuestion = Payload.getInt("questionNumber");
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+            } catch (JSONException e) {
+                currentRound = -1;
             }
-
+            try {
+                currentQuestion = Payload.getInt("questionNumber");
+            } catch (JSONException e) {
+                currentQuestion = -1;
+            }
             return new TriviaMessage(title, text, image, currentRound, currentQuestion);
         }
 

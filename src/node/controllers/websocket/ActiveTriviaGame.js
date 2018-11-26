@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+const Models = require('../../models');
 class ActiveTriviaGame {
 	constructor(triviaGame, host, wss) {
 		this.triviaGame = triviaGame;
@@ -146,8 +148,6 @@ class ActiveTriviaGame {
 	}
 
 	async assignAnswers() {
-		const _ = require('lodash');
-		const Models = require('../../models');
 		let rotate1;
 		let rotate2;
 		if (this.teams.length > 2) {
@@ -203,8 +203,78 @@ class ActiveTriviaGame {
 
 			assignments.push(assignment);
 		}
-		this.currentAssignments = this.assignments;
+		this.currentAssignments = assignments;
 		return assignments;
+	}
+
+	async submitGrades(submission, user) {
+
+		if (submission.roundNumber !== this.currentRound || submission.questionNumber !== this.currentQuestion) {
+			throw 'Invalid question number';
+		}
+
+		let team;
+		for (let i = 0; i < this.teams.length; i++) {
+			if (this.teams[i].teamLeader.id === user.id) {
+				team = this.teams[i];
+			}
+		}
+
+		if (team === undefined) {
+			throw 'Submitter not leader of a team';
+		}
+
+		let assignment;
+		let assignmentId;
+		for (let i = 0; i < this.currentAssignments.length; i++) {
+			if (team.id === this.currentAssignments[i].team.id) {
+				assignment = this.currentAssignments[i];
+				assignmentId = i;
+			}
+		}
+
+		if (assignment === undefined) {
+			throw 'Team not assigned any questions for grading'
+		}
+
+		if (submission.teamGrades.length != assignment.teamAnswers.length) {
+			throw 'Incorrect number of grades submitted'
+		}
+
+		if (submission.teamGrades.length === 1) {
+			if (submission.teamGrades[0].teamId !== assignment.teamAnswers[0].teamId) {
+				throw 'Team id(s) does not match assignment'
+			}
+		} else {
+			if (submission.teamGrades[0].teamId === assignment.teamAnswers[0].teamId) {
+				if (submission.teamGrades[1].teamId !== assignment.teamAnswers[1].teamId) {
+					throw 'Team id(s) does not match assignment'
+				}
+			} else if (submission.teamGrades[0].teamId === assignment.teamAnswers[1].teamId) {
+				if (submission.teamGrades[1].teamId !== assignment.teamAnswers[0].teamId) {
+					throw 'Team id(s) does not match assignment'
+				}
+			} else {
+				throw 'Team id(s) does not match assignment'
+			}
+		}
+		for (let i = 0; i < submission.teamGrades.length; i++) {
+			let grade = await Models.AnswerGrade.create({
+				correct: submission.teamGrades[i].correct
+			});
+
+			let answer = await Models.TeamAnswer.find({
+				where: {
+					teamId: submission.teamGrades[i].teamId,
+					triviaQuestionId: this.triviaGame.triviaRounds[this.currentRound].triviaQuestions[this.currentQuestion].id
+				}
+			});
+
+			await grade.setGradingTeam(team);
+			await grade.setTeamAnswer(answer);
+			this.currentAssignments.splice(assignmentId, 1);
+			this.teamsSubmitted++;
+		}
 	}
 }
 
