@@ -60,6 +60,7 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
             listenerRef = new WeakReference<>(listener);
             title = itemView.findViewById(R.id.teamAnswerText);
             select = itemView.findViewById(R.id.teamAnswerButton);
+            select.setOnClickListener(this);
         }
 
         @Override

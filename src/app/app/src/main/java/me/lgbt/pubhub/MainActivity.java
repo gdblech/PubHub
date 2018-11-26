@@ -177,7 +177,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 currentTriv = teamAnswer;
                 break;
         }
-        if (navBar.getSelectedItemId() == R.id.navigation_trivia) {
+        if(navBar.getSelectedItemId() == R.id.navigation_trivia){
+            active = currentTriv;
             manager.beginTransaction().show(currentTriv).commit();
         }
     }
@@ -425,6 +426,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     public void teamAnswerChosen(String answer) {
         String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"roundNumber\": " + currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\"" + answer + "\"}}}";
         ws.send(startGameJSON);
+        teamAnswer.dumpAnswers();
+        triviaTracker = PLAYING;
+        triviaSwitcher();
     }
     /*
      * End Playing Fragment Control Code
@@ -469,6 +473,14 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             @Override
             public void run() {
                 //chatFrag.addMessage(mes);
+            }
+        });
+    }
+    private void outputAnswer(final String mes) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                teamAnswer.addAnswer(mes);
             }
         });
     }
@@ -604,9 +616,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             case "AnswerSubmission":
                                 currentRound = subPayloadJSON.getInt("roundNumber");
                                 currentQuestion = subPayloadJSON.getInt("questionNumber");
-                                teamAnswer.addAnswer(subPayloadJSON.getString("answer"));
+                                outputAnswer(subPayloadJSON.getString("answer"));
                                 break;
                             case "FinalAnswerResponse":
+                                System.out.println("FinalAnswerResponse");
                                 break;
                             case "Grading":
                                 currentQuestion = subPayloadJSON.getInt("questionNumber");
@@ -619,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                     }
                 }
             } catch (org.json.JSONException e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
