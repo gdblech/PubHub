@@ -423,8 +423,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        //TODO UPDATE JSON
         String gameJSON = "{\"messageType\": \"PlayerServerMessage\",\"payload\": {\"messageType\": \"GradeQuestion\",\"payload\": {\"questionNumber\": " + currentQuestion + ",\"roundNumber\": " + currentRound;
-        gameJSON = gameJSON + obj.toString();
+        gameJSON = gameJSON + obj.toString().substring(1);
+        int length = gameJSON.length();
+        gameJSON = gameJSON.substring(0,length-2);
+        System.out.println("[Player-Server Message] " + gameJSON);
         ws.send(gameJSON);
     }
 
