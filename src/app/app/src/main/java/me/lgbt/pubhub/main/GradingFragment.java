@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.interfaces.GradingListener;
+import me.lgbt.pubhub.trivia.utils.Answer;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
 public class GradingFragment extends Fragment implements View.OnClickListener{
@@ -23,9 +25,11 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
     private TextView answerGiven;
     private TextView teamAnswer;
     private ImageView image;
-    private Button right;
-    private Button wrong;
+    private FloatingActionButton right;
+    private FloatingActionButton wrong;
     private GradingListener passer;
+    private Answer[] answers;
+    int answerTracker = 0;
 
     @Nullable
     @Override
@@ -57,22 +61,36 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
         passer = (GradingListener) context;
     }
 
-    public void updateUI(TriviaMessage msg, String answerGiven, String answer ){
+    public void updateUI(TriviaMessage msg, String answerGiven){
         title.setText(msg.getTitle());
         text.setText(msg.getText());
         image.setImageBitmap(msg.getImage());
         this.answerGiven.setText(answerGiven);
+    }
+    public void updateAnswer(String answer){
         teamAnswer.setText(answer);
     }
+
+    public void answerList(Answer[] answers){
+        this.answers = answers;
+        teamAnswer.setText(answers[answerTracker].getAnswer());
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.answerWrong:
-                passer.answerGraded(false);
+                answers[answerTracker].setCorrect(false);
                 break;
             case R.id.answerCorrect:
-                passer.answerGraded(true);
+                answers[answerTracker].setCorrect(true);
                 break;
+        }
+        answerTracker++;
+        if(answerTracker >= answers.length){
+            passer.answerGraded(answers);
+        }else{
+            teamAnswer.setText(answers[answerTracker].getAnswer());
         }
     }
 }
