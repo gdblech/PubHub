@@ -544,10 +544,13 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         TriviaMessage triviaMessage;
 
                         if (subMessageType.equals("Grading")) {
-                            //todo handle grading
+                            // TODO need to send host to grading fragment somehow
                         } else {
                             output(extract(subPayloadJSON));
                         }
+
+                        /* FROM SERVER TO PLAYER MESSAGES */
+
                     } else if (messageType.equals("ServerPlayerMessage")) {
                         String title;
                         String qtext;
