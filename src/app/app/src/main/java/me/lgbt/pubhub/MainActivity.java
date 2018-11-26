@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
@@ -402,11 +404,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     public void answerGraded(Answer[] answers) {
         JSONObject obj = new JSONObject();
         JSONArray ans = new JSONArray();
-        for (int i = 0; i < answers.length; i++) {
+        for (Answer answer : answers) {
             JSONObject ansObj = new JSONObject();
             try {
-                ansObj.put("teamId", answers[i].getTeamID());
-                ansObj.put("correct", answers[i].isCorrect());
+                ansObj.put("teamId", answer.getTeamID());
+                ansObj.put("correct", answer.isCorrect());
                 ans.put(ansObj);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -427,7 +429,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"roundNumber\": "+ currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\""+ answer +"\"}}}";
         ws.send(startGameJSON);
     }
-
     /*
      * End Playing Fragment Control Code
      */
@@ -596,14 +597,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             case "TriviaStart":
                                 startGame(hosting);
                             case "RoundStart":
-                                output(extract(subPayloadJSON));
-                                currentRound = subPayloadJSON.getInt("roundNumber");
+
                                 break;
                             case "Question":
-                                currentQuestion = subPayloadJSON.getInt("questionNumber");
                                 triviaMessage = extract(subPayloadJSON);
                                 triviaMessage.isQuestion(true);
-                                currentQuestion = subPayloadJSON.getInt("questionNumber");
                                 output(triviaMessage);
                                 break;
                             case "AnswerSubmission":
@@ -632,7 +630,15 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             String title = Payload.getString("title");
             String text = Payload.getString("text");
             String image = Payload.getString("image");
-            int currentRound = Payload.getInt("roundNumber");
+            int currentRound = -1;
+            int currentQuestion = -1;
+
+            try {
+                currentRound = Payload.getInt("roundNumber");
+                currentQuestion = Payload.getInt("questionNumber");
+            } catch(IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
 
             return new TriviaMessage(title, text, image, currentRound, currentQuestion);
         }
