@@ -46,6 +46,9 @@ class ActiveTriviaGame {
 
 	async next() {
 		// Game title screen
+		if (!this.started) {
+			throw 'Game not started';
+		}
 		if (this.currentRound === -1) {
 			this.currentRound = 0;
 			let round = this.triviaGame.triviaRounds[this.currentRound].toJSON();
