@@ -98,6 +98,7 @@ class ServerHostMessage {
 			Question: 'Question',
 			AnswerStatus: "AnswerStatus",
 			Grading: 'Grading',
+			GradingStatus: 'GradingStatus',
 			Scores: 'Scores',
 			Winners: 'Winners'
 		}

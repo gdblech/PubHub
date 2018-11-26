@@ -259,6 +259,7 @@ class WebSocketHandler {
 						logger.debug('scoreboard');
 					}
 				} catch (err) {
+					logger.debug(`Error: ${err}`);
 					this.sendError('Game not started', client);
 				}
 
@@ -582,9 +583,28 @@ class WebSocketHandler {
 					this.sendToUser(teamMessage, team.Users[i]);
 				}
 
-
 			} else {
 				this.sendError('Invalid question number', client);
+			}
+
+
+		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.GradeQuestion) {
+			// TODO: implement grading
+			try {
+				await this.activeTrivia.submitGrades(clientMessage.payload, client.user);
+				// Update host
+				let response = new ServerMessages.ServerHostMessage(
+					ServerMessages.ServerHostMessage.MESSAGE_TYPES.GradingStatus, {
+						roundNumber: this.activeTrivia.currentRound,
+						questionNumber: this.activeTrivia.currentQuestion,
+						numTeams: this.activeTrivia.teams.length,
+						gradesSubmitted: this.activeTrivia.teamsSubmitted
+					}
+				).toServerMessage();
+
+				this.sendToUser(JSON.stringify(response), this.activeTrivia.host);
+			} catch (err) {
+				this.sendError(err, client);
 			}
 
 		} else {
