@@ -254,9 +254,18 @@ class WebSocketHandler {
 						this.activeTrivia.host.client.send(JSON.stringify(response));
 
 					} else if (next.type === 'end') {
-						logger.debug('end game');
+						this.activeTrivia = null;
+						// TODO: test
+						this.wss.clients.forEach((sclient) => {
+							this.sendGameInfo(sclient);
+						})
 					} else if (next.type === 'scoreboard') {
-						logger.debug('scoreboard');
+						let response = new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Scores,
+							next.scores
+						).toServerMessage();
+						this.sendToPlayers(JSON.stringify(response));
+						this.sendToUser(JSON.stringify(response), this.activeTrivia.host);
 					}
 				} catch (err) {
 					logger.error(`Error: ${err}`);
@@ -589,7 +598,6 @@ class WebSocketHandler {
 
 
 		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.GradeQuestion) {
-			// TODO: implement grading
 			try {
 				await this.activeTrivia.submitGrades(clientMessage.payload, client.user);
 				// Update host

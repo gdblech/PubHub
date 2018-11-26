@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 		gameName: DataTypes.STRING,
 		title: DataTypes.STRING,
 		text: DataTypes.STRING,
-		image: DataTypes.STRING,
+		imageId: DataTypes.STRING,
 		completed: DataTypes.BOOLEAN
 	}, {});
 	TriviaGame.associate = function (models) {
@@ -28,8 +28,12 @@ module.exports = (sequelize, DataTypes) => {
 		json.gameName = this.gameName;
 		json.title = this.title;
 		json.text = this.text;
-		json.image = this.image;
+		json.imageId = this.imageID;
 		json.completed = this.completed;
+
+		if (this.image) {
+			json.image = this.image;
+		}
 
 		if (this.triviaRounds) {
 			let rounds = [];
@@ -40,6 +44,19 @@ module.exports = (sequelize, DataTypes) => {
 		}
 
 		return json;
+	};
+
+	TriviaGame.prototype.loadImages = async function () {
+		const imageStore = require('../utils/imageStore');
+
+		if (this.imageId) {
+			this.image = await imageStore.get(this.imageId);
+		}
+		if (this.triviaRounds) {
+			for (let i = 0; i < this.triviaRounds.length; i++) {
+				await this.triviaRounds[i].loadImages();
+			}
+		}
 	};
 
 	TriviaGame.findWithImages = async function (id) {
@@ -75,21 +92,23 @@ module.exports = (sequelize, DataTypes) => {
 			return triviaGame;
 		}
 
-		if (triviaGame.image) {
-			triviaGame.image = await imageStore.get(triviaGame.image);
-		}
+		await triviaGame.loadImages();
 
-		for (let i = 0; i < triviaGame.triviaRounds.length; i++) {
-			if (triviaGame.triviaRounds[i].image) {
-				triviaGame.triviaRounds[i].image = await imageStore.get(triviaGame.triviaRounds[i].image);
-			}
+		// if (triviaGame.image) {
+		// 	triviaGame.image = await imageStore.get(triviaGame.image);
+		// }
 
-			for (let j = 0; j < triviaGame.triviaRounds[i].triviaQuestions.length; j++) {
-				if (triviaGame.triviaRounds[i].triviaQuestions[j].image) {
-					triviaGame.triviaRounds[i].triviaQuestions[j].image = await imageStore.get(triviaGame.triviaRounds[i].triviaQuestions[j].image);
-				}
-			}
-		}
+		// for (let i = 0; i < triviaGame.triviaRounds.length; i++) {
+		// 	if (triviaGame.triviaRounds[i].image) {
+		// 		triviaGame.triviaRounds[i].image = await imageStore.get(triviaGame.triviaRounds[i].image);
+		// 	}
+
+		// 	for (let j = 0; j < triviaGame.triviaRounds[i].triviaQuestions.length; j++) {
+		// 		if (triviaGame.triviaRounds[i].triviaQuestions[j].image) {
+		// 			triviaGame.triviaRounds[i].triviaQuestions[j].image = await imageStore.get(triviaGame.triviaRounds[i].triviaQuestions[j].image);
+		// 		}
+		// 	}
+		// }
 
 		return triviaGame;
 	}
