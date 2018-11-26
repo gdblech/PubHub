@@ -625,4 +625,28 @@ If success is false, message is sent to only submitter and reason is included. I
 </pre>
 </td>
 </tr>
+<tr>
+<td>ServerPlayerMessage</td>
+<td>Scores</td>
+<td>
+<pre>
+{
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "Scores",
+    "payload": {
+      "roundNumber": 1,
+      "teamScores": [{
+        "teamName": "Super Awesome Team Name",
+        "score": "1000000"
+      },{
+        "teamName": "Super Lame Team",
+        "score": "1"
+      }]
+    }
+  }
+}
+</pre>
+</td>
+</tr>
 </table>
