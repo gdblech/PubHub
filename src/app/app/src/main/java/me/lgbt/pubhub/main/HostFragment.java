@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.Utils.Utils;
 import me.lgbt.pubhub.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
@@ -118,6 +119,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
     }
     @Override
     public void onClick(View view) {
+        //Utils.hideKeyboard(view);
         switch (view.getId()) {
             case R.id.hostPrevButton: {
                 passer.slideNavClicked(PREVIOUS);

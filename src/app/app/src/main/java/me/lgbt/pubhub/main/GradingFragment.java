@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.Utils.Utils;
 import me.lgbt.pubhub.interfaces.GradingListener;
 import me.lgbt.pubhub.trivia.utils.Answer;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
@@ -78,6 +79,7 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
+        Utils.hideKeyboard(view);
         switch (view.getId()){
             case R.id.answerWrong:
                 answers[answerTracker].setCorrect(false);
