@@ -330,10 +330,10 @@ When user connects they receive an array of all messages. Receive array with sin
   "payload": {
     "messageType": "AnswerStatus",
     "payload": {
-    "roundNumber": 0,
+      "roundNumber": 0,
       "questionNumber": 1,
       "numTeams": 3,
-    "answersSubmitted": 2
+      "answersSubmitted": 2
     }
   }
 }
@@ -373,10 +373,10 @@ When user connects they receive an array of all messages. Receive array with sin
   "payload": {
     "messageType": "GradingStatus",
     "payload": {
-    "roundNumber": 0,
-    "questionNumber": 1,
-    "numTeams": 3,
-    "gradesSubmitted": 2
+      "roundNumber": 0,
+      "questionNumber": 1,
+      "numTeams": 3,
+      "gradesSubmitted": 2
     }
   }
 }
@@ -618,6 +618,30 @@ If success is false, message is sent to only submitter and reason is included. I
       },{
         "teamId": 5,
         "answer": "Smells Like Teen Spirit"
+      }]
+    }
+  }
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>ServerPlayerMessage</td>
+<td>Scores</td>
+<td>
+<pre>
+{
+  "messageType": "ServerPlayerMessage",
+  "payload": {
+    "messageType": "Scores",
+    "payload": {
+      "roundNumber": 1,
+      "teamScores": [{
+        "teamName": "Super Awesome Team Name",
+        "score": "1000000"
+      },{
+        "teamName": "Super Lame Team",
+        "score": "1"
       }]
     }
   }
