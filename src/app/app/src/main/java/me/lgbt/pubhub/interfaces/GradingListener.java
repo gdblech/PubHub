@@ -1,5 +1,7 @@
 package me.lgbt.pubhub.interfaces;
 
+import me.lgbt.pubhub.trivia.utils.Answer;
+
 public interface GradingListener {
-    void answerGraded(boolean grade);
+    void answerGraded(Answer[] answers);
 }
