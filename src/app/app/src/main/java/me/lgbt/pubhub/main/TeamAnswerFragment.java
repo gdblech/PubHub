@@ -57,7 +57,7 @@ public class TeamAnswerFragment extends Fragment implements ClickListener {
 
     public void addAnswer(String answer) {
         answers.add(answer);
-        adapter.notifyItemInserted(answers.size());
+        adapter.notifyItemInserted(answers.size()-1);
     }
 
     public void dumpAnswers(){
