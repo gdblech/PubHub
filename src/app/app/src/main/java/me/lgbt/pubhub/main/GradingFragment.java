@@ -89,10 +89,10 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
                 break;
         }
         answerTracker++;
-        if(answerTracker >= answers.length){
-            passer.answerGraded(answers);
-        }else{
+        if(answerTracker < answers.length){
             teamAnswer.setText(answers[answerTracker].getAnswer());
+        }else{
+            passer.answerGraded(answers);
         }
     }
 }
