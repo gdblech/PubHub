@@ -2,6 +2,10 @@
 
 const _ = require('lodash');
 const Models = require('../../models');
+const log4js = require('log4js');
+let logger = log4js.getLogger();
+logger.level = process.env.LOG_LEVEL || 'info';
+
 class ActiveTriviaGame {
 	constructor(triviaGame, host, wss) {
 		this.triviaGame = triviaGame;
@@ -93,6 +97,29 @@ class ActiveTriviaGame {
 				type: 'round',
 				round
 			};
+		}
+
+		// If in grading phase, mark each answer as correct or false
+		if (this.grading) {
+			let answers = await Models.TeamAnswer.findAll({
+				where: {
+					triviaQuestionId: this.triviaGame.triviaRounds[this.currentRound].triviaQuestions[this.currentQuestion].id
+				},
+				include: [{
+					model: Models.AnswerGrade
+				}]
+			});
+
+			for (let i = 0; i < answers.length; i++) {
+				let correct = false;
+				for (let j = 0; j < answers[i].AnswerGrades.length; j++) {
+					if (answers[i].AnswerGrades[j].correct) {
+						correct = true;
+					}
+				}
+				answers[i].correct = correct;
+				await answers[i].save();
+			}
 		}
 
 		// Last question of a round
