@@ -424,10 +424,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             e.printStackTrace();
         }
         //TODO UPDATE JSON
-        String gameJSON = "{\"messageType\": \"PlayerServerMessage\",\"payload\": {\"messageType\": \"GradeQuestion\",\"payload\": {\"questionNumber\": " + currentQuestion + ",\"roundNumber\": " + currentRound;
+        String gameJSON = "{\"messageType\": \"PlayerServerMessage\",\"payload\": {\"messageType\": \"GradeQuestion\",\"payload\": {\"questionNumber\": " + currentQuestion + ",\"roundNumber\": " + currentRound + ",";
         gameJSON = gameJSON + obj.toString().substring(1);
         int length = gameJSON.length();
-        gameJSON = gameJSON.substring(0,length-2);
+        gameJSON = gameJSON.substring(0,length-1) + "}}}";
         System.out.println("[Player-Server Message] " + gameJSON);
         ws.send(gameJSON);
     }
