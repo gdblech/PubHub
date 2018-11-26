@@ -22,6 +22,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private TextView title;
     private TextView text;
     private ImageView picture;
+    private TextView currentRound;
+    private TextView currentQuestion;
     private FloatingActionButton submitAnswer;
     private EditText answer;
     private PlayListener passer;
@@ -43,6 +45,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         title = act.findViewById(R.id.slideTitlePlay);
         text = act.findViewById(R.id.slidePlayText);
         picture = act.findViewById(R.id.slidePlayPicture);
+        currentRound = act.findViewById(R.id.currentRound);
+        currentQuestion = act.findViewById(R.id.currentQuestion);
         submitAnswer = act.findViewById(R.id.doneSlideButton);
         answer = act.findViewById(R.id.slidePlayAnswer);
         fade = act.findViewById(R.id.fadeBackground);
