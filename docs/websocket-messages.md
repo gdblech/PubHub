@@ -330,10 +330,10 @@ When user connects they receive an array of all messages. Receive array with sin
   "payload": {
     "messageType": "AnswerStatus",
     "payload": {
-    "roundNumber": 0,
+      "roundNumber": 0,
       "questionNumber": 1,
       "numTeams": 3,
-    "answersSubmitted": 2
+      "answersSubmitted": 2
     }
   }
 }
@@ -373,10 +373,10 @@ When user connects they receive an array of all messages. Receive array with sin
   "payload": {
     "messageType": "GradingStatus",
     "payload": {
-    "roundNumber": 0,
-    "questionNumber": 1,
-    "numTeams": 3,
-    "gradesSubmitted": 2
+      "roundNumber": 0,
+      "questionNumber": 1,
+      "numTeams": 3,
+      "gradesSubmitted": 2
     }
   }
 }
