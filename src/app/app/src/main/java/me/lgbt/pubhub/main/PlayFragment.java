@@ -89,6 +89,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             case R.id.doneSlideButton: {
                 passer.answerClicked(answer.getText().toString());
                 answer.setVisibility(View.GONE);
+                answer.setText("");
+
                 submitAnswer.hide();
             }
         }
