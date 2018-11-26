@@ -10,11 +10,11 @@ public class TriviaMessage extends Message {
     private String title;
     private String text;
     private Bitmap image;
-    private String currentRound;
-    private String currentQuestion;
+    private int currentRound;
+    private int currentQuestion;
     private boolean isQuestion = false;
 
-    public TriviaMessage(String title, String text, String pictureString, String currentRound, String currentQuestion) {
+    public TriviaMessage(String title, String text, String pictureString, int currentRound, int currentQuestion) {
         this.title = title;
         this.text = text;
         convertPicture(pictureString);
@@ -22,10 +22,27 @@ public class TriviaMessage extends Message {
         this.currentQuestion = currentQuestion;
     }
 
-    public TriviaMessage(String title, String text, String pictureString) {
-        this.title = title;
-        this.text = text;
-        convertPicture(pictureString);
+//    public TriviaMessage(String title, String text, String pictureString) {
+//        this.title = title;
+//        this.text = text;
+//        convertPicture(pictureString);
+//    }
+
+
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
+    }
+
+    public int getCurrentQuestion() {
+        return currentQuestion;
+    }
+
+    public void setCurrentQuestion(int currentQuestion) {
+        this.currentQuestion = currentQuestion;
     }
 
     public String getTitle() {

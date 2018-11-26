@@ -17,12 +17,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import me.lgbt.pubhub.interfaces.ChatClickListener;
+import java.io.IOException;
+
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
+import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.interfaces.GradingListener;
+import me.lgbt.pubhub.interfaces.HostListener;
 import me.lgbt.pubhub.interfaces.JoinTeamListener;
+import me.lgbt.pubhub.interfaces.PlayListener;
+import me.lgbt.pubhub.interfaces.TeamAnswerListener;
 import me.lgbt.pubhub.interfaces.TeamNameCreatedListenser;
 import me.lgbt.pubhub.main.ChatFragment;
 import me.lgbt.pubhub.main.CreateTeam;
@@ -37,9 +42,6 @@ import me.lgbt.pubhub.main.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 import me.lgbt.pubhub.trivia.utils.Answer;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
-import me.lgbt.pubhub.interfaces.HostListener;
-import me.lgbt.pubhub.interfaces.PlayListener;
-import me.lgbt.pubhub.interfaces.TeamAnswerListener;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     /**
      * Handles when a chat message is sent from the chat fragment
+     *
      * @param data the message the use wants to send
      */
     @Override
@@ -126,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             teamAnswer = new TeamAnswerFragment();
             active = chatFrag;
 
-
             manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, waiting).hide(waiting).commit();
             manager.beginTransaction().add(R.id.fragContainer, teamAnswer).hide(teamAnswer).commit();
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
 
-            if(hosting){
+            if (hosting) {
                 triviaTracker = PLAYING;
                 triviaSwitcher();
             }else{
@@ -158,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         if (currentTriv != null) {
             manager.beginTransaction().hide(currentTriv).commit();
         }
-        switch (triviaTracker){
+        switch (triviaTracker) {
             case NOGAME:
                 currentTriv = waiting;
                 break;
@@ -245,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     @Override
     public void onBackPressed() {
-        if (hosting && gameID != -1){
+        if (hosting && gameID != -1) {
             closeGame();
             Intent nextActivity = new Intent(this, HostOptionsActivity.class);
             Bundle extras = new Bundle();
@@ -254,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             nextActivity.putExtras(extras);
             startActivity(nextActivity);
             finish();
-        }else{
+        } else {
             //todo add back button for players
         }
     }
@@ -267,13 +269,14 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     /**
      * Gets the answer from the customer when press the submit button.
+     *
      * @param data the answer returned from the customer
      */
     @Override
     public void answerClicked(String data) {
         String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerQuestion\",\"payload\":{\"roundNumber\": "+ currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\""+ data +"\"}}}";
         ws.send(startGameJSON);
-        if(teamLead){
+        if (teamLead) {
             triviaTracker = TEAMANSWER;
             triviaSwitcher();
         }
@@ -281,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     /**
      * gets the button push from the host fragment.
+     *
      * @param button which button was pushed, see final ints for more info.
      */
     @Override
@@ -307,6 +311,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     /**
      * Updates the playing of hosting fragments with the current slide from the server.
+     *
      * @param msg contains the message from the server to be displayed
      */
     private void updateUI(TriviaMessage msg) {
@@ -319,27 +324,30 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     /**
      * update the UI on the grading fragment
-     * @param msg trivia slide to display
+     *
+     * @param msg         trivia slide to display
      * @param answerGiven answer given by the server to check against
      */
-    private void updateUI(TriviaMessage msg, String answerGiven){
-        if(!hosting){
+    private void updateUI(TriviaMessage msg, String answerGiven) {
+        if (!hosting) {
             grading.updateUI(msg, answerGiven);
         }
     }
 
     /**
-     *  adds the list of answers to the grading fragment
+     * adds the list of answers to the grading fragment
+     *
      * @param answers array of answersto be graded
      */
-    private void answerRunner(Answer[] answers){
-        if(!hosting){
+    private void answerRunner(Answer[] answers) {
+        if (!hosting) {
             grading.answerList(answers);
         }
     }
 
     /**
-     *  changes the trivia fragment from lockout mode to playMode
+     * changes the trivia fragment from lockout mode to playMode
+     *
      * @param hos whether the user is a host or not
      */
     private void startGame(final boolean hos) {
@@ -354,23 +362,25 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     }
 
     /**
-     *  Takes the qrCode scanned by the user and sends it to the server
+     * Takes the qrCode scanned by the user and sends it to the server
+     *
      * @param qrCode the code scanned by the user from the table
      */
     @Override
-    public void qrCodeScanned(String qrCode){
+    public void qrCodeScanned(String qrCode) {
         this.qrCode = qrCode;
         String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"JoinTeam\",\"payload\":{\"QRCode\":\"" + qrCode + "\"}}}";
         ws.send(startGameJSON);
     }
 
     /**
-     *  gets the team name from the customer and sends it to the server
+     * gets the team name from the customer and sends it to the server
+     *
      * @param teamName the name chosen by the customer for their team
      */
     @Override
     public void nameChosen(String teamName) {
-        String gameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\""+ teamName +"\"}}}";
+        String gameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"CreateTeam\",\"payload\":{\"QRCode\": \"" + qrCode + "\",\"teamName\":\"" + teamName + "\"}}}";
         ws.send(gameJSON);
     }
 
@@ -388,24 +398,25 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     /**
      * Get the whether the answer is right or wrong
+     *
      * @param answers answer array thath as been graded
      */
     @Override
     public void answerGraded(Answer[] answers) {
         JSONObject obj = new JSONObject();
         JSONArray ans = new JSONArray();
-        for(int i = 0; i < answers.length; i++){
+        for (Answer answer : answers) {
             JSONObject ansObj = new JSONObject();
             try {
-                ansObj.put("teamId", answers[i].getTeamID());
-                ansObj.put("correct", answers[i].isCorrect());
+                ansObj.put("teamId", answer.getTeamID());
+                ansObj.put("correct", answer.isCorrect());
                 ans.put(ansObj);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         try {
-            obj.put("teamGrades",ans);
+            obj.put("teamGrades", ans);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -422,7 +433,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         triviaTracker = PLAYING;
         triviaSwitcher();
     }
-
     /*
      * End Playing Fragment Control Code
      */
@@ -478,14 +488,14 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         });
     }
 
-    private Context getContext(){
+    private Context getContext() {
         return this;
     }
 
     private Answer[] gradeExtractor(JSONArray array) throws JSONException {
         int length = array.length();
         Answer[] answers = new Answer[length];
-        for(int i = 0; i < length; i++){
+        for (int i = 0; i < length; i++) {
             JSONObject obj = array.getJSONObject(i);
             answers[i] = new Answer(obj.getString("answer"), obj.getInt("teamId"));
         }
@@ -535,9 +545,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         String qtext;
                         String qimage;
                         TriviaMessage triviaMessage;
-                        if(subMessageType.equals("Grading")){
+
+                        if (subMessageType.equals("Grading")) {
                             //todo handle grading
-                        }else {
+                        } else {
                             output(extract(subPayloadJSON));
                         }
                     } else if (messageType.equals("ServerPlayerMessage")) {
@@ -546,20 +557,22 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         String qrcode;
                         String qimage;
                         String teamName;
+                        int currentQuestion;
+
                         TriviaMessage triviaMessage;
 
                         switch (subMessageType) {
                             case "CreateTeamResponse":
                                 boolean isTeamCreated = subPayloadJSON.getBoolean("success");
 
-                                if(isTeamCreated){
+                                if (isTeamCreated) {
                                     triviaTracker = PLAYING;
                                     teamLead = true;
                                     triviaSwitcher();
                                 }else{
                                     String reasonTC = subPayloadJSON.getString("reason");
-                                    if(reasonTC.equals("Team already exists for table")){
-                                        Toast.makeText( getContext(), reasonTC, Toast.LENGTH_LONG).show();
+                                    if (reasonTC.equals("Team already exists for table")) {
+                                        Toast.makeText(getContext(), reasonTC, Toast.LENGTH_LONG).show();
                                     }
                                 }
                                 break;
@@ -568,14 +581,14 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             case "JoinTeamResponse":
                                 boolean success = subPayloadJSON.getBoolean("success");
 
-                                if(success){
+                                if (success) {
                                     triviaTracker = PLAYING;
                                     triviaSwitcher();
                                 }else{
                                     String reason = subPayloadJSON.getString("reason");
-                                    if(reason.equals("User already belongs to a team")){
+                                    if (reason.equals("User already belongs to a team")) {
                                         wrongTeam();
-                                    }else{
+                                    } else {
                                         triviaTracker = TEAMNOEXIST;
                                         triviaSwitcher();
                                     }
@@ -584,7 +597,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             case "GameInfo":
                                 JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
 //                                if(subPayloadJSON.getBoolean("onTeam")){ //todo
-                                if(false) {
+                                if (false) {
                                     triviaTracker = PLAYING;
                                     triviaSwitcher();
                                 }else if(!hosting){
@@ -596,13 +609,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             case "TriviaStart":
                                 startGame(hosting);
                             case "RoundStart":
-                                output(extract(subPayloadJSON));
-                                currentRound = subPayloadJSON.getInt("roundNumber");
+
                                 break;
                             case "Question":
                                 triviaMessage = extract(subPayloadJSON);
                                 triviaMessage.isQuestion(true);
-                                currentQuestion = subPayloadJSON.getInt("questionNumber");
                                 output(triviaMessage);
                                 break;
                             case "AnswerSubmission":
@@ -632,7 +643,17 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             String title = Payload.getString("title");
             String text = Payload.getString("text");
             String image = Payload.getString("image");
-            return new TriviaMessage(title, text, image);
+            int currentRound = -1;
+            int currentQuestion = -1;
+
+            try {
+                currentRound = Payload.getInt("roundNumber");
+                currentQuestion = Payload.getInt("questionNumber");
+            } catch(IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+
+            return new TriviaMessage(title, text, image, currentRound, currentQuestion);
         }
 
         @Override
@@ -645,6 +666,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             webSocket.close(NORMAL_CLOSURE_STATUS, null);
             output("Closing : " + code + " / " + reason);
         }
+
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
             Log.d("WS OnFailure", t.getMessage(), t);
