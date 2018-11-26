@@ -81,7 +81,9 @@ class ActiveTriviaGame {
 		// On scoreboard
 		if (this.onScoreboard) {
 			if (this.currentRound === this.triviaGame.triviaRounds.length - 1) {
-				// TODO: End of game
+				// TODO: Load game without images so that the images aren't saved to DB
+				this.triviaGame.completed = true;
+				await this.triviaGame.save();
 				return {
 					type: 'end'
 				};
@@ -126,14 +128,39 @@ class ActiveTriviaGame {
 		if (this.currentQuestion === this.triviaGame.triviaRounds[this.currentRound].triviaQuestions.length - 1) {
 			// Round grading
 			if (this.grading) {
-				// TODO: goto scoreboard
 				this.grading = false;
 				this.onScoreboard = true;
-				this.currentQuestion = -1;
-				this.currentRound++;
 				this.currentAssignments = null;
+				let teams = await Models.Team.findAll({
+					where: {
+						triviaGameId: this.triviaGame.id
+					},
+					include: [
+						Models.TeamAnswer
+					]
+				});
+
+				let scores = {
+					roundNumber: this.currentRound,
+					teamScores: []
+				};
+
+				for (let i = 0; i < teams.length; i++) {
+					let score = 0;
+					for (let j = 0; j < teams[i].TeamAnswers.length; j++) {
+						if (teams[i].TeamAnswers[j].correct === true) {
+							score++;
+						}
+					}
+					scores.teamScores.push({
+						teamName: teams[i].teamName,
+						score
+					})
+				}
+				logger.debug(`Teams with answers: ${JSON.stringify(teams)}`);
 				return {
-					type: 'scoreboard'
+					type: 'scoreboard',
+					scores
 				};
 			}
 			this.grading = true;
