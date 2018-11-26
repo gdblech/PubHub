@@ -17,8 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
@@ -63,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private OkHttpClient client;
     private String phbToken;
     private WebSocket ws;
-
 
     private ChatFragment chatFrag;
     private Fragment triviaFrag;
@@ -142,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             if (hosting) {
                 triviaTracker = PLAYING;
                 triviaSwitcher();
-            }else{
+            } else {
                 triviaTracker = NOGAME;
                 triviaSwitcher();
             }
@@ -156,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
-    private void triviaSwitcher(){
+    private void triviaSwitcher() {
         if (currentTriv != null) {
             manager.beginTransaction().hide(currentTriv).commit();
         }
@@ -273,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     @Override
     public void answerClicked(String data) {
-        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerQuestion\",\"payload\":{\"roundNumber\": "+ currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\""+ data +"\"}}}";
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"AnswerQuestion\",\"payload\":{\"roundNumber\": " + currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\"" + data + "\"}}}";
         ws.send(startGameJSON);
         if (teamLead) {
             triviaTracker = TEAMANSWER;
@@ -426,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
     @Override
     public void teamAnswerChosen(String answer) {
-        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"roundNumber\": "+ currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\""+ answer +"\"}}}";
+        String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"roundNumber\": " + currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\"" + answer + "\"}}}";
         ws.send(startGameJSON);
     }
     /*
@@ -557,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                     triviaTracker = PLAYING;
                                     teamLead = true;
                                     triviaSwitcher();
-                                }else{
+                                } else {
                                     String reasonTC = subPayloadJSON.getString("reason");
                                     if (reasonTC.equals("Team already exists for table")) {
                                         Toast.makeText(getContext(), reasonTC, Toast.LENGTH_LONG).show();
@@ -572,7 +569,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 if (success) {
                                     triviaTracker = PLAYING;
                                     triviaSwitcher();
-                                }else{
+                                } else {
                                     String reason = subPayloadJSON.getString("reason");
                                     if (reason.equals("User already belongs to a team")) {
                                         wrongTeam();
@@ -588,7 +585,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 if (false) {
                                     triviaTracker = PLAYING;
                                     triviaSwitcher();
-                                }else if(!hosting){
+                                } else if (!hosting) {
                                     triviaTracker = NOTONTEAM;
                                     triviaSwitcher();
                                 }
@@ -636,7 +633,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             try {
                 currentRound = Payload.getInt("roundNumber");
                 currentQuestion = Payload.getInt("questionNumber");
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
 
