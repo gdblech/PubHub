@@ -188,13 +188,13 @@ Only the team leader can submit a FinalAnswer.
 </tr>
 <tr>
 <td>PlayerServerMessage</td>
-<td>FinalAnswer</td>
+<td>GradeQuestion</td>
 <td>
 <pre>
 {
   "messageType": "PlayerServerMessage",
   "payload": {
-    "messageType": "Grading",
+    "messageType": "GradeQuestion",
     "payload": {
       "questionNumber": 1,
       "roundNumber": 0,
