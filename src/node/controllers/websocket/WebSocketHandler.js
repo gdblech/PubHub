@@ -665,7 +665,9 @@ class WebSocketHandler {
 	sendError(errorMessage, client) {
 		let error = {
 			messageType: 'Error',
-			error: errorMessage
+			payload: {
+				error: errorMessage
+			}
 		};
 		logger.error(error);
 		client.send(JSON.stringify(error));

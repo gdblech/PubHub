@@ -144,13 +144,13 @@ module.exports = {
 							"imageId": "4775dcd0-e6f6-11e8-aca3-ffe90892d3f6",
 							"answer": "Independence Day"
 						},
-						// {
-						// 	"questionNumber": 0,
-						// 	"title": "Drama",
-						// 	"text": "Released 2014",
-						// 	"imageId": "47a8d3b0-e6f6-11e8-aca3-ffe90892d3f6",
-						// 	"answer": "Imitation Game"
-						// },
+						{
+							"questionNumber": 0,
+							"title": "Drama",
+							"text": "Released 2014",
+							"imageId": "47a8d3b0-e6f6-11e8-aca3-ffe90892d3f6",
+							"answer": "Imitation Game"
+						},
 						// {
 						// 	"questionNumber": 2,
 						// 	"title": "Animation",
