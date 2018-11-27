@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.trivia.utils;
+package me.lgbt.pubhub.Utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

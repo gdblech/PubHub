@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.main;
+package me.lgbt.pubhub.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.trivia.utils.AnswerAdapter;
+import me.lgbt.pubhub.Utils.AnswerAdapter;
 import me.lgbt.pubhub.interfaces.ClickListener;
 import me.lgbt.pubhub.interfaces.TeamAnswerListener;
 

@@ -17,6 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import me.lgbt.pubhub.Utils.ScoreObject;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
@@ -27,16 +30,16 @@ import me.lgbt.pubhub.interfaces.JoinTeamListener;
 import me.lgbt.pubhub.interfaces.PlayListener;
 import me.lgbt.pubhub.interfaces.TeamAnswerListener;
 import me.lgbt.pubhub.interfaces.TeamNameCreatedListenser;
-import me.lgbt.pubhub.main.ChatFragment;
-import me.lgbt.pubhub.main.CreateTeam;
-import me.lgbt.pubhub.main.GradingFragment;
-import me.lgbt.pubhub.main.HostFragment;
-import me.lgbt.pubhub.main.JoinTeam;
-import me.lgbt.pubhub.main.PlayFragment;
-import me.lgbt.pubhub.main.ScoreFragment;
-import me.lgbt.pubhub.main.TeamAnswerFragment;
-import me.lgbt.pubhub.main.TeamFragment;
-import me.lgbt.pubhub.main.WaitingOpenFragment;
+import me.lgbt.pubhub.fragments.ChatFragment;
+import me.lgbt.pubhub.fragments.CreateTeam;
+import me.lgbt.pubhub.fragments.GradingFragment;
+import me.lgbt.pubhub.fragments.HostFragment;
+import me.lgbt.pubhub.fragments.JoinTeam;
+import me.lgbt.pubhub.fragments.PlayFragment;
+import me.lgbt.pubhub.fragments.ScoreFragment;
+import me.lgbt.pubhub.fragments.TeamAnswerFragment;
+import me.lgbt.pubhub.fragments.TeamFragment;
+import me.lgbt.pubhub.fragments.WaitingOpenFragment;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 import me.lgbt.pubhub.trivia.utils.Answer;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     final static int PLAYING = 3; //if on a team and ready to play
     final static int TEAMANSWER = 4; //if team lead, you can chose team answer.
     final static int GRADING = 5; //if grading is now active
+    final static int SCOREVIEW = 6;
 
     private int triviaTracker = -1;
     private OkHttpClient client;
@@ -175,6 +179,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 break;
             case TEAMANSWER:
                 currentTriv = teamAnswer;
+                break;
+            case SCOREVIEW:
+                currentTriv = null; //todo change to score view page
                 break;
         }
         if(navBar.getSelectedItemId() == R.id.navigation_trivia){
@@ -520,6 +527,22 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         return answers;
     }
 
+    private void scoreUpdater(JSONArray array) throws JSONException {
+        final ArrayList<ScoreObject> teams = new ArrayList<>();
+        for(int i = 0; i < array.length(); i++){
+            JSONObject obj = array.getJSONObject(i);
+            ScoreObject team = new ScoreObject(obj.getString("teamName"), obj.getInt("score"));
+            teams.add(team);
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                scoreFrag.setTeams(teams);
+            }
+        });
+        scoreFrag.returnTopTeam(); //todo send to trivia page for display
+    }
+
 
     private final class EchoWebSocketListener extends WebSocketListener {
 
@@ -568,12 +591,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                         /* FROM SERVER TO PLAYER MESSAGES */
 
                     } else if (messageType.equals("ServerPlayerMessage")) {
-                        String title;
-                        String qtext;
-                        String qrcode;
-                        String qimage;
-                        String teamName;
-
                         TriviaMessage triviaMessage;
 
                         switch (subMessageType) {
@@ -651,6 +668,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 triviaMessage = extract(subSubPayloadJSON);
                                 updateUI(triviaMessage, subSubPayloadJSON.getString("answer"));
                                 answerRunner(gradeExtractor(subPayloadJSON.getJSONArray("teamAnswers")));
+                                break;
+                            case "Scores":
+                                JSONArray array = subPayloadJSON.getJSONArray("teamScores");
+
                                 break;
                         }
                     } else if (messageType.equals("Error")) {

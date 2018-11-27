@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.main;
+package me.lgbt.pubhub.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,13 +10,12 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.Utils.Utils;
+import me.lgbt.pubhub.Utils.Keyboard;
 import me.lgbt.pubhub.interfaces.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
@@ -30,13 +29,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private EditText answer;
     private PlayListener passer;
     private View fade;
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // everyone connected gets game info, including host
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -91,13 +83,12 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        Utils.hideKeyboard(view);
+        Keyboard.hideKeyboard(view);
         switch (view.getId()) {
             case R.id.doneSlideButton: {
                 passer.answerClicked(answer.getText().toString());
                 answer.setVisibility(View.GONE);
                 answer.setText("");
-
                 submitAnswer.hide();
             }
         }

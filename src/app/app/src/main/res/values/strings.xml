@@ -48,5 +48,8 @@
     <string name="enter_team_name">Enter Team Name</string>
     <string name="textmissing">TextMissing</string>
     <string name="slide_desc">Slide Image</string>
+    <string name="score">Score</string>
+    <string name="teamname">TeamName</string>
+    <string name="place">Place</string>
 
 </resources>
