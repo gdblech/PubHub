@@ -13,7 +13,7 @@ import android.widget.TextView;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.Utils.ScoreObject;
 
-public class topTeam extends Fragment {
+public class TopTeam extends Fragment {
     private TextView textView;
 
 

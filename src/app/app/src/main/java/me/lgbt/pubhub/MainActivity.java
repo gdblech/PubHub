@@ -23,7 +23,7 @@ import me.lgbt.pubhub.Utils.ScoreObject;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
-import me.lgbt.pubhub.fragments.topTeam;
+import me.lgbt.pubhub.fragments.TopTeam;
 import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.interfaces.GradingListener;
 import me.lgbt.pubhub.interfaces.HostListener;
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private TeamAnswerFragment teamAnswer;
     private WaitingOpenFragment waiting;
     private GradingFragment grading;
-    private topTeam topTeam;
+    private TopTeam TopTeam;
 
     private Fragment active;
     private Fragment currentTriv;
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             teamFrag = new TeamFragment();
             grading = new GradingFragment();
             teamAnswer = new TeamAnswerFragment();
-            topTeam = new topTeam();
+            TopTeam = new TopTeam();
             active = chatFrag;
 
             manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             manager.beginTransaction().add(R.id.fragContainer, triviaFrag).hide(triviaFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
-            manager.beginTransaction().add(R.id.fragContainer, topTeam).hide(topTeam).commit();
+            manager.beginTransaction().add(R.id.fragContainer, TopTeam).hide(TopTeam).commit();
 
             if (hosting) {
                 triviaTracker = PLAYING;
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 currentTriv = teamAnswer;
                 break;
             case SCOREVIEW:
-                currentTriv = topTeam;
+                currentTriv = TopTeam;
                 break;
         }
         if(navBar.getSelectedItemId() == R.id.navigation_trivia){
@@ -538,16 +538,17 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             ScoreObject team = new ScoreObject(obj.getString("teamName"), obj.getInt("score"));
             teams.add(team);
         }
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 scoreFrag.setTeams(teams);
+                scoreFrag.sortTeams();
+                TopTeam.setNumberOneTeam(scoreFrag.returnTopTeam());
             }
         });
-        
-        topTeam.setNumberOneTeam(scoreFrag.returnTopTeam());
-
-
+        triviaTracker = SCOREVIEW;
+        triviaSwitcher();
     }
 
 
@@ -680,7 +681,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 break;
                             case "Scores":
                                 JSONArray array = subPayloadJSON.getJSONArray("teamScores");
-
+                                scoreUpdater(array);
                                 break;
                         }
                     } else if (messageType.equals("Error")) {
