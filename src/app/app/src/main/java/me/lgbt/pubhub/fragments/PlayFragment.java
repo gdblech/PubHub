@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.main;
+package me.lgbt.pubhub.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.Utils.Keyboard;
 import me.lgbt.pubhub.interfaces.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
@@ -22,17 +23,12 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private TextView title;
     private TextView text;
     private ImageView picture;
+    private TextView currentRound;
+    private TextView currentQuestion;
     private FloatingActionButton submitAnswer;
     private EditText answer;
     private PlayListener passer;
     private View fade;
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // everyone connected gets game info, including host
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -43,6 +39,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         title = act.findViewById(R.id.slideTitlePlay);
         text = act.findViewById(R.id.slidePlayText);
         picture = act.findViewById(R.id.slidePlayPicture);
+        currentRound = act.findViewById(R.id.currentRound);
+        currentQuestion = act.findViewById(R.id.currentQuestion);
         submitAnswer = act.findViewById(R.id.doneSlideButton);
         answer = act.findViewById(R.id.slidePlayAnswer);
         fade = act.findViewById(R.id.fadeBackground);
@@ -85,10 +83,15 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        Keyboard.hideKeyboard(view);
         switch (view.getId()) {
             case R.id.doneSlideButton: {
                 passer.answerClicked(answer.getText().toString());
+                answer.setVisibility(View.GONE);
+                answer.setText("");
+                submitAnswer.hide();
             }
         }
     }
+
 }

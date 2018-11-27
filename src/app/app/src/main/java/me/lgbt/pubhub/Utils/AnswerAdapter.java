@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.trivia.utils;
+package me.lgbt.pubhub.Utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -60,6 +60,7 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
             listenerRef = new WeakReference<>(listener);
             title = itemView.findViewById(R.id.teamAnswerText);
             select = itemView.findViewById(R.id.teamAnswerButton);
+            select.setOnClickListener(this);
         }
 
         @Override

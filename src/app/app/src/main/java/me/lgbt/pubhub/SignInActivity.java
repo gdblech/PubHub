@@ -36,7 +36,6 @@ import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 
-
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<GoogleSignInAccount> {
 
     private static final int REQ_CODE = 13374;
@@ -112,7 +111,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             }
             updateUI(account);
         } catch (ApiException e) {
-            if(e.getStatusCode() == 4){
+            if (e.getStatusCode() == 4) {
                 signIn();
             }
             Log.w(TAG, "signInResult:failed code = " + e.getStatusCode(), e);
@@ -165,10 +164,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         finish();
     }
 
-    private void unpack(){
-        Bundle bundle =  getIntent().getExtras();
-        if(bundle != null){
-            if(bundle.getBoolean(IntentKeys.SIGNOUT)){
+    private void unpack() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            if (bundle.getBoolean(IntentKeys.SIGNOUT)) {
                 googleSignInClient.signOut();
             }
         }

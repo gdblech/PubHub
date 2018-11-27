@@ -3,8 +3,8 @@ const ClientMessages = require('./ClientMessages');
 const ServerMessages = require('./ServerMessages');
 const Models = require('../../models');
 const ws = require('ws');
-const log4js = require('log4js');
 const ActiveTriviaGame = require('./ActiveTriviaGame');
+const log4js = require('log4js');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
@@ -222,36 +222,56 @@ class WebSocketHandler {
 					ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.TriviaStart, game).toServerMessage());
 				this.sendToPlayers(response);
 			} else if (clientMessage.messageType === ClientMessages.HostServerMessage.MESSAGE_TYPES.Next) {
-				let next = this.activeTrivia.next();
-				if (next.type === 'round') {
-					let response = new ServerMessages.ServerHostMessage(
-						ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
-					this.activeTrivia.host.client.send(JSON.stringify(response));
+				try {
+					let next = await this.activeTrivia.next();
+					if (next.type === 'round') {
+						let response = new ServerMessages.ServerHostMessage(
+							ServerMessages.ServerHostMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage();
+						this.activeTrivia.host.client.send(JSON.stringify(response));
 
-					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage());
-					this.sendToPlayers(response);
-				} else if (next.type === 'question') {
-					let response = new ServerMessages.ServerHostMessage(
-						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Question, next.question).toServerMessage();
-					this.activeTrivia.host.client.send(JSON.stringify(response));
+						response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.RoundStart, next.round).toServerMessage());
+						this.sendToPlayers(response);
+					} else if (next.type === 'question') {
+						let response = new ServerMessages.ServerHostMessage(
+							ServerMessages.ServerHostMessage.MESSAGE_TYPES.Question, next.question).toServerMessage();
+						this.activeTrivia.host.client.send(JSON.stringify(response));
 
-					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
-					this.sendToPlayers(response);
-				} else if (next.type === 'grading') {
-					let response = new ServerMessages.ServerHostMessage(
-						ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
-					this.activeTrivia.host.client.send(JSON.stringify(response));
+						response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Question, next.question).toServerMessage());
+						this.sendToPlayers(response);
+					} else if (next.type === 'grading') {
+						for (let i = 0; i < next.assignments.length; i++) {
+							let response = new ServerMessages.ServerPlayerMessage(
+								ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, {
+									question: next.question,
+									teamAnswers: next.assignments[i].teamAnswers
+								}).toServerMessage();
+							this.sendToUser(JSON.stringify(response), next.assignments[i].team.teamLeader);
+						}
+						let response = new ServerMessages.ServerHostMessage(
+							ServerMessages.ServerHostMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage();
+						this.activeTrivia.host.client.send(JSON.stringify(response));
 
-					response = JSON.stringify(new ServerMessages.ServerPlayerMessage(
-						ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Grading, next.question).toServerMessage());
-					this.sendToPlayers(response);
-				} else if (next.type === 'end') {
-					logger.debug('end game');
-				} else if (next.type === 'scoreboard') {
-					logger.debug('scoreboard');
+					} else if (next.type === 'end') {
+						this.activeTrivia = null;
+						// TODO: test
+						this.wss.clients.forEach((sclient) => {
+							this.sendGameInfo(sclient);
+						})
+					} else if (next.type === 'scoreboard') {
+						let response = new ServerMessages.ServerPlayerMessage(
+							ServerMessages.ServerPlayerMessage.MESSAGE_TYPES.Scores,
+							next.scores
+						).toServerMessage();
+						this.sendToPlayers(JSON.stringify(response));
+						this.sendToUser(JSON.stringify(response), this.activeTrivia.host);
+					}
+				} catch (err) {
+					logger.error(`Error: ${err}`);
+					this.sendError('Game not started', client);
 				}
+
 			} else {
 				this.sendError(`Host message type: ${clientMessage.messageType} not handled.`, client);
 			}
@@ -546,13 +566,13 @@ class WebSocketHandler {
 				await answer.setTriviaQuestion(question);
 				await answer.setTeam(team);
 
-				this.activeTrivia.teamsAnswered++;
+				this.activeTrivia.teamsSubmitted++;
 				let hostMessage = new ServerMessages.ServerHostMessage(
 					ServerMessages.ServerHostMessage.MESSAGE_TYPES.AnswerStatus, {
 						roundNumber: this.activeTrivia.currentRound,
 						questionNumber: this.activeTrivia.currentQuestion,
 						numTeams: this.activeTrivia.teams.length,
-						answersSubmitted: this.activeTrivia.teamsAnswered
+						answersSubmitted: this.activeTrivia.teamsSubmitted
 					}
 				).toServerMessage();
 
@@ -572,9 +592,27 @@ class WebSocketHandler {
 					this.sendToUser(teamMessage, team.Users[i]);
 				}
 
-
 			} else {
 				this.sendError('Invalid question number', client);
+			}
+
+
+		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.GradeQuestion) {
+			try {
+				await this.activeTrivia.submitGrades(clientMessage.payload, client.user);
+				// Update host
+				let response = new ServerMessages.ServerHostMessage(
+					ServerMessages.ServerHostMessage.MESSAGE_TYPES.GradingStatus, {
+						roundNumber: this.activeTrivia.currentRound,
+						questionNumber: this.activeTrivia.currentQuestion,
+						numTeams: this.activeTrivia.teams.length,
+						gradesSubmitted: this.activeTrivia.teamsSubmitted
+					}
+				).toServerMessage();
+
+				this.sendToUser(JSON.stringify(response), this.activeTrivia.host);
+			} catch (err) {
+				this.sendError(err, client);
 			}
 
 		} else {
@@ -627,7 +665,9 @@ class WebSocketHandler {
 	sendError(errorMessage, client) {
 		let error = {
 			messageType: 'Error',
-			error: errorMessage
+			payload: {
+				error: errorMessage
+			}
 		};
 		logger.error(error);
 		client.send(JSON.stringify(error));
