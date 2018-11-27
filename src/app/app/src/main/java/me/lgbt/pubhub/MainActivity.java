@@ -608,7 +608,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 }
                                 break;
                             case "GameInfo":
-                                if(subPayloadJSON.getString("status") != "closed") {
+                                if(subPayloadJSON.getString("status").equals("closed")) {
                                     JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
 //                                if(subPayloadJSON.getBoolean("onTeam")){ //todo
                                     if (false) {
