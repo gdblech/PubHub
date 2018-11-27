@@ -556,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            // System.out.println(text);
+            System.out.println(text);
             try {
                 JSONObject messageObject = new JSONObject(text);
                 JSONObject payloadJSON = messageObject.getJSONObject("payload"); // todo error here
@@ -640,8 +640,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                     output(extract(gameJSON));
                                     break;
                                 } else if (subPayloadJSON.getString("status").equals("closed")) {
-                                    triviaTracker = NOGAME;
-                                    triviaSwitcher();
+                                    if(!hosting) {
+                                        triviaTracker = NOGAME;
+                                        triviaSwitcher();
+                                    }
                                 }
                             case "TriviaStart":
                                 startGame(hosting);
