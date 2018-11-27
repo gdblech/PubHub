@@ -70,11 +70,13 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
     }
     public void updateAnswer(String answer){
         teamAnswer.setText(answer);
+        showButtons();
     }
 
     public void answerList(Answer[] answers){
         this.answers = answers;
         teamAnswer.setText(answers[answerTracker].getAnswer());
+        showButtons();
     }
 
     public void showButtons(){
