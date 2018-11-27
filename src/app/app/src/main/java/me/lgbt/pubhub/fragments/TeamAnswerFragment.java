@@ -44,6 +44,7 @@ public class TeamAnswerFragment extends Fragment implements ClickListener {
 
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
