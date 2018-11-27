@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.main;
+package me.lgbt.pubhub.fragments;
 
 
 import android.os.Bundle;

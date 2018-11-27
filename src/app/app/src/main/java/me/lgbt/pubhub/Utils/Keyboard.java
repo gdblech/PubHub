@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.app.Activity;
 
 
-public class Utils {
+public class Keyboard {
         public static void hideKeyboard (View view){
             InputMethodManager inputManager = (InputMethodManager) view
                     .getContext()

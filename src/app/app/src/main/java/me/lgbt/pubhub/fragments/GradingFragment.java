@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.main;
+package me.lgbt.pubhub.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,12 +10,11 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.Utils.Utils;
+import me.lgbt.pubhub.Utils.Keyboard;
 import me.lgbt.pubhub.interfaces.GradingListener;
 import me.lgbt.pubhub.trivia.utils.Answer;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
@@ -79,7 +78,7 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        Utils.hideKeyboard(view);
+        Keyboard.hideKeyboard(view);
         switch (view.getId()){
             case R.id.answerWrong:
                 answers[answerTracker].setCorrect(false);
@@ -92,9 +91,8 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
         if(answerTracker < answers.length){
             teamAnswer.setText(answers[answerTracker].getAnswer());
         }else{
-            right.hide();
-            wrong.hide();
             passer.answerGraded(answers);
+            answerTracker = 0;
         }
     }
 }

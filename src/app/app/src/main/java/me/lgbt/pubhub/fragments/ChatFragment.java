@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.main;
+package me.lgbt.pubhub.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,12 +19,11 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-import me.lgbt.pubhub.MainActivity;
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.Utils.Keyboard;
 import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.chat.MessageAdapter;
 import me.lgbt.pubhub.chat.UserMessage;
-import me.lgbt.pubhub.Utils.Utils;
 
 public class ChatFragment extends Fragment implements View.OnClickListener, View.OnKeyListener {
 
@@ -79,7 +78,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener, View
 
     @Override
     public void onClick(View view) {
-        Utils.hideKeyboard(view);
+        Keyboard.hideKeyboard(view);
         if (view.getId() == send.getId()) {
             dataPasser.clicked(message.getText().toString());
             message.setText("");
