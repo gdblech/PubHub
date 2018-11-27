@@ -355,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     private void answerRunner(Answer[] answers) {
         if (!hosting) {
+            grading.showButtons();
             grading.answerList(answers);
         }
     }
@@ -450,8 +451,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"roundNumber\": " + currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\"" + answer + "\"}}}";
         ws.send(startGameJSON);
         teamAnswer.dumpAnswers();
-        triviaTracker = PLAYING;
-        triviaSwitcher();
     }
     /*
      * End Playing Fragment Control Code

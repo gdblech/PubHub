@@ -55,6 +55,7 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
         wrong.setOnClickListener(this);
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -76,6 +77,11 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
         teamAnswer.setText(answers[answerTracker].getAnswer());
     }
 
+    public void showButtons(){
+        right.show();
+        wrong.show();
+    }
+
     @Override
     public void onClick(View view) {
         Keyboard.hideKeyboard(view);
@@ -93,6 +99,8 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
         }else{
             passer.answerGraded(answers);
             answerTracker = 0;
+            right.hide();
+            wrong.hide();
         }
     }
 }
