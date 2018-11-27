@@ -342,6 +342,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             triviaTracker = GRADING;
             triviaSwitcher();
             grading.updateUI(msg, answerGiven);
+            grading.showButtons();
         }else {
             ((HostFragment)triviaFrag).switchMode(true);
             ((HostFragment)triviaFrag).setSlide(msg,answerGiven);
