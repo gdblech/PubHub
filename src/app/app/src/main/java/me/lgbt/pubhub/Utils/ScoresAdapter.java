@@ -25,7 +25,7 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ViewHolder
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View gameView = inflater.inflate(R.layout.object_answer, parent, false);
+        View gameView = inflater.inflate(R.layout.object_scores, parent, false);
 
         return new ScoresAdapter.ViewHolder(gameView);
     }
@@ -34,14 +34,15 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ScoresAdapter.ViewHolder viewHolder, int i) {
         ScoreObject team = teams.get(i);
         String teamsName = team.getTeamName();
-        int teamScore = team.getScore();
+        String teamScore = Integer.toString(team.getScore());
+        String plc = Integer.toString(i + 1);
         TextView score = viewHolder.score;
         TextView teamName = viewHolder.teamName;
         TextView place = viewHolder.place;
 
         score.setText(teamScore);
         teamName.setText(teamsName);
-        place.setText(i);
+        place.setText(plc);
     }
 
     @Override

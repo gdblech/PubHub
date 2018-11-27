@@ -542,6 +542,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(hosting){
+                    TopTeam.hosting();
+                }
                 scoreFrag.setTeams(teams);
                 scoreFrag.sortTeams();
                 TopTeam.setNumberOneTeam(scoreFrag.returnTopTeam());
