@@ -65,19 +65,6 @@ class ActiveTriviaGame {
 			};
 		}
 
-		// // Round title screen
-		// if (this.currentQuestion === -1) {
-		// 	this.currentQuestion = 0;
-		// 	let question = this.triviaGame.triviaRounds[this.currentRound].triviaQuestions[this.currentQuestion].toJSON();
-		// 	question.roundNumber = this.currentRound;
-		// 	this.teamsSubmitted = 0;
-		// 	delete question.answer;
-		// 	return {
-		// 		type: 'question',
-		// 		question
-		// 	};
-		// }
-
 		// On scoreboard
 		if (this.onScoreboard) {
 			if (this.currentRound === this.triviaGame.triviaRounds.length - 1) {
