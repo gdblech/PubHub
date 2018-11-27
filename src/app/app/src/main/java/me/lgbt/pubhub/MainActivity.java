@@ -602,6 +602,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                             output(extract(subPayloadJSON), subPayloadJSON.getString("answer"));
                         } else {
                             output(extract(subPayloadJSON));
+                            roundReset();
                         }
 
                         /* FROM SERVER TO PLAYER MESSAGES */
