@@ -51,5 +51,6 @@
     <string name="score">Score</string>
     <string name="teamname">TeamName</string>
     <string name="place">Place</string>
+    <string name="top_team">Top Team!</string>
 
 </resources>
