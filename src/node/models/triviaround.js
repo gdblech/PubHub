@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
 		roundNumber: DataTypes.INTEGER,
 		title: DataTypes.STRING,
 		text: DataTypes.STRING,
-		image: DataTypes.STRING
+		imageId: DataTypes.STRING
 	}, {});
 	TriviaRound.associate = function (models) {
 		// associations can be defined here
@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
 		json.roundNumber = this.roundNumber;
 		json.title = this.title;
 		json.text = this.text;
-		json.image = this.image;
+		json.imageId = this.imageId;
+
+		if (this.image) {
+			json.image = this.image;
+		}
 
 		if (this.triviaQuestions) {
 			let questions = [];
@@ -32,5 +36,18 @@ module.exports = (sequelize, DataTypes) => {
 
 		return json;
 	};
+
+	TriviaRound.prototype.loadImages = async function () {
+		const imageStore = require('../utils/imageStore');
+
+		if (this.imageId) {
+			this.image = await imageStore.get(this.imageId);
+		}
+		if (this.triviaQuestions) {
+			for (let i = 0; i < this.triviaQuestions.length; i++) {
+				await this.triviaQuestions[i].loadImages();
+			}
+		}
+	}
 	return TriviaRound;
 };

@@ -1,5 +1,6 @@
-package me.lgbt.pubhub.main;
+package me.lgbt.pubhub.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,11 +14,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.Utils.Keyboard;
 import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.chat.MessageAdapter;
 import me.lgbt.pubhub.chat.UserMessage;
@@ -75,6 +78,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener, View
 
     @Override
     public void onClick(View view) {
+        Keyboard.hideKeyboard(view);
         if (view.getId() == send.getId()) {
             dataPasser.clicked(message.getText().toString());
             message.setText("");
@@ -90,5 +94,14 @@ public class ChatFragment extends Fragment implements View.OnClickListener, View
         }
         return false;
     }
+
+    private void closeKeyboard(Activity activity){
+        View view = activity.getCurrentFocus();
+        if (view != null){
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);        }
+    }
+
+
 }
 

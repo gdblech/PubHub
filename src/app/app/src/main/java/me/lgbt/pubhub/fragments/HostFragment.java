@@ -1,4 +1,4 @@
-package me.lgbt.pubhub.main;
+package me.lgbt.pubhub.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,35 +18,21 @@ import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
-/*
- * ```{
-    "messageType": "HostServerMessage",
-    "payload": {
-        "messageType": "openGame",
-        "payload": {
-            "gameId": <id>
-        }
-    }
-}```
- */
-
 public class HostFragment extends Fragment implements View.OnClickListener {
     public static final int NEXT = 1;
     public static final int PREVIOUS = -1;
     public static final int START = 0;
     private TextView title;
     private TextView text;
+    private TextView answer;
+    private TextView counter;
     private ImageView image;
+    private View line;
     private FloatingActionButton next;
     private FloatingActionButton back;
     private HostListener passer;
     private View fade;
     private Button launchGame;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -61,6 +47,10 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         back = act.findViewById(R.id.hostPrevButton);
         fade = act.findViewById(R.id.fadeBackgroundHost);
         launchGame = act.findViewById(R.id.launchGameHost);
+        answer = act.findViewById(R.id.slideHostTextAnswer);
+        counter = act.findViewById(R.id.hostyOutOfxText);
+        line = act.findViewById(R.id.viewHostLine);
+
 
         fade.setVisibility(View.VISIBLE);
         fade.bringToFront();
@@ -93,8 +83,30 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         image.setImageBitmap(msg.getImage());
     }
 
+    public void switchMode(boolean grading){
+        if(!grading){
+            answer.setVisibility(View.INVISIBLE);
+            line.setVisibility(View.INVISIBLE);
+        }else{
+            answer.setVisibility(View.VISIBLE);
+            line.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void updateCounter(int x, int y){
+        String blackJackAndHookers = x + " out of " + y + " players finished";
+        counter.setText(blackJackAndHookers);
+    }
+
+    public void setSlide(TriviaMessage msg, String answer) {
+        title.setText(msg.getTitle());
+        text.setText(msg.getText());
+        image.setImageBitmap(msg.getImage());
+        this.answer.setText(answer);
+    }
     @Override
     public void onClick(View view) {
+        //Keyboard.hideKeyboard(view);
         switch (view.getId()) {
             case R.id.hostPrevButton: {
                 passer.slideNavClicked(PREVIOUS);
@@ -106,7 +118,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
             }
             case R.id.launchGameHost: {
                 fade.setVisibility(View.GONE);
-               // back.show();
+                // back.show();
                 next.show();
                 launchGame.setVisibility(View.GONE);
                 passer.slideNavClicked(START);

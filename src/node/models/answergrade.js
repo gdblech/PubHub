@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
 		// associations can be defined here
 		AnswerGrade.belongsTo(models.TeamAnswer);
 		AnswerGrade.belongsTo(models.Team, {
-			as: 'gradingTeam'
+			as: 'gradingTeam',
+			foreignKey: 'gradingTeamId'
 		});
 	};
 	return AnswerGrade;
