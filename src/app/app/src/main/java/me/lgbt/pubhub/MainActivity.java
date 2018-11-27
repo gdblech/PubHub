@@ -23,6 +23,7 @@ import me.lgbt.pubhub.Utils.ScoreObject;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
+import me.lgbt.pubhub.fragments.topTeam;
 import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.interfaces.GradingListener;
 import me.lgbt.pubhub.interfaces.HostListener;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     private TeamAnswerFragment teamAnswer;
     private WaitingOpenFragment waiting;
     private GradingFragment grading;
+    private topTeam topTeam;
 
     private Fragment active;
     private Fragment currentTriv;
@@ -128,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             teamFrag = new TeamFragment();
             grading = new GradingFragment();
             teamAnswer = new TeamAnswerFragment();
+            topTeam = new topTeam();
             active = chatFrag;
 
             manager.beginTransaction().add(R.id.fragContainer, chatFrag).commit();
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             manager.beginTransaction().add(R.id.fragContainer, triviaFrag).hide(triviaFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, teamFrag).hide(teamFrag).commit();
             manager.beginTransaction().add(R.id.fragContainer, scoreFrag).hide(scoreFrag).commit();
+            manager.beginTransaction().add(R.id.fragContainer, topTeam).hide(topTeam).commit();
 
             if (hosting) {
                 triviaTracker = PLAYING;
@@ -181,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 currentTriv = teamAnswer;
                 break;
             case SCOREVIEW:
-                currentTriv = null; //todo change to score view page
+                currentTriv = topTeam;
                 break;
         }
         if(navBar.getSelectedItemId() == R.id.navigation_trivia){
@@ -540,7 +544,10 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 scoreFrag.setTeams(teams);
             }
         });
-        scoreFrag.returnTopTeam(); //todo send to trivia page for display
+        
+        topTeam.setNumberOneTeam(scoreFrag.returnTopTeam());
+
+
     }
 
 
