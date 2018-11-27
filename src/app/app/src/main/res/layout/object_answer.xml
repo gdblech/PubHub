@@ -7,9 +7,11 @@
     <TextView
         android:id="@+id/teamAnswerText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="8"
-        android:text="TextView" />
+        android:gravity="center"
+        android:textSize="18sp"
+        android:text="" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/teamAnswerButton"
@@ -17,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:clickable="true"
-        app:srcCompat="@drawable/ic_baseline_done_24px"
-        android:focusable="true" />
+        android:focusable="true"
+        android:layout_margin="4sp"
+        android:src="@drawable/ic_baseline_done_24px" />
 </LinearLayout>
