@@ -50,11 +50,11 @@ public class ScoreFragment extends Fragment {
 
     public void setTeams(ArrayList<ScoreObject> teams) {
         this.teams = teams;
-        adapter.notifyDataSetChanged();
     }
 
     public void sortTeams(){
         Collections.sort(teams, new scoreComparator());
+        adapter.notifyDataSetChanged();
     }
 
     public ScoreObject returnTopTeam(){
