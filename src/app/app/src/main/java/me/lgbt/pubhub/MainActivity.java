@@ -430,6 +430,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         gameJSON = gameJSON.substring(0,length-1) + "}}}";
         System.out.println("[Player-Server Message] " + gameJSON);
         ws.send(gameJSON);
+        triviaTracker = PLAYING;
+        triviaSwitcher();
     }
 
     @Override
