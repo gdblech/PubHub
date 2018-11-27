@@ -49,7 +49,7 @@ public class ScoreFragment extends Fragment {
     }
 
     public void setTeams(ArrayList<ScoreObject> teams) {
-        this.teams = teams;
+        this.teams.addAll(teams);
     }
 
     public void sortTeams(){
