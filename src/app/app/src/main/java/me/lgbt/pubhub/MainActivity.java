@@ -442,8 +442,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         gameJSON = gameJSON.substring(0,length-1) + "}}}";
         System.out.println("[Player-Server Message] " + gameJSON);
         ws.send(gameJSON);
-        triviaTracker = PLAYING;
-        triviaSwitcher();
     }
 
     @Override
@@ -451,6 +449,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"roundNumber\": " + currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\"" + answer + "\"}}}";
         ws.send(startGameJSON);
         teamAnswer.dumpAnswers();
+        triviaTracker = PLAYING;
+        triviaSwitcher();
     }
     /*
      * End Playing Fragment Control Code
