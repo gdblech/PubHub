@@ -554,6 +554,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         triviaSwitcher();
     }
 
+    public void roundReset(){
+        triviaTracker = PLAYING;
+        triviaSwitcher();
+    }
+
 
     private final class EchoWebSocketListener extends WebSocketListener {
 
@@ -660,6 +665,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 startGame(hosting);
                             case "RoundStart":
                                 output(extract(subPayloadJSON));
+                                roundReset();
                                 break;
                             case "Question":
                                 triviaMessage = extract(subPayloadJSON);

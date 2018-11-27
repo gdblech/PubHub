@@ -58,6 +58,6 @@ public class TopTeam extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        passer.slideNavClicked(NEXT);
+        passer.slideNavClicked(HostFragment.NEXT);
     }
 }
