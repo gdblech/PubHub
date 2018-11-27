@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
+import me.lgbt.pubhub.Utils.Utils;
 import me.lgbt.pubhub.interfaces.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
@@ -90,7 +91,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        closeKeyboard();
+        Utils.hideKeyboard(view);
         switch (view.getId()) {
             case R.id.doneSlideButton: {
                 passer.answerClicked(answer.getText().toString());
@@ -102,10 +103,4 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void closeKeyboard(){
-        View view = getActivity().getCurrentFocus();
-        if (view != null){
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);        }
-    }
 }
