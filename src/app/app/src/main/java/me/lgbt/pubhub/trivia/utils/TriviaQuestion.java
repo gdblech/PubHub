@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class TriviaQuestion extends Slide implements Parcelable {
     public static final Parcelable.Creator<TriviaQuestion> CREATOR = new Parcelable.Creator<TriviaQuestion>() {
         public TriviaQuestion createFromParcel(Parcel in) {

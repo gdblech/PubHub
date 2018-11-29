@@ -1,11 +1,15 @@
 package me.lgbt.pubhub.trivia.utils;
 
+/**
+ * @author Geoffrey Blech
+ * The class representing an answer for passsing around between activities and fragments
+ */
 public class Answer {
     String answer;
     int teamID;
-    boolean correct= false;
+    boolean correct = false;
 
-    public Answer(String answer, int teamID){
+    public Answer(String answer, int teamID) {
         this.answer = answer;
         this.teamID = teamID;
     }
@@ -18,19 +22,19 @@ public class Answer {
         this.correct = correct;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public int getTeamID() {
+        return teamID;
     }
 
     public void setTeamID(int teamID) {
         this.teamID = teamID;
     }
 
-    public int getTeamID() {
-        return teamID;
-    }
-
     public String getAnswer() {
         return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

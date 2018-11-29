@@ -15,14 +15,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.Utils.ScoreObject;
-import me.lgbt.pubhub.Utils.ScoresAdapter;
-import me.lgbt.pubhub.Utils.scoreComparator;
+import me.lgbt.pubhub.Utils.teamScoreObject;
+import me.lgbt.pubhub.Utils.teamScoreAdapter;
+import me.lgbt.pubhub.Utils.teamScoreComparator;
+
+/**
+ * @author Geoffrey Blech
+ */
 
 public class ScoreFragment extends Fragment {
-    private ArrayList<ScoreObject> teams = new ArrayList<>();
-    private RecyclerView recycler;
-    private ScoresAdapter adapter;
+    private ArrayList<teamScoreObject> teams = new ArrayList<>();
+    private teamScoreAdapter adapter;
 
     @Nullable
     @Override
@@ -36,28 +39,28 @@ public class ScoreFragment extends Fragment {
         FragmentActivity act = getActivity();
 
         assert act != null;
-        recycler = act.findViewById(R.id.scoreFragmentRec);
-        adapter = new ScoresAdapter(teams);
+        RecyclerView recycler = act.findViewById(R.id.scoreFragmentRec);
+        adapter = new teamScoreAdapter(teams);
 
         recycler.setAdapter(adapter);
         recycler.setLayoutManager(new LinearLayoutManager(act));
     }
 
-    public void addTeam(ScoreObject team){
+    public void addTeam(teamScoreObject team) {
         teams.add(team);
-        adapter.notifyItemInserted(teams.size()-1);
+        adapter.notifyItemInserted(teams.size() - 1);
     }
 
-    public void setTeams(ArrayList<ScoreObject> teams) {
+    public void setTeams(ArrayList<teamScoreObject> teams) {
         this.teams.addAll(teams);
     }
 
-    public void sortTeams(){
-        Collections.sort(teams, new scoreComparator());
+    public void sortTeams() {
+        Collections.sort(teams, new teamScoreComparator());
         adapter.notifyDataSetChanged();
     }
 
-    public ScoreObject returnTopTeam(){
+    public teamScoreObject returnTopTeam() {
         return teams.get(0);
     }
 }

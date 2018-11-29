@@ -1,7 +1,6 @@
 package me.lgbt.pubhub.trivia.creation;
 
 import android.content.Intent;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -67,7 +66,6 @@ public class CreateQuestionsActivity extends AppCompatActivity implements View.O
         extras.putParcelable(IntentKeys.ROUND, currentRound);
         extras.putParcelable(IntentKeys.GAME, currentGame);
         extras.putInt(IntentKeys.RPOSITION, roundPosition);
-
 
         nextActivity.putExtras(extras);
         startActivity(nextActivity);

@@ -1,18 +1,18 @@
 package me.lgbt.pubhub.trivia.start;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import me.lgbt.pubhub.MainActivity;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
-import me.lgbt.pubhub.connect.RestConnection;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class HostOptionsActivity extends AppCompatActivity implements View.OnClickListener {
     private String phbToken;
 

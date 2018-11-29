@@ -19,6 +19,10 @@ import me.lgbt.pubhub.Utils.Keyboard;
 import me.lgbt.pubhub.interfaces.PlayListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
+/**
+ * @author Geoffrey Blech
+ */
+
 public class PlayFragment extends Fragment implements View.OnClickListener {
     private TextView title;
     private TextView text;
@@ -72,10 +76,11 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
         picture.setImageBitmap(msg.getImage());
+
         if (msg.isQuestion()) {
             submitAnswer.show();
             answer.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             submitAnswer.hide();
             answer.setVisibility(View.GONE);
         }

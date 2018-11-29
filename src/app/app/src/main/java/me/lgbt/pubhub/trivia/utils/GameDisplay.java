@@ -1,5 +1,9 @@
 package me.lgbt.pubhub.trivia.utils;
 
+/**
+ * @author Geoffrey Blech
+ * Class representing a game for display inside a recyclerView's list of games
+ */
 public class GameDisplay {
     private String name;
     private String host;

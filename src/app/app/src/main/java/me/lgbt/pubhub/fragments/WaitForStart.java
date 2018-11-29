@@ -14,11 +14,6 @@ import me.lgbt.pubhub.R;
  */
 public class WaitForStart extends Fragment {
 
-
-    public WaitForStart() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

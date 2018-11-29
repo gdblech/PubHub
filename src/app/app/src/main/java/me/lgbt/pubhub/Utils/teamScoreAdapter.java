@@ -12,27 +12,31 @@ import java.util.ArrayList;
 
 import me.lgbt.pubhub.R;
 
-public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ViewHolder> {
-    private ArrayList<ScoreObject> teams;
+/**
+ * @author Geoffrey Blech
+ * Adapter for showing the list of scores for each team.
+ */
+public class teamScoreAdapter extends RecyclerView.Adapter<teamScoreAdapter.ViewHolder> {
+    private ArrayList<teamScoreObject> teams;
 
-    public ScoresAdapter(ArrayList<ScoreObject> teams) {
+    public teamScoreAdapter(ArrayList<teamScoreObject> teams) {
         this.teams = teams;
     }
 
     @NonNull
     @Override
-    public ScoresAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public teamScoreAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View gameView = inflater.inflate(R.layout.object_scores, parent, false);
 
-        return new ScoresAdapter.ViewHolder(gameView);
+        return new teamScoreAdapter.ViewHolder(gameView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ScoresAdapter.ViewHolder viewHolder, int i) {
-        ScoreObject team = teams.get(i);
+    public void onBindViewHolder(@NonNull teamScoreAdapter.ViewHolder viewHolder, int i) {
+        teamScoreObject team = teams.get(i);
         String teamsName = team.getTeamName();
         String teamScore = Integer.toString(team.getScore());
         String plc = Integer.toString(i + 1);

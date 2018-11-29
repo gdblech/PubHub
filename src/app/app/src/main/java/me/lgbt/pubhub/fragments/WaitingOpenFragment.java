@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
 
+/**
+ * @author Geoffrey Blech
+ */
 
 public class WaitingOpenFragment extends Fragment {
     TextView message;

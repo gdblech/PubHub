@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.interfaces.ClickListener;
 
+/**
+ * @author Geoffrey Blech
+ * An adapter for the recyclerView for a list of  Trivia games
+ */
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
     private final ClickListener listener;
     private ArrayList<GameDisplay> gameList;

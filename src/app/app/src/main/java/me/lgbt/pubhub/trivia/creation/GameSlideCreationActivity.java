@@ -15,6 +15,9 @@ import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class GameSlideCreationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int PICK_IMAGE = 125;

@@ -5,6 +5,7 @@ package me.lgbt.pubhub.connect;
  * List of Keys for use with intents and bundles when passing information between activities and services.
  * @since 10/13/2018
  */
+
 public class IntentKeys {
     public static final String GAME = "000";
     public static final String ROUND = "001";

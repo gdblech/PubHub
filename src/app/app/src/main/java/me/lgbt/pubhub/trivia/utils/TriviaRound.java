@@ -6,6 +6,9 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class TriviaRound extends Slide implements Parcelable {
     public static final Parcelable.Creator<TriviaRound> CREATOR = new Parcelable.Creator<TriviaRound>() {
         public TriviaRound createFromParcel(Parcel in) {
@@ -69,6 +72,10 @@ public class TriviaRound extends Slide implements Parcelable {
 
     }
 
+    public boolean getCreationMode() {
+        return creationMode;
+    }
+
     //initializes questions of value is true and creation mode is false, nulls questions if false and true.
     public void setCreationMode(boolean value) {
         if (value && !creationMode) {
@@ -78,10 +85,6 @@ public class TriviaRound extends Slide implements Parcelable {
             creationMode = false;
             questions = null;
         }
-    }
-
-    public boolean getCreationMode() {
-        return creationMode;
     }
 
     public void trimQuestions() {

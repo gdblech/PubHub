@@ -19,7 +19,12 @@ import me.lgbt.pubhub.interfaces.GradingListener;
 import me.lgbt.pubhub.trivia.utils.Answer;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
-public class GradingFragment extends Fragment implements View.OnClickListener{
+/**
+ * @author Geoffrey Blech
+ */
+
+public class GradingFragment extends Fragment implements View.OnClickListener {
+    int answerTracker = 0;
     private TextView title;
     private TextView text;
     private TextView answerGiven;
@@ -29,7 +34,6 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
     private FloatingActionButton wrong;
     private GradingListener passer;
     private Answer[] answers;
-    int answerTracker = 0;
 
     @Nullable
     @Override
@@ -61,23 +65,23 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
         passer = (GradingListener) context;
     }
 
-    public void updateUI(TriviaMessage msg, String answerGiven){
+    public void updateUI(TriviaMessage msg, String answerGiven) {
         title.setText(msg.getTitle());
         text.setText(msg.getText());
         image.setImageBitmap(msg.getImage());
         this.answerGiven.setText(answerGiven);
     }
 
-    public void updateAnswer(String answer){
+    public void updateAnswer(String answer) {
         teamAnswer.setText(answer);
     }
 
-    public void answerList(Answer[] answers){
+    public void answerList(Answer[] answers) {
         this.answers = answers;
         teamAnswer.setText(answers[answerTracker].getAnswer());
     }
 
-    public void showButtons(){
+    public void showButtons() {
         right.show();
         wrong.show();
     }
@@ -85,7 +89,7 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         Keyboard.hideKeyboard(view);
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.answerWrong:
                 answers[answerTracker].setCorrect(false);
                 break;
@@ -94,9 +98,9 @@ public class GradingFragment extends Fragment implements View.OnClickListener{
                 break;
         }
         answerTracker++;
-        if(answerTracker < answers.length){
+        if (answerTracker < answers.length) {
             teamAnswer.setText(answers[answerTracker].getAnswer());
-        }else{
+        } else {
             teamAnswer.setText("");
             answerTracker = 0;
             right.hide();

@@ -1,14 +1,14 @@
 package me.lgbt.pubhub.Utils;
 
-import android.support.annotation.NonNull;
-
-import java.util.Comparator;
-
-public class ScoreObject {
+/**
+ * @author Geoffrey Blech
+ *
+ */
+public class teamScoreObject {
     private int score;
     private String teamName;
 
-    public ScoreObject(String teamName, int score){
+    public teamScoreObject(String teamName, int score) {
         this.score = score;
         this.teamName = teamName;
     }
@@ -17,12 +17,12 @@ public class ScoreObject {
         return score;
     }
 
-    public String getTeamName() {
-        return teamName;
-    }
-
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public String getTeamName() {
+        return teamName;
     }
 
     public void setTeamName(String teamName) {

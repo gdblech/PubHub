@@ -13,18 +13,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import me.lgbt.pubhub.R;
-import me.lgbt.pubhub.Utils.ScoreObject;
+import me.lgbt.pubhub.Utils.teamScoreObject;
 import me.lgbt.pubhub.interfaces.HostListener;
 
-public class TopTeam extends Fragment implements View.OnClickListener{
+/**
+ * @author Linh Tran
+ * @author Geoffrey Blech
+ *
+ */
+
+public class TopTeam extends Fragment implements View.OnClickListener {
+    public static final int NEXT = 1;
     private TextView textView;
     private FloatingActionButton next;
     private HostListener passer;
-    public static final int NEXT = 1;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_top_team, container, false);
 
@@ -40,8 +45,8 @@ public class TopTeam extends Fragment implements View.OnClickListener{
         next.setOnClickListener(this);
     }
 
-    public void setNumberOneTeam(ScoreObject scoreObject){
-        textView.setText(scoreObject.getTeamName());
+    public void setNumberOneTeam(teamScoreObject teamScoreObject) {
+        textView.setText(teamScoreObject.getTeamName());
 
     }
 
@@ -51,7 +56,10 @@ public class TopTeam extends Fragment implements View.OnClickListener{
         passer = (HostListener) context;
     }
 
-    public void hosting(){
+    /**
+     * called only by the host, this shows a FAB allowing them to move onto the next slide.
+     */
+    public void hosting() {
         next.show();
     }
 

@@ -46,6 +46,9 @@ public class Slide implements Parcelable {
         return 0;
     }
 
+    /**
+     * Allows the slide to be converted into a Parcel for passing between fragments
+     */
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(title);
         out.writeString(text);

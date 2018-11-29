@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.interfaces.ClickListener;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder> {
     private final ClickListener listener;
     private ArrayList<String> answerList;
