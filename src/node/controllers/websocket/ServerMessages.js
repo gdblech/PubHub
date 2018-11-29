@@ -80,7 +80,15 @@ class ServerClientChatMessage {
 
 }
 
+/**
+ * Class for messages from the server to the Host.
+ */
 class ServerHostMessage {
+	/**
+	 * Constructor for building the message.
+	 * @param {*} messageType Message sub-type.
+	 * @param {*} payload Payload contained in message as a JSON object.
+	 */
 	constructor(messageType, payload) {
 		if (ServerHostMessage.MESSAGE_TYPES[messageType]) {
 			this.messageType = messageType;
@@ -112,6 +120,9 @@ class ServerHostMessage {
 		return new WSServerMessage(this);
 	}
 
+	/**
+	 * Returns a the message as a JSON object.
+	 */
 	toJSON() {
 		return {
 			messageType: this.messageType,
@@ -120,7 +131,15 @@ class ServerHostMessage {
 	}
 }
 
+/**
+ * Class for messages that the Server sends to players.
+ */
 class ServerPlayerMessage {
+	/**
+	 * Constructor that builds the message.
+	 * @param {*} messageType Message sub-type.
+	 * @param {*} payload Payload contained in the message as a JSON object.
+	 */
 	constructor(messageType, payload) {
 		if (ServerPlayerMessage.MESSAGE_TYPES[messageType]) {
 			this.messageType = messageType;
@@ -156,6 +175,9 @@ class ServerPlayerMessage {
 		return new WSServerMessage(this);
 	}
 
+	/**
+	 * Returns a the message as a JSON object.
+	 */
 	toJSON() {
 		return {
 			messageType: this.messageType,

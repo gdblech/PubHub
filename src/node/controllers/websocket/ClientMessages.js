@@ -82,7 +82,14 @@ class ClientServerChatMessage {
 	}
 }
 
+/**
+ * Class for handling messages from hosts to the server.
+ */
 class HostServerMessage {
+	/**
+	 * Constructor for building the message.
+	 * @param {*} payload A JSON object containing the message in the correct format.
+	 */
 	constructor(payload) {
 		this.messageType = payload.messageType;
 		if (!HostServerMessage.MESSAGE_TYPES[this.messageType]) {
@@ -120,7 +127,14 @@ class HostServerMessage {
 	}
 }
 
+/**
+ * Class for handling messages from players to the server.
+ */
 class PlayerServerMessage {
+	/**
+	 * Constructor for building the message.
+	 * @param {*} payload A JSON object containing the message in the correct format.
+	 */
 	constructor(payload) {
 		this.messageType = payload.messageType;
 		if (!PlayerServerMessage.MESSAGE_TYPES[this.messageType]) {
