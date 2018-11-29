@@ -255,7 +255,6 @@ class WebSocketHandler {
 
 					} else if (next.type === 'end') {
 						this.activeTrivia = null;
-						// TODO: test
 						this.wss.clients.forEach((sclient) => {
 							this.sendGameInfo(sclient);
 						})
