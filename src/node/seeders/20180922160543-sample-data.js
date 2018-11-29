@@ -3,6 +3,8 @@ let Models = require('../models');
 
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
+
+		// Load in sample users, sets up host users
 		let admin = await Models.Role.create({
 			roleName: 'Admin',
 			createdAt: '2018-09-21',
@@ -124,6 +126,8 @@ module.exports = {
 			});
 		}
 
+
+		// Create the sample trivia game
 		let triviaGame = {
 			"date": "2018-12-25T05:00:00.000Z",
 			"hostName": "Trivia Master",
@@ -151,20 +155,20 @@ module.exports = {
 							"imageId": "47a8d3b0-e6f6-11e8-aca3-ffe90892d3f6",
 							"answer": "Imitation Game"
 						},
-						// {
-						// 	"questionNumber": 2,
-						// 	"title": "Animation",
-						// 	"text": "Released 2008",
-						// 	"imageId": "54182440-ecee-11e8-9abb-ab59297ae4ab",
-						// 	"answer": "WALL-E"
-						// },
-						// {
-						// 	"questionNumber": 3,
-						// 	"title": "Sci-Fi",
-						// 	"text": "Released 1968",
-						// 	"imageId": "2ff77c00-ecee-11e8-b1bb-f51c35dd0199",
-						// 	"answer": "2001: A Space Odyssey"
-						// }
+						{
+							"questionNumber": 2,
+							"title": "Animation",
+							"text": "Released 2008",
+							"imageId": "54182440-ecee-11e8-9abb-ab59297ae4ab",
+							"answer": "WALL-E"
+						},
+						{
+							"questionNumber": 3,
+							"title": "Sci-Fi",
+							"text": "Released 1968",
+							"imageId": "2ff77c00-ecee-11e8-b1bb-f51c35dd0199",
+							"answer": "2001: A Space Odyssey"
+						}
 					]
 				},
 				{
@@ -179,20 +183,20 @@ module.exports = {
 							"imageId": "4905a490-e6f6-11e8-aca3-ffe90892d3f6",
 							"answer": "Smells Like Teen Spirit"
 						},
-						// {
-						// 	"questionNumber": 1,
-						// 	"title": "Amish Paradise",
-						// 	"text": "Released 1996",
-						// 	"imageId": "498a16d0-e6f6-11e8-aca3-ffe90892d3f6",
-						// 	"answer": "Gangsta's Paradise"
-						// },
-						// {
-						// 	"questionNumber": 2,
-						// 	"title": "The Saga Begins",
-						// 	"text": "Released 1999",
-						// 	"imageId": "859cd6a0-ecee-11e8-8853-53b139d97086",
-						// 	"answer": "American Pie"
-						// }
+						{
+							"questionNumber": 1,
+							"title": "Amish Paradise",
+							"text": "Released 1996",
+							"imageId": "498a16d0-e6f6-11e8-aca3-ffe90892d3f6",
+							"answer": "Gangsta's Paradise"
+						},
+						{
+							"questionNumber": 2,
+							"title": "The Saga Begins",
+							"text": "Released 1999",
+							"imageId": "859cd6a0-ecee-11e8-8853-53b139d97086",
+							"answer": "American Pie"
+						}
 					]
 				}
 			]
