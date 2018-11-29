@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.interfaces.ClickListener;
 
+/**
+ * @author Geoffrey Blech
+ * An adapter for a recyclerView displaying a list of Question inside a specific round
+ */
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHolder> {
 
     private final ClickListener listener;

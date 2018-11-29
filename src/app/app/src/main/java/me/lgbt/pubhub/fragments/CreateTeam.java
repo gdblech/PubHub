@@ -18,6 +18,11 @@ import me.lgbt.pubhub.Utils.Keyboard;
 import me.lgbt.pubhub.interfaces.TeamNameCreatedListenser;
 
 
+/**
+ * @author Geoffrey Blech
+ */
+
+
 public class CreateTeam extends Fragment implements View.OnClickListener{
     private Button btnTeamCreate;
     private EditText text;

@@ -20,10 +20,13 @@ import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.interfaces.JoinTeamListener;
 import me.lgbt.pubhub.trivia.start.QRCodeScanner;
 
+/**
+ * @author Geoffrey Blech
+ */
+
 public class JoinTeam extends Fragment implements View.OnClickListener {
     private final int REQ_CODE = 12359;
     private JoinTeamListener passer;
-    private Button scanQR;
     private TextView text;
 
     @Override
@@ -38,7 +41,7 @@ public class JoinTeam extends Fragment implements View.OnClickListener {
         FragmentActivity act = getActivity();
 
         assert act != null;
-        scanQR = act.findViewById(R.id.joinTeamButton);
+        Button scanQR = act.findViewById(R.id.joinTeamButton);
         scanQR.setOnClickListener(this);
         text = act.findViewById(R.id.joinTeamText);
     }
@@ -60,7 +63,7 @@ public class JoinTeam extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void upDateText(String text){
+    public void upDateText(String text) {
         this.text.setText(text);
     }
 
@@ -74,7 +77,9 @@ public class JoinTeam extends Fragment implements View.OnClickListener {
         }
     }
 
-    //open qr_code activity
+    /**
+     * Starts the QR code scanning activity
+     */
     public void scanQR() {
         // start QRCodeScanner activity
         Intent scanner = new Intent(getActivity(), QRCodeScanner.class);

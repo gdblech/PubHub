@@ -19,18 +19,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import me.lgbt.pubhub.Utils.ScoreObject;
+import me.lgbt.pubhub.Utils.teamScoreObject;
 import me.lgbt.pubhub.chat.UserMessage;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.Websockets.ClientChatMessage;
-import me.lgbt.pubhub.fragments.TopTeam;
-import me.lgbt.pubhub.interfaces.ChatClickListener;
-import me.lgbt.pubhub.interfaces.GradingListener;
-import me.lgbt.pubhub.interfaces.HostListener;
-import me.lgbt.pubhub.interfaces.JoinTeamListener;
-import me.lgbt.pubhub.interfaces.PlayListener;
-import me.lgbt.pubhub.interfaces.TeamAnswerListener;
-import me.lgbt.pubhub.interfaces.TeamNameCreatedListenser;
 import me.lgbt.pubhub.fragments.ChatFragment;
 import me.lgbt.pubhub.fragments.CreateTeam;
 import me.lgbt.pubhub.fragments.GradingFragment;
@@ -40,7 +32,15 @@ import me.lgbt.pubhub.fragments.PlayFragment;
 import me.lgbt.pubhub.fragments.ScoreFragment;
 import me.lgbt.pubhub.fragments.TeamAnswerFragment;
 import me.lgbt.pubhub.fragments.TeamFragment;
+import me.lgbt.pubhub.fragments.TopTeam;
 import me.lgbt.pubhub.fragments.WaitingOpenFragment;
+import me.lgbt.pubhub.interfaces.ChatClickListener;
+import me.lgbt.pubhub.interfaces.GradingListener;
+import me.lgbt.pubhub.interfaces.HostListener;
+import me.lgbt.pubhub.interfaces.JoinTeamListener;
+import me.lgbt.pubhub.interfaces.PlayListener;
+import me.lgbt.pubhub.interfaces.TeamAnswerListener;
+import me.lgbt.pubhub.interfaces.TeamNameCreatedListenser;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 import me.lgbt.pubhub.trivia.utils.Answer;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
@@ -51,6 +51,12 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
+/**
+ * @author Geoffrey Blech
+ * @author Linh Tran
+ * @author Blair Gentry
+ * @author Travis Cox
+ */
 public class MainActivity extends AppCompatActivity implements ChatClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, PlayListener, HostListener, TeamAnswerListener,
         JoinTeamListener, TeamNameCreatedListenser, GradingListener {
@@ -60,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
     final static int PLAYING = 3; //if on a team and ready to play
     final static int TEAMANSWER = 4; //if team lead, you can chose team answer.
     final static int GRADING = 5; //if grading is now active
-    final static int SCOREVIEW = 6;
+    final static int SCOREVIEW = 6; //displays who is the current leader
 
     private int triviaTracker = -1;
     private OkHttpClient client;
@@ -161,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         }
     }
 
+    /**
+     * Handles switching between the different fragments that represent the trivia screen. should always be called after
+     */
     private void triviaSwitcher() {
         if (currentTriv != null) {
             manager.beginTransaction().hide(currentTriv).commit();
@@ -188,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                 currentTriv = TopTeam;
                 break;
         }
-        if(navBar.getSelectedItemId() == R.id.navigation_trivia){
+        if (navBar.getSelectedItemId() == R.id.navigation_trivia) {
             active = currentTriv;
             manager.beginTransaction().show(currentTriv).commit();
         }
@@ -324,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      */
     private void updateUI(TriviaMessage msg) {
         if (hosting) {
-            ((HostFragment)triviaFrag).switchMode(false);
+            ((HostFragment) triviaFrag).switchMode(false);
             ((HostFragment) triviaFrag).setSlide(msg);
         } else {
             ((PlayFragment) triviaFrag).setSlide(msg);
@@ -346,9 +355,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                     triviaSwitcher();
                     grading.updateUI(msg, answerGiven);
                     grading.showButtons();
-                }else {
-                    ((HostFragment)triviaFrag).switchMode(true);
-                    ((HostFragment)triviaFrag).setSlide(msg,answerGiven);
+                } else {
+                    ((HostFragment) triviaFrag).switchMode(true);
+                    ((HostFragment) triviaFrag).setSlide(msg, answerGiven);
                 }
             }
         });
@@ -364,9 +373,9 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             @Override
             public void run() {
                 if (!hosting) {
-                        grading.answerList(answers);
-                    }
+                    grading.answerList(answers);
                 }
+            }
         });
     }
 
@@ -449,11 +458,14 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         String gameJSON = "{\"messageType\": \"PlayerServerMessage\",\"payload\": {\"messageType\": \"GradeQuestion\",\"payload\": {\"questionNumber\": " + currentQuestion + ",\"roundNumber\": " + currentRound + ",";
         gameJSON = gameJSON + obj.toString().substring(1);
         int length = gameJSON.length();
-        gameJSON = gameJSON.substring(0,length-1) + "}}}";
+        gameJSON = gameJSON.substring(0, length - 1) + "}}}";
         System.out.println("[Player-Server Message] " + gameJSON);
         ws.send(gameJSON);
     }
 
+    /**
+     * @param answer the answer that the team leader has selected as the teams final answer
+     */
     @Override
     public void teamAnswerChosen(String answer) {
         String startGameJSON = "{\"messageType\":\"PlayerServerMessage\",\"payload\":{\"messageType\":\"FinalAnswer\",\"payload\":{\"roundNumber\": " + currentRound + ",\"questionNumber\": " + currentQuestion + ",\"answer\":\"" + answer + "\"}}}";
@@ -462,6 +474,41 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         triviaTracker = PLAYING;
         triviaSwitcher();
     }
+
+    /**
+     * @param array the JSONArray that has the teams and their scores
+     */
+    private void scoreUpdater(JSONArray array) throws JSONException {
+        final ArrayList<teamScoreObject> teams = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+            teamScoreObject team = new teamScoreObject(obj.getString("teamName"), obj.getInt("score"));
+            teams.add(team);
+        }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (hosting) {
+                    TopTeam.hosting();
+                }
+                scoreFrag.setTeams(teams);
+                scoreFrag.sortTeams();
+                TopTeam.setNumberOneTeam(scoreFrag.returnTopTeam());
+            }
+        });
+        triviaTracker = SCOREVIEW;
+        triviaSwitcher();
+    }
+
+    /**
+     * resets the trivia fragment at the start of the new round
+     */
+    public void roundReset() {
+        triviaTracker = PLAYING;
+        triviaSwitcher();
+    }
+
     /*
      * End Playing Fragment Control Code
      */
@@ -475,8 +522,8 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         String startGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"OpenGame\",\"payload\":{\"gameId\":" + gameID + "}}}";
         ws.send(startGameJSON);
     }
-
     /* Tells server that game has ended. */
+
     private void closeGame() {
         String endGameJSON = "{\"messageType\":\"HostServerMessage\",\"payload\":{\"messageType\":\"EndGame\"}}";
         ws.send(endGameJSON);
@@ -500,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         });
     }
 
-    private void output(final TriviaMessage mes, final String answer ) {
+    private void output(final TriviaMessage mes, final String answer) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -517,6 +564,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             }
         });
     }
+
     private void outputAnswer(final String mes) {
         runOnUiThread(new Runnable() {
             @Override
@@ -530,44 +578,6 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         return this;
     }
 
-    private Answer[] gradeExtractor(JSONArray array) throws JSONException {
-        int length = array.length();
-        Answer[] answers = new Answer[length];
-        for (int i = 0; i < length; i++) {
-            JSONObject obj = array.getJSONObject(i);
-            answers[i] = new Answer(obj.getString("answer"), obj.getInt("teamId"));
-        }
-        return answers;
-    }
-
-    private void scoreUpdater(JSONArray array) throws JSONException {
-        final ArrayList<ScoreObject> teams = new ArrayList<>();
-        for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            ScoreObject team = new ScoreObject(obj.getString("teamName"), obj.getInt("score"));
-            teams.add(team);
-        }
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(hosting){
-                    TopTeam.hosting();
-                }
-                scoreFrag.setTeams(teams);
-                scoreFrag.sortTeams();
-                TopTeam.setNumberOneTeam(scoreFrag.returnTopTeam());
-            }
-        });
-        triviaTracker = SCOREVIEW;
-        triviaSwitcher();
-    }
-
-    public void roundReset(){
-        triviaTracker = PLAYING;
-        triviaSwitcher();
-    }
-
 
     private final class EchoWebSocketListener extends WebSocketListener {
 
@@ -579,6 +589,12 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             System.out.println("Websocket Connection Success");
         }
 
+        /**
+         * Event Handler for incoming messages from the server
+         *
+         * @param webSocket the web Socket connection that is receiving the messages
+         * @param text      the text that was received from the server in the message
+         */
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             System.out.println(text);
@@ -653,7 +669,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                 }
                                 break;
                             case "GameInfo":
-                                if(!subPayloadJSON.getString("status").equals("closed")) {
+                                if (!subPayloadJSON.getString("status").equals("closed")) {
                                     JSONObject gameJSON = subPayloadJSON.getJSONObject("game");
 //                                if(subPayloadJSON.getBoolean("onTeam")){ //todo
                                     if (false) {
@@ -666,7 +682,7 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
                                     output(extract(gameJSON));
                                     break;
                                 } else if (subPayloadJSON.getString("status").equals("closed")) {
-                                    if(!hosting) {
+                                    if (!hosting) {
                                         triviaTracker = NOGAME;
                                         triviaSwitcher();
                                     }
@@ -730,6 +746,11 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
             return new TriviaMessage(title, text, image, currentRound, currentQuestion);
         }
 
+        /**
+         * Event Handler for incoming messages from the server
+         *
+         * @param webSocket the web Socket connection that is receiving the messages
+         */
         @Override
         public void onMessage(WebSocket webSocket, ByteString bytes) {
             output("Receiving bytes : " + bytes.hex());
@@ -744,6 +765,20 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
             Log.d("WS OnFailure", t.getMessage(), t);
+        }
+
+        /**
+         * @param array the JSONArray to be converted to a java array
+         * @return returns the converted array
+         */
+        private Answer[] gradeExtractor(JSONArray array) throws JSONException {
+            int length = array.length();
+            Answer[] answers = new Answer[length];
+            for (int i = 0; i < length; i++) {
+                JSONObject obj = array.getJSONObject(i);
+                answers[i] = new Answer(obj.getString("answer"), obj.getInt("teamId"));
+            }
+            return answers;
         }
 
     }

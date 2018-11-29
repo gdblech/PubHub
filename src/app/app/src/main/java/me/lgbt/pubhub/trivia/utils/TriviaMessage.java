@@ -6,6 +6,9 @@ import android.util.Base64;
 
 import me.lgbt.pubhub.chat.Message;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class TriviaMessage extends Message {
     private String title;
     private String text;
@@ -21,13 +24,6 @@ public class TriviaMessage extends Message {
         this.currentRound = currentRound;
         this.currentQuestion = currentQuestion;
     }
-
-//    public TriviaMessage(String title, String text, String pictureString) {
-//        this.title = title;
-//        this.text = text;
-//        convertPicture(pictureString);
-//    }
-
 
     public int getCurrentRound() {
         return currentRound;

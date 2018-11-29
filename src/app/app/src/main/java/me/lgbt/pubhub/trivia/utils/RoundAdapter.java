@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.interfaces.ClickListener;
 
+/**
+ * @author Geoffrey Blech
+ * An adapter for a RecyclerVIew for displaying a list of rounds of a trivia game
+ */
 public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> {
 
     private final ClickListener listener;

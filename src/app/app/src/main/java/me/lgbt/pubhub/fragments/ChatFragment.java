@@ -25,6 +25,10 @@ import me.lgbt.pubhub.interfaces.ChatClickListener;
 import me.lgbt.pubhub.chat.MessageAdapter;
 import me.lgbt.pubhub.chat.UserMessage;
 
+/**
+ * @author Geoffrey Blech
+ */
+
 public class ChatFragment extends Fragment implements View.OnClickListener, View.OnKeyListener {
 
     private ArrayList<UserMessage> messageList;

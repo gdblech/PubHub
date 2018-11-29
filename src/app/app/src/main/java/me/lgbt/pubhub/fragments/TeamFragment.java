@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 
 import me.lgbt.pubhub.R;
 
+/**
+ * @author Geoffrey Blech
+ * currently unused, exists as the fragment to be used by the team option in the main fragment menu.
+ */
+
 public class TeamFragment extends Fragment {
     @Nullable
     @Override

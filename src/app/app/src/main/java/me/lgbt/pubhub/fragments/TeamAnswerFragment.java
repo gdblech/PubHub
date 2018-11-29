@@ -19,6 +19,10 @@ import me.lgbt.pubhub.Utils.AnswerAdapter;
 import me.lgbt.pubhub.interfaces.ClickListener;
 import me.lgbt.pubhub.interfaces.TeamAnswerListener;
 
+/**
+ * @author Geoffrey Blech
+ */
+
 public class TeamAnswerFragment extends Fragment implements ClickListener {
     private ArrayList<String> answers = new ArrayList<>();
     private RecyclerView recycler;
@@ -51,6 +55,10 @@ public class TeamAnswerFragment extends Fragment implements ClickListener {
         passer = (TeamAnswerListener) context;
     }
 
+    /**
+     * @param position the position in the list that was selected from the recycler
+     * @param button   which button was pushed, in this instance only 1 button can be pushed
+     */
     @Override
     public void onPositionClicked(int position, int button) {
         passer.teamAnswerChosen(answers.get(position));
@@ -58,10 +66,10 @@ public class TeamAnswerFragment extends Fragment implements ClickListener {
 
     public void addAnswer(String answer) {
         answers.add(answer);
-        adapter.notifyItemInserted(answers.size()-1);
+        adapter.notifyItemInserted(answers.size() - 1);
     }
 
-    public void dumpAnswers(){
+    public void dumpAnswers() {
         answers.clear();
         adapter.notifyDataSetChanged();
     }

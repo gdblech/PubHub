@@ -36,6 +36,10 @@ import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
 import me.lgbt.pubhub.trivia.start.HostOptionsActivity;
 
+
+/**
+ * @author Geoffrey Blech
+ */
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<GoogleSignInAccount> {
 
     private static final int REQ_CODE = 13374;

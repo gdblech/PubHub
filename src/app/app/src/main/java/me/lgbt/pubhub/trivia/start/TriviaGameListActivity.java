@@ -19,11 +19,15 @@ import me.lgbt.pubhub.MainActivity;
 import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.connect.RestConnection;
-import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 import me.lgbt.pubhub.interfaces.ClickListener;
+import me.lgbt.pubhub.trivia.creation.GameSlideCreationActivity;
 import me.lgbt.pubhub.trivia.utils.GameAdapter;
 import me.lgbt.pubhub.trivia.utils.GameDisplay;
 
+/**
+ * @author Geoffrey Blech
+ * List of available games, also entry point for creating a game of trivia
+ */
 public class TriviaGameListActivity extends AppCompatActivity implements View.OnClickListener, ClickListener {
     private String phbToken;
     private ArrayList<GameDisplay> listOfGames;
@@ -45,6 +49,9 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         newGame.setOnClickListener(this);
     }
 
+    /**
+     * Gets the game list from the back end.
+     */
     private void fetchGameList() {
         listOfGames = new ArrayList<>();
 
@@ -91,7 +98,6 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         finish();
     }
 
-    /* This is what takes you to the next activity from the play button. */
     private void sendMessagePlay(int id) {
         Intent nextActivity = new Intent(this, MainActivity.class);
         Bundle extras = new Bundle();
@@ -118,20 +124,17 @@ public class TriviaGameListActivity extends AppCompatActivity implements View.On
         }
     }
 
-    /* Button handling for edit, delete, and play. Play calls  */
-
     @Override
     public void onPositionClicked(int position, int button) {
         switch (button) {
             case R.id.editButton: {
-                break; //todo add edit functionality
+                break; //todo add edit functionality in future release
             }
             case R.id.deleteButton: {
-                break; //todo add delete functionality
+                break; //todo add delete functionality in future release
             }
             case R.id.playButton: {
                 sendMessagePlay(listOfGames.get(position).getId());
-// sendMessagePlay(listOfGames.get(position).getId());
             }
         }
     }

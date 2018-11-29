@@ -18,6 +18,10 @@ import me.lgbt.pubhub.R;
 import me.lgbt.pubhub.interfaces.HostListener;
 import me.lgbt.pubhub.trivia.utils.TriviaMessage;
 
+/**
+ * @author Geoffrey Blech
+ */
+
 public class HostFragment extends Fragment implements View.OnClickListener {
     public static final int NEXT = 1;
     public static final int PREVIOUS = -1;
@@ -29,7 +33,6 @@ public class HostFragment extends Fragment implements View.OnClickListener {
     private ImageView image;
     private View line;
     private FloatingActionButton next;
-    private FloatingActionButton back;
     private HostListener passer;
     private View fade;
     private Button launchGame;
@@ -44,7 +47,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         text = act.findViewById(R.id.slideTextHost);
         image = act.findViewById(R.id.slidePictureHost);
         next = act.findViewById(R.id.hostNextButton);
-        back = act.findViewById(R.id.hostPrevButton);
+        FloatingActionButton back = act.findViewById(R.id.hostPrevButton);
         fade = act.findViewById(R.id.fadeBackgroundHost);
         launchGame = act.findViewById(R.id.launchGameHost);
         answer = act.findViewById(R.id.slideHostTextAnswer);
@@ -83,17 +86,17 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         image.setImageBitmap(msg.getImage());
     }
 
-    public void switchMode(boolean grading){
-        if(!grading){
+    public void switchMode(boolean grading) {
+        if (!grading) {
             answer.setVisibility(View.INVISIBLE);
             line.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             answer.setVisibility(View.VISIBLE);
             line.setVisibility(View.VISIBLE);
         }
     }
 
-    public void updateCounter(int x, int y){
+    public void updateCounter(int x, int y) {
         String blackJackAndHookers = x + " out of " + y + " players finished";
         counter.setText(blackJackAndHookers);
     }
@@ -104,6 +107,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         image.setImageBitmap(msg.getImage());
         this.answer.setText(answer);
     }
+
     @Override
     public void onClick(View view) {
         //Keyboard.hideKeyboard(view);
