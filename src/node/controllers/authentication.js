@@ -117,6 +117,9 @@ let getProfile = async (req, res) => {
 	res.send(JSON.stringify(req.user));
 }
 
+/**
+ * Returns a object with dependencies, so that they can be mocked in testing.
+ */
 let getDependencies = () => {
 	return {
 		jwt,
