@@ -6,6 +6,10 @@ const log4js = require('log4js');
 let logger = log4js.getLogger();
 logger.level = process.env.LOG_LEVEL || 'info';
 
+/**
+ * Class for managing the active trivia game. Maintains the game state and controls
+ * progress through the game.
+ */
 class ActiveTriviaGame {
 
 	/**
