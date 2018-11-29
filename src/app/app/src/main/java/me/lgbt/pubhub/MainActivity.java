@@ -337,28 +337,37 @@ public class MainActivity extends AppCompatActivity implements ChatClickListener
      * @param msg         trivia slide to display
      * @param answerGiven answer given by the server to check against
      */
-    private void updateUI(TriviaMessage msg, String answerGiven) {
-        if (!hosting) {
-            triviaTracker = GRADING;
-            triviaSwitcher();
-            grading.updateUI(msg, answerGiven);
-            grading.showButtons();
-        }else {
-            ((HostFragment)triviaFrag).switchMode(true);
-            ((HostFragment)triviaFrag).setSlide(msg,answerGiven);
-        }
+    private void updateUI(final TriviaMessage msg, final String answerGiven) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!hosting) {
+                    triviaTracker = GRADING;
+                    triviaSwitcher();
+                    grading.updateUI(msg, answerGiven);
+                    grading.showButtons();
+                }else {
+                    ((HostFragment)triviaFrag).switchMode(true);
+                    ((HostFragment)triviaFrag).setSlide(msg,answerGiven);
+                }
+            }
+        });
     }
 
     /**
      * adds the list of answers to the grading fragment
      *
-     * @param answers array of answersto be graded
+     * @param answers array of answers to be graded
      */
-    private void answerRunner(Answer[] answers) {
-        if (!hosting) {
-            grading.showButtons();
-            grading.answerList(answers);
-        }
+    private void answerRunner(final Answer[] answers) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!hosting) {
+                        grading.answerList(answers);
+                    }
+                }
+        });
     }
 
     /**
