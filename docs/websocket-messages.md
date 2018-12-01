@@ -1,4 +1,4 @@
-## Client Messages
+## Client Messages 
 Note: Messages will be minified, whitespace is for readability only
 <table>
 <tr>
