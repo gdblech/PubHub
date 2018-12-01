@@ -78,7 +78,9 @@ public class GradingFragment extends Fragment implements View.OnClickListener {
 
     public void answerList(Answer[] answers) {
         this.answers = answers;
-        teamAnswer.setText(answers[answerTracker].getAnswer());
+        if(answers.length != 0) {
+            teamAnswer.setText(answers[answerTracker].getAnswer());
+        }
     }
 
     public void showButtons() {
