@@ -80,6 +80,10 @@ public class GradingFragment extends Fragment implements View.OnClickListener {
         this.answers = answers;
         if(answers.length != 0) {
             teamAnswer.setText(answers[answerTracker].getAnswer());
+            showButtons();
+        }else{
+            right.hide();
+            wrong.hide();
         }
     }
 
