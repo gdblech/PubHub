@@ -107,8 +107,8 @@ class ServerHostMessage {
 			AnswerStatus: "AnswerStatus",
 			Grading: 'Grading',
 			GradingStatus: 'GradingStatus',
-			Scores: 'Scores',
-			Winners: 'Winners'
+			// Scores: 'Scores',
+			// Winners: 'Winners'
 		}
 	}
 
@@ -163,7 +163,7 @@ class ServerPlayerMessage {
 			FinalAnswerResponse: 'FinalAnswerResponse',
 			Grading: 'Grading',
 			Scores: 'Scores',
-			Winners: 'Winners'
+			// Winners: 'Winners'
 		}
 	}
 

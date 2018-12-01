@@ -276,11 +276,13 @@ class ActiveTriviaGame {
 			};
 
 			assignment.teamAnswers = [];
-			assignment.teamAnswers.push({
-				teamId: this.teams[teamIndex1].id,
-				answer: answer1.answer
-			});
-			if (this.teams.length > 2) {
+			if (answer1) {
+				assignment.teamAnswers.push({
+					teamId: this.teams[teamIndex1].id,
+					answer: answer1.answer
+				});
+			}
+			if (answer2) {
 				assignment.teamAnswers.push({
 					teamId: this.teams[teamIndex2].id,
 					answer: answer2.answer

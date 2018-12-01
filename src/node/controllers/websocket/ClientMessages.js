@@ -68,6 +68,10 @@ class ClientServerChatMessage {
 	 */
 	constructor(payload) {
 		this.message = payload.message;
+		// Truncate message length
+		if (this.message.length > 255) {
+			this.message = this.message.slice(0, 255);
+		}
 	}
 
 	/**
@@ -107,10 +111,10 @@ class HostServerMessage {
 			// StartRound: 'StartRound',
 			// StartQuestion: 'StartQuestion',
 			// AnswerQuestion: 'AnswerQuestion',
-			FinishRound: 'FinishRound',
-			FinalGrade: 'FinalGrade',
-			RoundScore: 'RoundScore',
-			GameScore: 'GameScore'
+			// FinishRound: 'FinishRound',
+			// FinalGrade: 'FinalGrade',
+			// RoundScore: 'RoundScore',
+			// GameScore: 'GameScore'
 		}
 	}
 
