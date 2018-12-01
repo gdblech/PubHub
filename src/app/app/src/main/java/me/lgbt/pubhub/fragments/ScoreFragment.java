@@ -52,6 +52,7 @@ public class ScoreFragment extends Fragment {
     }
 
     public void setTeams(ArrayList<teamScoreObject> teams) {
+        this.teams.clear();
         this.teams.addAll(teams);
     }
 
