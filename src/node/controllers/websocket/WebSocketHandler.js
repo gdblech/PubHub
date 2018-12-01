@@ -560,7 +560,7 @@ class WebSocketHandler {
 		} else if (clientMessage.messageType === ClientMessages.PlayerServerMessage.MESSAGE_TYPES.FinalAnswer) {
 			// find team that player belongs to
 			let teamIndex;
-			for (let i = 0; i < this.activeTrivia.teams.length && teamIndex === -1; i++) {
+			for (let i = 0; i < this.activeTrivia.teams.length && teamIndex === undefined; i++) {
 				if (this.activeTrivia.teams[i].teamLeader.id === client.user.id) {
 					teamIndex = i;
 				}
@@ -577,6 +577,12 @@ class WebSocketHandler {
 					}
 				).toServerMessage();
 				client.send(JSON.stringify(response));
+				return;
+			}
+
+			// Make sure not in grading mode
+			if (this.activeTrivia.grading) {
+				this.sendError('Game in grading phase', client);
 				return;
 			}
 
