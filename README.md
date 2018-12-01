@@ -19,5 +19,3 @@ PubHub will be a combination of technologies that will work together to implemen
 - [Linh Tran](https://github.com/ltran1109)
 - [Geoffrey Blech](https://github.com/gdblech)
 - [Blair Gentry](https://github.com/bdcollin)
-
-_Direct inquiries about copyright and patent infringement to SRTate@uncg.edu_
