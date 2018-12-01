@@ -16,8 +16,8 @@ const OAClient = new OAuth2Client(CLIENT_ID);
 /**
  * Function for handling a authorization request, validates the
  * Google sign in JWT, and sends a PubHub generated JWT
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req the request object from express.
+ * @param {*} res the response object from express.
  */
 let auth = async (req, res) => {
 	let gtoken = req.token;
@@ -82,7 +82,7 @@ let auth = async (req, res) => {
 
 /**
  * Function for validating a PubHub JWT, returns the user from the JWT
- * @param {*} token 
+ * @param {*} token a string with a JWT token
  */
 let validate = async (token) => {
 	let decoded;
@@ -110,13 +110,16 @@ let validate = async (token) => {
 
 /**
  * Function for responding to a profile request, gets userId from PubHub JWT
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req the request object from express.
+ * @param {*} res the response object from express.
  */
 let getProfile = async (req, res) => {
 	res.send(JSON.stringify(req.user));
 }
 
+/**
+ * Returns a object with dependencies, so that they can be mocked in testing.
+ */
 let getDependencies = () => {
 	return {
 		jwt,

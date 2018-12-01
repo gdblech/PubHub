@@ -68,6 +68,10 @@ class ClientServerChatMessage {
 	 */
 	constructor(payload) {
 		this.message = payload.message;
+		// Truncate message length
+		if (this.message.length > 255) {
+			this.message = this.message.slice(0, 255);
+		}
 	}
 
 	/**
@@ -82,7 +86,14 @@ class ClientServerChatMessage {
 	}
 }
 
+/**
+ * Class for handling messages from hosts to the server.
+ */
 class HostServerMessage {
+	/**
+	 * Constructor for building the message.
+	 * @param {*} payload A JSON object containing the message in the correct format.
+	 */
 	constructor(payload) {
 		this.messageType = payload.messageType;
 		if (!HostServerMessage.MESSAGE_TYPES[this.messageType]) {
@@ -100,10 +111,10 @@ class HostServerMessage {
 			// StartRound: 'StartRound',
 			// StartQuestion: 'StartQuestion',
 			// AnswerQuestion: 'AnswerQuestion',
-			FinishRound: 'FinishRound',
-			FinalGrade: 'FinalGrade',
-			RoundScore: 'RoundScore',
-			GameScore: 'GameScore'
+			// FinishRound: 'FinishRound',
+			// FinalGrade: 'FinalGrade',
+			// RoundScore: 'RoundScore',
+			// GameScore: 'GameScore'
 		}
 	}
 
@@ -120,7 +131,14 @@ class HostServerMessage {
 	}
 }
 
+/**
+ * Class for handling messages from players to the server.
+ */
 class PlayerServerMessage {
+	/**
+	 * Constructor for building the message.
+	 * @param {*} payload A JSON object containing the message in the correct format.
+	 */
 	constructor(payload) {
 		this.messageType = payload.messageType;
 		if (!PlayerServerMessage.MESSAGE_TYPES[this.messageType]) {

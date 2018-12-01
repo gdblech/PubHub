@@ -54,6 +54,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     private String host;
     private String gameDate;
     private Button upload;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +114,9 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    /**
+     * Creates the JSON from a game of trivia for sending to the back end.
+     */
     void createJson() {
         JSONObject gameJson = new JSONObject();
         try {
@@ -121,7 +125,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
             gameJson.put("date", gameDate);
             gameJson.put("title", currentGame.getTitle());
             gameJson.put("text", currentGame.getTitle());
-            gameJson.put("image", picToBase64(currentGame.getPicture()));
+            gameJson.put("image", imgToBase64(currentGame.getPicture()));
             progressBar.incrementProgressBy(1);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -134,7 +138,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
                 jsonRound.put("roundNumber", i);
                 jsonRound.put("title", r.getTitle());
                 jsonRound.put("text", r.getTitle());
-                jsonRound.put("image", picToBase64(r.getPicture()));
+                jsonRound.put("image", imgToBase64(r.getPicture()));
                 progressBar.incrementProgressBy(1);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -148,7 +152,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
                     jsonQuest.put("questionNumber", j);
                     jsonQuest.put("title", q.getTitle());
                     jsonQuest.put("text", q.getTitle());
-                    jsonQuest.put("image", picToBase64(q.getPicture()));
+                    jsonQuest.put("image", imgToBase64(q.getPicture()));
                     jsonQuest.put("answer", q.getAnswer());
                     questArray.put(jsonQuest);
                     progressBar.incrementProgressBy(1);
@@ -174,6 +178,10 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         sendGame();
     }
 
+
+    /**
+     * sends the game to the backend
+     */
     void sendGame() {
         RestConnection conn;
         Resources res = getResources();
@@ -187,20 +195,25 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         conn.start(RestConnection.SENDGAME);
         try {
             conn.join();
-        } catch (InterruptedException e) {
-            //do nothing it failed
-        }finally {
             sendMessage();
+        } catch (InterruptedException e) {
+            Toast.makeText(this, "Upload Interrupted, Try Again", Toast.LENGTH_LONG).show();
+            upload.setVisibility(View.VISIBLE);
         }
     }
 
-    private String picToBase64(Uri pictureUri) {
+    /**
+     * Converts a picture saved on the phones storage device and converts it to WEBP format with 85% quality and the to base64
+     *
+     * @param imageUri URI of the image
+     * @return returns the String representation of the converted image
+     */
+    private String imgToBase64(Uri imageUri) {
         String base64Pic = "";
         try {
-
             ContentResolver cr = getContentResolver();
-            cr.takePersistableUriPermission(pictureUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Bitmap picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), pictureUri);
+            cr.takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Bitmap picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
 
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -221,7 +234,7 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void sendMessage() {
-        Intent nextActivity = new Intent(this, TriviaGameListActivity.class); // add the activity class you're going to, also uncomment duh.
+        Intent nextActivity = new Intent(this, TriviaGameListActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentKeys.PUBHUB, phbToken);
         extras.putParcelable(IntentKeys.GAME, currentGame);
@@ -230,6 +243,9 @@ public class GameFinishActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
 
+    /**
+     * class for showing and returning the date of the game from the host.
+     */
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         private String date = "";

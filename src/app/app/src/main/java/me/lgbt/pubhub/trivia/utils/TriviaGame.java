@@ -6,6 +6,9 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class TriviaGame extends Slide implements Parcelable {
     public static final Parcelable.Creator<TriviaGame> CREATOR = new Parcelable.Creator<TriviaGame>() {
         public TriviaGame createFromParcel(Parcel in) {

@@ -16,6 +16,9 @@ import me.lgbt.pubhub.connect.IntentKeys;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class RoundCreationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int PICK_IMAGE = 125;

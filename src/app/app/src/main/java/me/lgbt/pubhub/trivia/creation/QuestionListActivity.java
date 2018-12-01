@@ -16,6 +16,9 @@ import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaQuestion;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class QuestionListActivity extends AppCompatActivity implements View.OnClickListener, ClickListener {
     private String phbToken;
     private TriviaGame currentGame;
@@ -114,7 +117,7 @@ public class QuestionListActivity extends AppCompatActivity implements View.OnCl
                 sendMessage();
                 break;
             case R.id.deleteButton:
-                currentRound.removeQuestion(position); //todo add confirmation alert dialog box
+                currentRound.removeQuestion(position);
                 adapter.notifyItemRemoved(position);
                 break;
         }

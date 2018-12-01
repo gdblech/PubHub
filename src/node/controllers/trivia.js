@@ -7,9 +7,9 @@ logger.level = process.env.LOG_LEVEL || 'info';
 
 
 /**
- * Function for listing all availble TrivaiaGames
- * @param {*} req 
- * @param {*} res 
+ * Function for listing all available TriviaGames
+ * @param {*} req the request object from express.
+ * @param {*} res the response object from express.
  * 
  */
 let list = async (req, res) => {
@@ -75,8 +75,8 @@ let getById = async (req, res) => {
 
 /**
  * Function for adding Trivia Game
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req the request object from express.
+ * @param {*} res the response object from express.
  */
 let add = async (req, res) => {
 	let user = req.user;
@@ -91,17 +91,17 @@ let add = async (req, res) => {
 	//replacing the images with an id
 	try {
 		if (triviaObj.image) {
-			triviaObj.image = await imageStore.put(triviaObj.image);
+			triviaObj.imageId = await imageStore.put(triviaObj.image);
 		}
 		for (let i = 0; i < triviaObj.triviaRounds.length; i++) {
 			let round = triviaObj.triviaRounds[i];
 			if (round.image) {
-				round.image = await imageStore.put(round.image);
+				round.imageId = await imageStore.put(round.image);
 			}
 			for (let j = 0; j < round.triviaQuestions.length; j++) {
 				let question = round.triviaQuestions[j];
 				if (question.image) {
-					question.image = await imageStore.put(question.image);
+					question.imageId = await imageStore.put(question.image);
 				}
 			}
 		}

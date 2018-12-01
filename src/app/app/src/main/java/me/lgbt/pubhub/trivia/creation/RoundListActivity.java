@@ -15,6 +15,9 @@ import me.lgbt.pubhub.trivia.utils.RoundAdapter;
 import me.lgbt.pubhub.trivia.utils.TriviaGame;
 import me.lgbt.pubhub.trivia.utils.TriviaRound;
 
+/**
+ * @author Geoffrey Blech
+ */
 public class RoundListActivity extends AppCompatActivity implements View.OnClickListener, ClickListener {
 
     private String phbToken;
@@ -99,7 +102,7 @@ public class RoundListActivity extends AppCompatActivity implements View.OnClick
                 sendMessage();
                 break;
             case R.id.deleteButton:
-                currentGame.removeRound(position); //todo add confirmation alert dialog box
+                currentGame.removeRound(position);
                 adapter.notifyItemRemoved(position);
                 break;
         }
